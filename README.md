@@ -3,7 +3,7 @@ DaoliNet Network Virtualization
 
 The DaoliNet Network Virtualization is based on Openflow Standard, which completely separates the control plane and forward plane for your virtualized cloud network. Below let us provide a in-a-nut-shell introduction to the control-forward separation and important advantages.
 
-Demo: [http://www.daolicloud.com]
+Demo: http://www.daolicloud.com
 
 Openflow Controller
 -------------------
