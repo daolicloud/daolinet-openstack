@@ -1,14 +1,15 @@
-# DaoliNet Network Virtualization
+DaoliNet Network Virtualization
+===============================
 
 The DaoliNet Network Virtualization is based on Openflow Standard, which completely separates the control plane and forward plane for your virtualized cloud network. Below let us provide a in-a-nut-shell introduction to the control-forward separation and important advantages.
 
 Openflow Controller
-===================
+-------------------
 
 This is a set of distributed deployed web service agents. They receive "PacketIn" request from the forward plane, which is a normal communication packet that forwarding devices do not know how to process switching/routing/gateway-in-out/firewall-in-out, and answer with "PacketOut" which is flow information to on-the-fly configure the forwarding devices turning them into intelligent to forward the packets.
 
 Forwarding Devices
-==================
+------------------
 
 The DaoliNet forwarding devices are standard x86 servers running Linux kernel with Open-v-Switch (OVS) agents without any pre-confirguration apart from only knowing the Openflow Controller. This means that the deployment of the forwarding devices completely independent of one another, in fact, the forwarding devices forming a cloud network do not know one another at all, each device only knows the Openflow Controller. Once on-the-fly PacketOut configured by the Controller, the forwarding devices become intelligent to execute network functions of switching (L2), routing (L3) and gateway-ing (L4: NAT-in-out, Firewall-in-out), and can form security groups for your virtual private cloud (VPC), and handle load balancing function at the edge of your cloud network.
 
