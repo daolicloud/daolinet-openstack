@@ -12,7 +12,7 @@ Top-Level Features
 
 * VPCs and security groups are strictly isolated one another without server hosts being pre-configured for VLAN, VXLAN, GRE, iptables, etc., settings. This unique feature of DaoliNet not only greatly saves server CPUs, just like Docker saving server CPUs by avoiding hypervisors, but also more importantly: a VPC becomes freely and dynamically distributed and scale-out spanning over different servers, datacenters, or even behind different firewalls!
 
-* Pure software implementation, completely distributed over any underlying physical network, high avalability by redundant servers.
+* Pure software implementation, completely distributed over any underlying physical network, high avalability by plug-and-play adding redundant and "network-knowledge-less" servers.
 
 
 Checkout our website  http://www.daolicloud.com
