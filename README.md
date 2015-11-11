@@ -8,9 +8,9 @@ Top-Level Features
 
 * Namespace-based lightweight partition of the physical network resource on X86 servers, just like Docker's lightweight namespace partition for the CPU resource on X86 servers.
 
-* Connecting Docker containers (and virtual machines, too) for VPCs (Virtual Private Clouds) taking place in user space without any per-configurations on host servers, and thus scale-out of Docker hosts is as simple as plug-and-play of servers with "for dummies" simplicity.
+* Connecting Docker containers (and virtual machines, too) for VPCs (Virtual Private Clouds) and security groups take place in user space without any per-configurations on servers. Thus scale-out distribution of server hosts is as simple as plug-and-play with "for dummies" simplicity.
 
-* VPCs are strictly isolated one another without running VLAN, VXLAN, GRE, iptables, etc., on any host server. This unique feature of DaoliNet not only greatly saves server resource, just like Docker using no hypervisor, but also more importantly: a VPC becomes freely and dynamically distributed and scale-out spanning over different servers, datacenters, or even behind different firewalls!
+* VPCs and security groups are strictly isolated one another without server hosts being pre-configured for VLAN, VXLAN, GRE, iptables, etc., settings. This unique feature of DaoliNet not only greatly saves server CPUs, just like Docker saving server CPUs by avoiding hypervisors, but also more importantly: a VPC becomes freely and dynamically distributed and scale-out spanning over different servers, datacenters, or even behind different firewalls!
 
 Checkout our website  http://www.daolicloud.com
 
