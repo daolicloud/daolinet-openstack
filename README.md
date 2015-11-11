@@ -15,7 +15,7 @@ Top-Level Features
 * Pure software implementation, completely distributed over any underlying physical network, high avalability by plug-and-play adding redundant and "network-knowledge-less" servers.
 
 
-Checkout our website  http://www.daolicloud.com
+**Checkout our website**  http://www.daolicloud.com
 
 How does it work?
 =================
