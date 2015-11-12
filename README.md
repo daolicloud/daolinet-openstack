@@ -17,6 +17,8 @@ Top-Level Features
 
 **Checkout our website**:  http://www.daolicloud.com
 
+![DaoliNet Picture](http://www.daolicloud.com/static/topology.png)
+
 
 How does it work?
 =================
