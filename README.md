@@ -17,7 +17,7 @@ Top-Level Features
 
 **Checkout our website**:  http://www.daolicloud.com
 
-![DaoliNet Picture](http://www.daolicloud.com/static/topology.png)
+![DaoliNet Topology](http://www.daolicloud.com/static/topology.png)
 
 
 How it Works
@@ -32,6 +32,8 @@ Openflow Controller
 -------------------
 
 This is a set of distributed web service agents. They receive a "PacketIn" request from a server host and reply a "PacketOut" response to the requesting server. A packetin request is a normal network packet that the server receives but does not know how to process switching/routing/gateway-in-out/firewall-in-out, due to lack of configuration intelligence. A packetout response from the Controller is a flow which on-the-fly configures the packetin server to turn it into intelligent for forwarding packets.
+
+![Workflow](http://www.daolicloud.com/static/workflow.png)
 
 Servers as Networking Boxes: Distributed Switches, Routers, and Gateways
 ---------------------------
