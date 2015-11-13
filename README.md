@@ -33,8 +33,6 @@ Openflow Controller
 
 This is a set of distributed web service agents. They receive a "PacketIn" request from a server host and reply a "PacketOut" response to the requesting server. A packetin request is a normal network packet that the server receives but does not know how to process switching/routing/gateway-in-out/firewall-in-out, due to lack of configuration intelligence. A packetout response from the Controller is a flow which on-the-fly configures the packetin server to turn it into intelligent for forwarding packets.
 
-![Workflow](http://www.daolicloud.com/static/workflow.png)
-
 Servers as Networking Boxes: Distributed Switches, Routers, and Gateways
 ---------------------------
 
@@ -45,4 +43,7 @@ Distributed Containers Forming Overlay Network
 
 When a container is created in a server, its network medadata are captured by DaoliNet Openflow Controller (below we use the Controller for short). The network metadata include: the container's MAC address, the container's IP address (assigned to by the Controller as the DHCP server), the server's intranet MAC, the server's intranet IP, and the default gateway IP (the default gateway is the server). The Controller also capture the security group information of the container, i.e., information about a group of containers belonging to one security group, which is specified by the owner of the containers.
 
-When a container initiates a communication to another container, the first packet is an ARP one. In DaoliNet, the ARP packet will not be broadcast, instead it will be unicast to the Controller. The Controller has information to answer this ARP, again, unicast back to the ARP origin container. Then the container will send out communication packets. Since the server's OVS has no switching, routing, gatewaying information for these packets, a packetin event, sending the packet to the Controller, will occur.
+When a container initiates a communication to another container, the first packet is an ARP one. In DaoliNet, the ARP packet will not be broadcast, instead it will be unicast to the Controller. The Controller has information to answer this ARP, again, unicast back to the ARP origin container. Then the container will send out communication packets. Since the server's OVS has no switching, routing, gatewaying information for these packets, a packetin event, sending the packet to the Controller, will occur (see figure below):
+
+![Workflow](http://www.daolicloud.com/static/workflow.png)
+
