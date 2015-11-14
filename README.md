@@ -19,8 +19,26 @@ Top-Level Features
 
 ![DaoliNet Topology](http://www.daolicloud.com/static/topology.png)
 
+Docker in Need of Efficient Networking
+=========================
 
-How it Works
+Docker is awesome! It simplifies provisioning micro-servicing containers to virtualize CPUs much more efficient and lightweight than virtual machines (VMs). Containers are playing more and more roles in cloud computing and bigdata processing in places of VMs. However, there is one thing yet in need: an also simplified, efficient and lightweight networking solution which can easily connect containers in distribution across different Docker hosts.
+
+What Problem Docker Networking has
+----------------------------------
+
+A Docker host can partition thousands of micro-servicing containers. A Docker cloud or a bigdata project should ideally used a set of centrally managed containers which are from arbitrarily distributed number of Docker hosts. Containers which are contributed from one host to the project should be networking isolated from the rest the containers in the host, and containers which are contributed from different hosts to the project should be networking connected one another.
+
+A Docker host provides essencially two non-trivial modes to networking its containers to connecting the world outside the host: (1) a flat network of host and containers being in one IP subnet, and (2) a NAT (Network Address Translation) network which the containers in a host are in an internal IP subnet and the host has an external IP address which will NAT communications for the containers within it. Mode (1) is obviously non-practical: you cannot imagine your home computers and smart phones having their IP addresses exposed to the Internet as your home router! Mode (2) is on the contrary very practical as home/office routers and base stations working today to form a well organized and extremely large scale Internet!
+
+NAT is very kindly to an inside device to initiate communications, outgong packets are easily going out and the response packets allowed to enter. However, NAT will block packets initiated from outside the NAT gateway unless some pre-configurations are in place which is in fact a firewall policy. Now we see the problem in Docker's practical networking mode: two containers in different Docker hosts are not connected since one of them will NAT block packets which are initiated from the other.
+
+Existing Solutions
+------------------
+
+There exists a number of offers for the Docker networking problem. Omitting these for Mode (1) which is obviously non-practical as we mentioned above, Weave is among those working for Mode (2) and is therefore meaningful for a description. Weave uses the packets encapsulation techniques in Open-V-Switch (OVS) such as VXLAN to tunnel in between two Docker hosts.
+
+How DaoliNet Works
 ============
 
 DaoliNet Network Virtualization
