@@ -1,7 +1,7 @@
 What is DaoliNet?
 =================
 
-DaoliNet is a Software Defined Networking (SDN) system that is designed to achieve lightweight network connections for Docker containers, with high availability, performance and scale-out.
+DaoliNet is a Software Defined Networking (SDN) system that is designed for lightweight network connections for Docker containers, with high availability, performance and scale-out.
 
 Top-Level Features
 ------------------
@@ -26,14 +26,14 @@ Docker is awesome! It simplifies provisioning micro-servicing containers to virt
 
 A Docker host can partition thousands of micro-servicing containers. A Docker cloud or a bigdata project should ideally used a set of centrally managed containers which are from arbitrarily distributed number of Docker hosts. Containers which are contributed from one host to the project should be networking isolated from the rest the containers in the host, and containers which are contributed from different hosts to the project should be networking connected one another.
 
-A Docker host provides essencially two non-trivial modes to networking its containers to connecting the world outside the host: (1) a flat network of host and containers being in one IP subnet, and (2) a NAT (Network Address Translation) network which the containers in a host are in an internal IP subnet and the host has an external IP address which will NAT communications for the containers within it. Mode (1) is obviously non-practical: you cannot imagine your home computers and smart phones having their IP addresses exposed to the Internet as your home router! Mode (2) is on the contrary very practical as home/office routers and base stations working today to form a well organized and extremely large scale Internet!
+Docker provides essencially two non-trivial networking modes for the containers in a Docker host to connect the outside world: (1) flat network mode with the host and its containers being in one IP subnet, and (2) NAT (Network Address Translation) network mode which the containers in a host have an internal IP subnet and the host has an external IP address, and the containers communicate with the outside world via the host NAT using the external IP address of the host. Obviously mode (1) is impractical as you won't imagine your home computers or smart phones having their IP addresses exposed to the Internet as your home router! Mode (2) is on the contrary very practical since NAT is ubiquitously working everywhere in the Internet: routers in homes and offers, base stations, etc., all use NAT in the borders of intranets and the Internet.
 
-NAT is very kind to an inside device to initiate communications, outgong packets are easily going out and the response packets allowed to enter. However, NAT will block packets initiated from outside the NAT gateway unless some pre-configurations are in place which is in fact a firewall policy. Now we see the problem in Docker's practical networking mode: two containers in different Docker hosts are not connected since one of them will NAT block packets which are initiated from the other.
+NAT works very kindly to an intranet node initiating communications to an outside node: for all outgoing packets, NAT will maintain a stateful flow for responding packets to enter. However, NAT will by default block packets which are initiated from outside the NAT gateway unless some pre-configuration is in place which is in essense a firewall policy. Now we see a problem in Docker's practical networking mode: two containers in different Docker hosts are not connected since one NAT host will block packets from the other.
 
 Existing Solutions
 ------------------
 
-There exists a number of offers for the Docker networking problem. Omitting these for Mode (1) which is obviously non-practical as we mentioned above, Weave is among those working for Mode (2) and is therefore meaningful for a description. Weave uses the packets encapsulation techniques in Open-V-Switch (OVS) such as VXLAN to tunnel in between two Docker hosts.
+There exists a number of offers for the Docker networking problem. Omitting the ones with Mode (1) which is obviously non-practical as we mentioned above, Weave is among those working for Mode (2). Weave uses packets encapsulation techniques such as VXLAN or GRE to tunnel in between two Docker hosts. For packets encapsulation to be applied to Docker networking, each Docker host is setup a Virtual Tunnel End Point (vtep) where cross host packets are encapsulated and decapsulated. These vteps work like a "networking hypervisor". They are considered to be heaviweight technologies and also complicate cloud management. For example, encapsulation will cause packet fragmentation/reassambly at two vteps due to encapsulation header expanding the packet size exceeding the maximum transmition unit (MTU). Docker's lightweight CPU virtualization is awesome exactly because it has avoided heavyweight CPU hypervisors, it should also avoid heavyweight "networking hypervisor"!
 
 How DaoliNet Works
 ============
@@ -58,7 +58,7 @@ Distributed Containers Forming Overlay Network
 
 When a container is created in a server, its network medadata are captured by DaoliNet Openflow Controller (below we use the Controller for short). The network metadata include: the container's MAC address, the container's IP address (assigned to by the Controller as the DHCP server), the server's intranet MAC, the server's intranet IP, and the default gateway IP (the default gateway is the server). The Controller also capture the security group information of the container, i.e., information about a group of containers belonging to one security group, which is specified by the owner of the containers.
 
-When a container (say C1 in the figure below) initiates a communication to another container (C2), the first packet is an ARP one. In DaoliNet, the ARP packet will not be broadcast, instead it will be unicast to the Controller. The Controller has information to answer this ARP (the MAC of C2), again, unicast back to the ARP origin container. Then the container will send out communication packets. Since the server's OVS has no switching, routing, gatewaying information for these packets, a packetin event, sending the packet to the Controller, will occur
+When a container (say C1 in the figure below) initiates a communication to another container (C2), since the server has no switching, routing, gatewaying information for these packets, a packetin event, sending the packet to the Controller, will occur
 
 ![Workflow](http://www.daolicloud.com/static/workflow.png)
 
