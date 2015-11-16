@@ -10,7 +10,7 @@ Top-Level Features
 
 * That Docker containers are connected to form VPCs (Virtual Private Clouds) and security groups takes place in user space without any server configurations. Thus scale-out distribution of Docker servers has a plug-and-play "for dummies" simplicity.
 
-* VPCs and security groups are strictly isolated one another without server hosts being pre-configured for, e.g., VLAN, VXLAN, GRE, iptables, etc., settings. This unique feature of DaoliNet not only greatly saves server CPUs, just like Docker saving server CPUs by avoiding hypervisors, but also more importantly: since servers are network-knowledge-less, containers forming a VPC are freely and dynamically distributed to scale-out span over different servers, datacenters, or even behind different firewalls, irrespective of their location.
+* VPCs and security groups are strictly isolated one another without server hosts being pre-setup "networking hypervisors", e.g., VLAN, VXLAN, GRE, iptables, etc. This unique feature of DaoliNet not only greatly saves server CPUs, just like Docker saving server CPUs by avoiding hypervisors, but also more importantly: since servers are network-knowledge-less, containers forming a VPC are freely and dynamically distributed to scale-out span over different servers, datacenters, or even behind different firewalls, irrespective of their location.
 
 * Pure software implementation, completely distributed over any underlying physical network, high avalability by plug-and-play adding redundant and network-knowledge-less servers.
 
@@ -53,7 +53,7 @@ Servers as Networking Boxes: Distributed Switches, Routers, and Gateways
 
 The DaoliNet uses standard X86 servers running Linux kernel with Open-v-Switch (OVS) as networking forwarding devices. When joining a cloud resource pool, a server has no any networking confirguration information apart from only knowing the IP addresses of Openflow Controllers. This means that the servers joining a cloud resource pool are completely independent of one another, having no whatever knowledge of one another at all. Once on-the-fly configured by the Controller, a server becomes intelligent to forward packets in various network functions, e.g., switching (L2), routing (L3) and gateway-ing (L4: NAT-in-out, Firewall-in-out), and can also form security groups for a cloud tenant, and handle load balancing at the edge of a cloud network.
 
-Distributed Containers Forming Overlay Network
+Overlay Network for Distributed Containers
 ------
 
 When a container is created in a server, its network medadata are captured by DaoliNet Openflow Controller (below we use the Controller for short). The network metadata include: the container's MAC address, the container's IP address, the server's intranet MAC, the server's intranet IP, and the default gateway IP (the default gateway is the server). The Controller will also capture the security group information of the container, i.e., information about a group of containers belonging to one security group, which is specified by the owner of the containers.
