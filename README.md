@@ -27,7 +27,7 @@ Docker is awesome! It is a container engine to virtualize CPUs much more efficie
 Existing Solutions
 ------------------
 
-There exists a number of offers for the Docker networking: Weave, Flannel, Libnetwork, and Colico are open source projects on Docker networking. These offers all are one requirement: any Docker host participating a cloud must know network information of containers in other Docker hosts. For instance, Weave and Colico require containers to have IP addresses which are visible outside a Docker host; Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel between containers in different Doker hosts. However, as we have mentioned above, a Docker host is created without knowledge of other Doker hosts. Requiring Docker hosts to know one another greatly complicates cloud management. In fact, the simplest network mode for Docker is Network Address Translation (NAT) in which containers in a Docker host do not have externally visible IP addresses; when a container communicates with the outside world, the Docker host uses its IP address to NAT the IP addresses of containers.
+There exists a number of offers for the Docker networking: Weave, Flannel, Libnetwork, and Colico are open source projects on Docker networking. These offers all are one requirement: any Docker host participating a cloud must know network information of containers in other Docker hosts. For instance, Weave and Colico require containers to have IP addresses which are visible outside a Docker host; Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel between containers in different Doker hosts. However, as we have mentioned above, a Docker host is created without knowledge of other Doker hosts. Requiring Docker hosts to know one another greatly complicates cloud management. In fact, the simplest network mode for Docker is Network Address Translation (NAT) in which containers in a Docker host do not have externally visible IP addresses; when a container communicates with the outside world, the Docker host uses its IP address to NAT translate the IP addresses of containers.
 
 How DaoliNet Works
 ============
@@ -35,17 +35,17 @@ How DaoliNet Works
 DaoliNet Network Virtualization
 -------------------------------
 
-The DaoliNet Network Virtualization is based on Openflow Standard, which completely separates the control and forward planes for your virtualized cloud network. Below let us provide an introduction to important advantages enabled by Openflow.
+The DaoliNet Network Virtualization is based on Openflow Standard, which completely separates the control and forward planes for your virtualized cloud network. With DaoliNet, Docker hosts are created and managed independently; there is no deed for them to know one another. This greatly simplifies the management and scalability of Docker cloud. Below let us provide an introduction to important advantages enabled by Openflow.
 
 Openflow Controller
 -------------------
 
-This is a set of distributed web service agents. They receive a "PacketIn" request from a server host and reply a "PacketOut" response to the requesting server. A packetin request is a normal network packet that the server receives but does not know how to process switching/routing/gateway-in-out/firewall-in-out, due to lack of configuration intelligence. A packetout response from the Controller is a flow which on-the-fly configures the packetin server to turn it into intelligent for forwarding packets.
+This is a set of distributed web service agents. They receive a "PacketIn" request from a Decker host and reply a "PacketOut" response to the requesting host. A packetin request is a normal network packet that a Docker host receives from a container but does not know how to process switching/routing/gateway-in-out/firewall-in-out, due to lack of configuration intelligence. A packetout response from the Controller is a flow which configures in real time the packetin host to turn it into intelligent for forwarding packets.
 
 Servers as Networking Boxes: Distributed Switches, Routers, and Gateways
 ---------------------------
 
-The DaoliNet uses standard X86 servers running Linux kernel with Open-v-Switch (OVS) as networking forwarding devices. When joining a cloud resource pool, a server has no any networking confirguration information apart from only knowing the IP addresses of Openflow Controllers. This means that the servers joining a cloud resource pool are completely independent of one another, having no whatever knowledge of one another at all. Once on-the-fly configured by the Controller, a server becomes intelligent to forward packets in various network functions, e.g., switching (L2), routing (L3) and gateway-ing (L4: NAT-in-out, Firewall-in-out), and can also form security groups for a cloud tenant, and handle load balancing at the edge of a cloud network.
+The DaoliNet uses standard X86 servers running Linux kernel with Open-v-Switch (OVS) as networking forwarding devices. When joining a cloud resource pool, a server has no any networking confirguration information apart from only knowing the IP addresses of the Openflow Controllers. This means that the Docker hosts joining a cloud resource pool are completely independent of one another, having no whatever knowledge of one another at all. Once real-time configured by the Controller, a Docker host becomes intelligent to forward packets in various network functions, e.g., switching (L2), routing (L3) and gateway-ing (L4: NAT-in-out, Firewall-in-out), and can also form security groups for a cloud tenant, and handle load balancing at the edge of a cloud network.
 
 Overlay Network for Distributed Containers
 ------
