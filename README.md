@@ -19,21 +19,15 @@ Top-Level Features
 
 ![DaoliNet Topology](http://www.daolicloud.com/static/topology.png)
 
-Docker in Need of Efficient Networking
+Docker Networking
 =========================
 
-Docker is awesome! It simplifies provisioning micro-servicing containers to virtualize CPUs much more efficient and lightweight than virtual machines (VMs). Containers are playing more and more roles in cloud computing and bigdata processing in places of VMs. However, there is one thing yet in need: an also simplified, efficient and lightweight networking solution which can easily connect containers in distribution across different Docker hosts.
-
-A Docker host can partition thousands of micro-servicing containers. A Docker cloud or a bigdata project should ideally used a set of centrally managed containers which are from arbitrarily distributed number of Docker hosts. Containers which are contributed from one host to the project should be networking isolated from the rest the containers in the host, and containers which are contributed from different hosts to the project should be networking connected one another.
-
-Docker provides essencially two non-trivial networking modes for the containers in a Docker host to connect the outside world: (1) linux bridge mode which is a flat network with the host and its containers being in one IP subnet, and (2) NAT (Network Address Translation) network mode which the containers in a host have an internal IP subnet and the host has an external IP address, and the containers communicate with the outside world via the host NAT using the external IP address of the host. Mode (1) is very difficult to manage network isolation and scalability. Mode (2) is quite practical since NAT is ubiquitously working everywhere in the Internet: routers in homes and offers, base stations, etc., all use NAT in the borders of intranets and the Internet.
-
-NAT works very kindly to an intranet node initiating communications to an outside node: for all outgoing packets, NAT will maintain a stateful flow for responding packets to enter. However, NAT will by default block packets which are initiated from outside the NAT gateway unless some pre-configuration is in place which is in essense a firewall policy. Now we see a problem in Docker's practical networking mode: two containers in different Docker hosts are not connected since one NAT host will block packets from the other.
+Docker is awesome! It is a container engine to virtualize CPUs much more efficient than a hypervisor does with virtual machines (VMs). A Docker host can partition an X86 server into thousands of containers. Containers are playing more and more roles in cloud computing in places of VMs. However, because a Docker host is created independently without knowledge of other Docker hosts, containers in different Docker hosts are by default not connected. We need an efficient and lightweight networking solution to connect containers which are distributed in multiple Docker hosts.
 
 Existing Solutions
 ------------------
 
-There exists a number of offers for the Docker networking problem. Weave and Flannel are among those working for Mode (2). Both uses encapsulation techniques for connecting containers which are distributed in two Docker hosts. For packets encapsulation to be applied to Docker networking, each Docker host is setup a Virtual Tunnel End Point (vtep) where cross host packets are encapsulated and decapsulated. These vteps work like a "networking hypervisor". They are considered to be heaviweight technologies and also complicate cloud management. For example, encapsulation will cause packet fragmentation/reassambly at two vteps due to encapsulation header expanding the packet size exceeding the maximum transmition unit (MTU). Docker's lightweight CPU virtualization is awesome exactly because it has avoided heavyweight CPU hypervisors, it should also avoid heavyweight "networking hypervisor"!
+There exists a number of offers for the Docker networking: Weave, Flannel, Libnetwork, and Colico are open source projects on Docker networking. These offers all are one requirement: any Docker host participating a cloud must know network information of containers in other Docker hosts. For instance, Weave and Colico require containers to have IP addresses which are visible outside a Docker host; Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel between containers in different Doker hosts. However, as we have mentioned above, a Docker host is created without knowledge of other Doker hosts. Requiring Docker hosts to know one another greatly complicates cloud management. In fact, the simplest network mode for Docker is Network Address Translation (NAT) in which containers in a Docker host do not have externally visible IP addresses; when a container communicates with the outside world, the Docker host uses its IP address to NAT the IP addresses of containers.
 
 How DaoliNet Works
 ============
