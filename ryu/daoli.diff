@@ -1,0 +1,23 @@
+diff -r ryu/lib/packet/icmp.py ryu.daoli/lib/packet/icmp.py
+68c68
+<     _PACK_STR = '!BBH'
+---
+>     _PACK_STR = '!BBHH'
+80c80
+<     def __init__(self, type_=ICMP_ECHO_REQUEST, code=0, csum=0, data=None):
+---
+>     def __init__(self, type_=ICMP_ECHO_REQUEST, code=0, csum=0, id=0, data=None):
+84a85
+>         self.id = id
+89,90c90,91
+<         (type_, code, csum) = struct.unpack_from(cls._PACK_STR, buf)
+<         msg = cls(type_, code, csum)
+---
+>         (type_, code, csum, id) = struct.unpack_from(cls._PACK_STR, buf)
+>         msg = cls(type_, code, csum, id)
+diff -r ryu/ofproto/ofproto_v1_2_parser.py ryu.daoli/ofproto/ofproto_v1_2_parser.py
+3271a3272
+>         self.icmpv4_id = 0
+diff -r ryu/ofproto/ofproto_v1_2.py ryu.daoli/ofproto/ofproto_v1_2.py
+838a839
+>     oxm_fields.OpenFlowBasic('icmpv4_id', 43, type_desc.Int2),
