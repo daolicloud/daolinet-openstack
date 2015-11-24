@@ -61,3 +61,5 @@ The packetin lifted to the Controller contains sufficient network metadata: sour
 The above pair of flows uniquely define a session of connection between C1 and C2 irrespective of the locations of C1 and C2. Let's analyse the following two cases. Case 1: C1 and C2 being in the same Docker host (Server1 = Server2), the pair of flows are MAC address defined. Case 2: C1 and C2 being in different Docker hosts (Server1 =\= Server2), the flow for Server1 is NAT-out, and that for Server2 is NAT-in, and both flows are identified by the src port number of C1, which is a randum number created by C1. We also notice that there is no need for C1 and C2 being in the same subnet, this is because the OVS-es form distributed and ubiquitous routers in every Docker host!
 
 NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be on-the-fly established by the Controller.
+
+**Checkout our website**: http://www.daolicloud.com/html/technology.html
