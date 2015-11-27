@@ -6,11 +6,11 @@ DaoliNet is a Software Defined Networking (SDN) system that is designed for ligh
 Top-Level Features
 ------------------
 
-* Namespace-based lightweight partition of the physical network resource on X86 servers, just like Docker's lightweight namespace partition for the CPU resource on X86 servers.
+* Lightweight and highly efficient virtualization of the network resource on X86 servers, just like Docker's lightweight and highly efficient partition of the CPU resource on X86 servers.
 
-* That Docker containers are connected to form VPCs (Virtual Private Clouds) and security groups takes place in user space without any server configurations. Thus scale-out distribution of Docker servers has a plug-and-play "for dummies" simplicity.
+* Docker containers are connected to form VPCs (Virtual Private Clouds) and security groups without any pre-configuration of the participating Docker hosts. Any Docker host has no knowledge of containers in other Docker hosts. Thus scale-out deployment of Docker hosts has a plug-and-play "for dummies" simplicity.
 
-* VPCs and security groups are strictly isolated one another without server hosts being pre-setup "networking hypervisors", e.g., VLAN, VXLAN, GRE, iptables, etc. This unique feature of DaoliNet not only greatly saves server CPUs, just like Docker saving server CPUs by avoiding hypervisors, but also more importantly: since servers are network-knowledge-less, containers forming a VPC are freely and dynamically distributed to scale-out span over different servers, datacenters, or even behind different firewalls, irrespective of their location.
+* Overlay network of containers is constructed without using packet encapsulation technologies such as VLAN, VXLAN, GRE, etc. This unique feature of DaoliNet not only greatly saves server resources, just like Docker saving server CPUs without using hypervisors, but also more importantly simplifies cloud management: an overlay network of containers can be constructed in user-mode and hot-plug manner, can span over different Docker hosts, datacenters, or even behind different firewalls, irrespective of the locations of the containers.
 
 * Pure software implementation, completely distributed over any underlying physical network, high avalability by plug-and-play adding redundant and network-knowledge-less servers.
 
