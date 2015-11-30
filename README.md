@@ -12,7 +12,7 @@ Top-Level Features
 
 * Overlay network of containers is constructed without using packet encapsulation technologies such as VLAN, VXLAN, GRE, etc. This unique feature of DaoliNet not only greatly saves server resource, just as Docker saves server resource without using hypervisors, but also more importantly simplifies cloud management: an overlay network of containers can be constructed in user-mode and hot-plug manner, can span over different Docker hosts, datacenters, or even behind different firewalls, irrespective of locations of the containers.
 
-* Pure software implementation, completely distributed over any underlying physical network, high avalability by plug-and-play adding redundant and network-knowledge-less servers.
+* Pure software implementation, with high availability distribution over any underlying physical network, and plug-and-play easy adding servers to the resource pool.
 
 
 **Checkout our website**:  http://www.daolicloud.com
@@ -22,15 +22,15 @@ Top-Level Features
 Docker Networking
 =================
 
-Docker is awesome! It is a container engine to virtualize server CPUs much more efficient than a hypervisor does with virtual machines (VMs). A Docker host can partition an X86 server into thousands of containers. Containers are playing more and more roles in cloud computing in places of VMs. However, because a Docker host is created independently without knowledge of other Docker hosts and containers within, containers in different Docker hosts by default are not connected one another. We need an efficient and lightweight network solution to connect containers which are distributed in multiple Docker hosts.
+Docker is awesome! It is a container engine to virtualize server CPUs much more efficient than a hypervisor does for virtual machines (VMs). A Docker host can partition an X86 server into thousands of containers. Containers are playing more and more roles in cloud computing in places of VMs. However, because each Docker host is created independently one another, containers in different Docker hosts by default are not connected one another. We need an efficient and lightweight network solution to connect containers which are distributed in multiple Docker hosts.
 
 Existing Solutions
 ------------------
 
-There exists a number of offers for the Docker networking: Weave, Flannel, Libnetwork, and Colico are open source projects on Docker networking. These offers seemingly share a common requirement: Each Docker host participating in a cloud must know the network topology of all containers in the cloud. E.g, Weave and Colico require that containers have external IP addresses which are visible from outside of their Docker host; Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel overlay container packets inbetween different Doker hosts. However, a Docker host is created independently without knowledge of other Doker hosts, requiring Docker hosts to know the network information of containers in other Docker hosts will greatly complicates cloud management. In fact, the simplest and preferred network mode for Docker is Network Address Translation (NAT) in which containers in a Docker host do not have externally visible IP addresses; when they communicate with outside world, the Docker host will use its own IP address to NAT translate the internal IP addresses of containers. DaoliNet adopts this simple network mode without providing externally visible IP addresses to containers.
+There exists a number of offers for the Docker networking: Weave, Flannel, Libnetwork, and Colico are open source projects on Docker networking. Some of these offers require that each Docker host participating in a cloud must know the network topology of all containers in the cloud; e.g, Colico requires that containers have external IP addresses which are visible from outside of their Docker host; others require that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel overlay container packets inbetween different Doker hosts (e.g., Flannel). However, Docker hosts are created independently from each other, requiring Docker hosts to know the network information of containers in all other Docker hosts will complicate cloud management. Also packet encapsulation is similar to running a "networking hypervisor" which is somewhat against the lightweight nature of Docker. In fact, the simplest and preferred network mode for Docker is Network Address Translation (NAT) in which containers in a Docker host do not have externally visible IP addresses; when they communicate with outside world, the Docker host will use its own IP address to NAT translate the internal IP addresses of containers. DaoliNet adopts this simple network mode without having to assign externally visible IP addresses to containers. Also DaoliNet uses no heavyweight packet encapsulation or "networking hypervisor" method.
 
 How DaoliNet Works
-============
+==================
 
 DaoliNet Network Virtualization
 -------------------------------
@@ -42,7 +42,7 @@ Openflow Controller
 
 This is a set of distributed web service agents. They receive a "PacketIn" request from a Decker host and reply a "PacketOut" response to the requesting host. A packetin request is a normal network packet that a Docker host receives from a container but does not know how to process switching/routing/gateway-in-out/firewall-in-out, due to lack of configuration intelligence. A packetout response from the Controller is a flow which configures in real time the packetin host to turn it into intelligent for forwarding packets.
 
-Servers as Networking Boxes: Distributed Switches, Routers, and Gateways
+Servers as Networking Boxes for Distributed Switches, Routers, Gateways, and Firewalls
 ---------------------------
 
 The DaoliNet uses standard X86 servers running Linux kernel with Open-v-Switch (OVS) as networking forwarding devices. When joining a cloud resource pool, a server has no any networking confirguration information apart from only knowing the IP addresses of the Openflow Controllers. This means that the Docker hosts joining a cloud resource pool are completely independent of one another, having no whatever knowledge of one another at all. Once real-time configured by the Controller, a Docker host becomes intelligent to forward packets in various network functions, e.g., switching (L2), routing (L3) and gateway-ing (L4: NAT-in-out, Firewall-in-out), and can also form security groups for a cloud tenant, and handle load balancing at the edge of a cloud network.
