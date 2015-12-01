@@ -1,0 +1,31 @@
+from django.conf import settings
+#from django.contrib.auth.models import AnonymousUser
+
+from openstack_auth.user import User as BaseUser
+from horizon import exceptions
+
+
+#class User(AnonymousUser):
+class User(BaseUser):
+
+    def __init__(self, project_id='admin', project_name='admin', user_domain_name=None,
+                 is_superuser=True, services_region=None):
+        self.id = getattr(settings, 'ADMIN_TOKEN')
+        if not self.id:
+            raise exceptions.NotAuthorized("Token not authorized")
+        self.project_id = project_id
+        self.project_name = project_name
+        self.user_domain_name = user_domain_name
+        self.is_superuser = is_superuser
+        self.available_services_regions = []
+        self.services_region = services_region
+
+    def is_authenticated(self):
+        return self.id
+
+    @property
+    def token(self):
+        class Token:
+            def __init__(self, id):
+                self.id = id
+        return Token(self.id)

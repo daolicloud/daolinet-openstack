@@ -1,0 +1,22 @@
+<div style="max-height:69px; overflow-y:auto">
+<table class="table table-bordered table-striped" style="margin:0;padding:0;margin-left:-2px;">
+  {% if members %}
+  <thead>
+    <tr>
+      <th>Instance Name</th>
+      <th>Instance Address</th>
+    </tr>
+  </thead>
+  {% endif %}
+  <tbody>
+  {% for member in members %}
+    <tr>
+    {% if member.instance %}
+      <td>{{ member.instance.name}}</td>
+      <td>{% include "project/instances/_instance_ips.html" with ip_groups=member.instance.ip_groups%}</td>
+    {% endif %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>

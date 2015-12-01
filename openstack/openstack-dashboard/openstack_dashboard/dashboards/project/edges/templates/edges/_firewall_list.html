@@ -1,0 +1,22 @@
+<div style="max-height:69px; overflow-y:auto">
+<table class="table table-bordered table-striped" style="margin:0;padding:0;margin-left:-2px;">
+  {% if firewall %}
+  <thead>
+    <tr>
+      <th>Gateway Address</th>
+      <th>Gateway Port</th>
+      <th>Service Port</th>
+    </tr>
+  </thead>
+  {% endif %}
+  <tbody>
+  {% for f in firewall %}
+    <tr>
+      <td>{{ f.gateway_ip }}</td>
+      <td>{{ f.gateway_port }}</td>
+      <td>{{ f.service_port }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>

@@ -1,0 +1,35 @@
+{% extends "horizon/client_side/template.html" %}
+{% load i18n %}
+{% load horizon %}
+{% load url from future %}
+
+{% block id %}tip_template{% endblock %}
+{% block template %}{% spaceless %}{% jstemplate %}
+<table class='table table-bordered'>
+  <tr><th>{% trans 'Name' %}</th><td>[[name]]</td></tr>
+  <tr><th>{% trans 'Address' %}</th><td>[[address]]</td></tr>
+  <tr><th>{% trans 'Data Center' %}</th><td>[[zone]]</td></tr>
+  <tr><th>{% trans 'Status' %}</th><td>[[status]]</td></tr>
+</table>
+<div>Firewall Details:</div>
+<table class='table table-bordered'>
+  [[#firewalls]]
+  <tr><th>{% trans 'Gateway Address' %}</th><th>{% trans 'Gateway Port' %}</th><th>{% trans 'Service Port' %}</th></tr>
+  <tr><td>[[gateway_ip]]</td><td>[[gateway_port]]</td><td>[[service_port]]</td></tr>
+  [[/firewalls]]
+  [[^firewalls]]
+  <tr><th><a id="instances__row_[[id]]__action_edit" class="btn btn-default btn-sm ajax-modal btn-edit" href="{% url 'horizon:project:edges:index' %}[[id]]">Add Firewall</a></th></tr>
+  [[/firewalls]]
+</table>
+<div>
+  <form method='POST' action="{% url 'horizon:project:instances:index' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{% url 'horizon:project:vpcs:index' %}" />
+    <div class="btn-group">
+    <button id='instances__row_[[id]]__action_start' class='btn btn-default btn-sm btn-confirm' type='submit' value='instances__start__[[id]]' name='action' help_text='This action cannot be undone.'[[^_start]] disabled="disabled"[[/_start]]>Start</button>
+    <button id='instances__row_[[id]]__action_stop' class='btn btn-default btn-sm btn-confirm' type='submit' value='instances__stop__[[id]]' name='action' help_text='The instance(s) will be shut off.'[[^_stop]] disabled="disabled"[[/_stop]]>Stop</button>
+    <button id='instances__row_[[id]]__action_terminate' class='btn btn-default btn-sm btn-confirm' type='submit' value='instances__terminate__[[id]]' name='action' help_text='Terminated instances are not recoverable.'>Terminate</button>
+    </div>
+  </form>
+</div>
+{% endjstemplate %}{% endspaceless %}{% endblock %}

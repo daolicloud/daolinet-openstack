@@ -1,0 +1,51 @@
+{% load i18n %}
+
+<!--link type="text/css" href="{{STATIC_URL}}daoli/jquery-ui-1.8.16.custom.css" rel="stylesheet" /-->
+<div class="draw">
+    <div id="tool" style="margin-bottom:12px">
+        <i><button id="cursor" title="{% trans "Pointer " %}"></button></i>
+        <i><button id='scissor' title="{% trans "Cut" %}"></button></i>
+        <i><button id='line' title="{% trans "Connect" %}"></button></i>
+        <span class="separate_line" style="display:none"></span>
+        {% for image in vm_images %}
+        <i>
+          <div class="tool_{{ image.type }} gui_drag ajax-modal" image_id="{{ image.id }}"  image_name="{{ image.name }}" image_type="{{ image.type }}" image_category="{{ image.category }}" href="{% url 'horizon:project:instances:launch' %}?source_id={{ image.id }}&source_type=image_id&next={% url 'horizon:project:vpcs:index' %}"></div>
+        </i>
+        {% endfor %}
+        <span class="separate_line"></span>
+        {% for image in container_images %}
+         <i>
+          <div class="tool_{{ image.type }} gui_drag ajax-modal" image_id="{{ image.id }}"  image_name="{{ image.name }}" image_type="{{ image.type }}" image_category="{{ image.category }}" href="{% url 'horizon:project:instances:launch' %}?source_id={{ image.id }}&source_type=image_id&next={% url 'horizon:project:vpcs:index' %}"></div>     
+          </i>
+        {% endfor %}
+
+        <i id="toolAce"></i>
+        <i id="toolTip"></i>
+    </div>
+
+    <div id="roll">
+        <div id="roll_button">
+            <div id="roll_buttonN" title="{% trans "Up" %}"></div>
+            <div id="roll_buttonW" title="{% trans "Left" %}"></div>
+            <div id="roll_buttonE" title="{% trans "Right" %}"></div>
+            <div id="roll_buttonS" title="{% trans "Down" %}"></div>
+        </div>
+
+        <div id="roll_slider">
+            <div id="slider_plus"></div>
+            <div id="slider" class="slider_center"></div>
+            <div id="slider_minus"></div>
+        </div>
+    </div>
+
+    <div id="play" class="playShow"></div>
+</div>
+<a href="#" id="vpc_details_tip" class="link-popover" style="position: absolute; display: none" rel="popover" tabindex="0" data-trigger="focus" data-content="" data-original-title=""></a>
+
+<!--div id="gui_model"></div-->
+<div id="gui_loading"></div>
+<!--script src='{{ STATIC_URL }}daoli/js/jquery.cookie.js' type="text/javascript"></script-->
+{% include "project/vpcs/_tip.html" %}
+
+<link type='text/css' href='{{ STATIC_URL }}daoli/css/gui.css' media='screen' rel='stylesheet' />
+<script type="text/javascript" src="{{ STATIC_URL }}daoli/js/gui.js"></script>

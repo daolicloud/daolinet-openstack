@@ -1,0 +1,22 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block form_id %}edit_firewall_form{% endblock %}
+{% block form_action %}{% url "horizon:project:edges:update" instance_id %}{% endblock %}
+{% block form_class %}{{ block.super }} horizontal{% endblock %}
+
+{% block modal_id %}edit_firewall_modal{% endblock %}
+{% block modal-header %}{% trans "Manager Firewall Rules" %}{% endblock %}
+
+{% block modal-body %}
+  <h3>{% trans "Rule" %}</h3>
+  <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+  </fieldset>
+{% endblock %}
+
+{% block modal-footer %}
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Add Firewall" %}" />
+  <a href="{% url "horizon:project:edges:index" %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
+{% endblock %}
