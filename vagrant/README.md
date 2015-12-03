@@ -3,7 +3,7 @@ Quick Start
 
 Prerequisites:
 --------------
-On the host, equivalent or greater:
+On the host, equivalent or greater: 
 VirtualBox 4.3.32 or greater
 Vagrant 1.7.4
 
@@ -32,6 +32,8 @@ In current directory.
 $ vagrant up
 $ ./pre.sh
 $ vagrant ssh
+
+Visit our system by 10.10.10.10 or 192.168.10.10.
 
 Delete：
 --------
