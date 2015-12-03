@@ -10,6 +10,11 @@ Vagrant 1.7.4
 Running:
 --------
 In current directory.
+$ vagrant up
 $ ./pre.sh
 $ vagrant ssh
 
+Delete：
+--------
+In current directory.
+$ vagrant destroy
