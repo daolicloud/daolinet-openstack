@@ -36,6 +36,6 @@ $ vagrant ssh
 Visit our system by 10.10.10.10 or 192.168.10.10.
 
 Delete：
---------
+-------
 In current directory. 
 $ vagrant destroy
