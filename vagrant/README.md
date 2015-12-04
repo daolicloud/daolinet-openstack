@@ -10,10 +10,10 @@ On the host, equivalent or greater:
 Installation:
 -------------
 Before install the Virtualbox, these tools are necessary:
-$ sudo yum install -y kernel-devel kernel-headers kernel gcc
+% sudo yum install -y kernel-devel kernel-headers kernel gcc
 
 Reboot your machine:
-$ sudo reboot
+`% sudo reboot
 
 
 Get the public-yum repo file of Virtualbox:
@@ -32,13 +32,13 @@ e.g. $ sudo rpm -ivh https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4_
 Running:
 --------
 In current directory.
-$ vagrant up
-$ ./pre.sh
-$ vagrant ssh
+`% vagrant up
+`% ./pre.sh
+`% vagrant ssh
 
 Visit our system by 10.10.10.10 or 192.168.10.10.
 
 Delete：
 -------
 In current directory. 
-$ vagrant destroy
+`% vagrant destroy
