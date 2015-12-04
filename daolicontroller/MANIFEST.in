@@ -1,0 +1,6 @@
+include LICENSE
+exclude .gitignore
+exclude .gitreview
+
+global-exclude *~
+global-exclude *.pyc
