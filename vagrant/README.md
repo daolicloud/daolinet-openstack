@@ -7,8 +7,8 @@ On the host, equivalent or greater:
 * VirtualBox 4.3.32 or greater
 * Vagrant 1.7.4
 
-Installation:
--------------
+Installation Requirements:
+--------------------------
 Before install the Virtualbox, these tools are necessary:
 
     % sudo yum install -y kernel-devel kernel-headers kernel gcc
@@ -17,7 +17,7 @@ Reboot your machine:
 
     % sudo reboot
 
-Get the public-yum repo file of Virtualbox:
+Get Virtualbox repo:
 
     % wget -P /etc/yum.repos.d http://download.virtualbox.org/virtualbox/rpm/{distro}/virtualbox.repo
   
@@ -44,7 +44,7 @@ In current directory.
 
 Visit our system by 10.10.10.10.
 
-Delete：
+Deleting:
 -------
 In current directory. 
 
