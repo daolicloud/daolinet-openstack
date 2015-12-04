@@ -38,7 +38,6 @@ Running:
 --------
 In current directory.
 
-    % vagrant up
     % ./pre.sh
     % vagrant ssh
 

@@ -14,5 +14,5 @@ if [ "$?" -ne 0 ]; then
   iptables -t nat -I $IPTABLE
 fi
 
-vagrant box add base http://124.202.141.239/controller.box
+vagrant box add controller http://124.202.141.239/controller.box
 vagrant up
