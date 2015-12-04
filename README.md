@@ -15,7 +15,7 @@ Top-Level Features
 * Pure software implementation, with high availability distribution over any underlying physical network, and plug-and-play easy adding servers to the resource pool.
 
 
-**Checkout our website**:  http://www.daolicloud.com
+**More in our website**:  http://www.daolicloud.com
 
 ![DaoliNet Topology](http://www.daolicloud.com/static/topology.png)
 
@@ -62,6 +62,6 @@ The above pair of flows uniquely define a session of connection between C1 and C
 
 NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be on-the-fly established by the Controller.
 
-**Checkout our website**: http://www.daolicloud.com/html/technology.html
+**More in our website**: http://www.daolicloud.com/html/technology.html
 
 **SlideShare** http://www.slideshare.net/daolinetppt/daolinet-lightweight-and-simple-networking-for-docker
