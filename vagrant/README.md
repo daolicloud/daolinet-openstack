@@ -25,10 +25,12 @@ Replace {distro} with your Linux distribution (eg: el for CentOS, rhel for Red H
 
 
 Install the Virtualbox:
+
 e.g. $ sudo yum install -y VirtualBox-5.0.x86_64
 
 
 Install the Vagrant:
+
 e.g. $ sudo rpm -ivh https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4_x86_64.rpm
 
 
