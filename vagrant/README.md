@@ -41,7 +41,7 @@ In current directory.
     % ./pre.sh
     % vagrant ssh
 
-Visit our system by 10.10.10.10.
+Visit our system by 10.10.10.10.The user id is admin, and the pwd is daolinet.
 
 Deleting:
 -------
