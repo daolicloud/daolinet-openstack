@@ -64,7 +64,7 @@ Case 1: C1 and C2 are in the same Docker host
 ---
 In this case, Server1 = Server2. The flow packet-out to the Docker Server is MAC address defined, i.e., a switch flow, very simple! (Notice that if Controller judges that C1 and C2 are not allowed to communicate, then it will not packet-out a mac flow to the Docker Server, and thereby C1 and C2 will not be able to communicate eventhough they are in the same Docker Server!)
 
-Case 2: C1 and C2 being in different Docker hosts:
+Case 2: C1 and C2 are in different Docker hosts:
 ---
 In this case, Server1 =\= Server2. Two flows will be packet-out to Server1 and Server2, respectively. The flow for Server1 is NAT-out, and that for Server2 is NAT-in, and both flows are identified by the src port number of C1. This port number is a randum number which is created by C1. With these two flows, C1 and C2 are connected. Notice that there is no need to encapsulate packets: with NAT, the packets travelling between the two Docker servers use the underlay IP addresses of the two servers, and the packets travelling between the containers and their respective hosting servers use the respective overlay IP addresses.
 
