@@ -1,12 +1,12 @@
 What's Ryu
 ==========
-Daolicontroller is a software defined networking openflow controller.
 
-Daoliagnet dependent on ryu.
+Ryu is an OpenFlow Controller which DaoliNet is based on. DaoliNet modified Ryu to suit its novel use.
+
+Daolicontroller is a software defined networking OpenFlow controller.
 
 All of the code is freely available under the Apache 2.0 license.
 Daolicontroller is fully written in Python.
-
 
 Quick Start
 ===========
