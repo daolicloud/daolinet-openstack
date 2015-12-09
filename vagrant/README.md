@@ -1,4 +1,4 @@
-Quick Start
+This page includes instructions for building your own demo system
 ===========
 
 Prerequisites:
@@ -6,6 +6,7 @@ Prerequisites:
 On the host, equivalent or greater: 
 * VirtualBox 4.3.32 or greater
 * Vagrant 1.7.4
+* In order to run this demo smoothly, you should have 4-core CPU with 4G RAM
 
 Installation Requirements:
 --------------------------
