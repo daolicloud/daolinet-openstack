@@ -72,7 +72,7 @@ We also notice that in both cases, there is no need for C1 and C2 to be in the s
 
 Distributed Gateways
 ---
-NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be on-the-fly established by the Controller.
+NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be hotplug established by the Controller.
 
 **More in our website**: http://www.daolicloud.com/html/technology.html
 
