@@ -58,8 +58,20 @@ When a container (say C1 in the figure below) initiates a communication session 
 
 The packetin lifted to the Controller contains sufficient network metadata: source MAC and IP addresses of C1, destination MAC and IP addresses of C2, plus those of Server1 and Server2. Suppose that the Controller judges from security policy that C1 and C2 can legally communicate, it will respond to Server1 with packeout (PacketOut1), which is a flow sent to Server1 to real-time configure the server. In addition, the Controller will also send a corresponding flow to Server2 as a real-time configuration (PacketOut2). Upon receipt the respective flows by Server1 and Server2, the OVS-es in these two Docker hosts become knowing how to forward the packets, and the Controller will not be contacted any more for the remainder communications session.
 
-The above pair of flows uniquely define a session of connection between C1 and C2 irrespective of the locations of C1 and C2. Let's analyse the following two cases. Case 1: C1 and C2 being in the same Docker host (Server1 = Server2), the pair of flows are MAC address defined. Case 2: C1 and C2 being in different Docker hosts (Server1 =\= Server2), the flow for Server1 is NAT-out, and that for Server2 is NAT-in, and both flows are identified by the src port number of C1, which is a randum number created by C1. We also notice that there is no need for C1 and C2 being in the same subnet, this is because the OVS-es form distributed and ubiquitous routers in every Docker host!
+The above pair of flows uniquely define a session of connection between C1 and C2 irrespective of the locations of C1 and C2. Let's analyse the following two cases:
 
+Case 1: C1 and C2 are in the same Docker host
+---
+In this case, Server1 = Server2. The flow packet-out to the Docker Server is MAC address defined, i.e., a switch flow, very simple! (Notice that if Controller judges that C1 and C2 are not allowed to communicate, then it will not packet-out a mac flow to the Docker Server, and thereby C1 and C2 will not be able to communicate eventhough they are in the same Docker Server!)
+
+Case 2: C1 and C2 being in different Docker hosts:
+---
+In this case, Server1 =\= Server2. Two flows will be packet-out to Server1 and Server2, respectively. The flow for Server1 is NAT-out, and that for Server2 is NAT-in, and both flows are identified by the src port number of C1. This port number is a randum number which is created by C1. With these two flows, C1 and C2 are connected. Notice that there is no need to encapsulate packets: with NAT, the packets travelling between the two Docker servers use the underlay IP addresses of the two servers, and the packets travelling between the containers and their respective hosting servers use the respective overlay IP addresses.
+
+We also notice that in both cases, there is no need for C1 and C2 to be in the same subnet. This is because the OVS-es form distributed and ubiquitous routers in every Docker host!
+
+Distributed Gateways
+---
 NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be on-the-fly established by the Controller.
 
 **More in our website**: http://www.daolicloud.com/html/technology.html
