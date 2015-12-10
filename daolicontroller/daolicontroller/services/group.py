@@ -50,8 +50,8 @@ class PacketGroup(PacketBase):
         reverse_ports = self.reverse_normal_ports
 
         if gateway.ext_dev != gateway.int_dev:
-            redirect_ports += self.gateway_ports
-            reverse_ports += self.reverse_gateway_ports
+            redirect_ports |= self.gateway_ports
+            reverse_ports |= self.reverse_gateway_ports
 
         for port in redirect_ports:
             self.setup(dp, server_port.port_no, ofp_out(ofp.OFPP_LOCAL),

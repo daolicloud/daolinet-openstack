@@ -177,10 +177,7 @@ class PacketLib(db_base.Base):
         gateway = self.gateway_get(dp.id)
 
         if gateway is not None and gateway.idc_id == CONF.idc_id:
-            try:
-                self.packet_group.init_flow(dp, gateway)
-            except Exception as e:
-                LOG.error(e)
+            self.packet_group.init_flow(dp, gateway)
 
     def group_delete(self, sid, did):
         src = self.db.server_get(sid)
