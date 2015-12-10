@@ -42,10 +42,10 @@ Openflow Controller
 
 This is a set of distributed web service agents. They receive a "PacketIn" request from a Decker host and reply a "PacketOut" response to the requesting host. A packetin request is a normal network packet that a Docker host receives from a container but does not know how to process switching/routing/gateway-in-out/firewall-in-out, due to lack of configuration intelligence. A packetout response from the Controller is a flow which configures in real time the packetin host to turn it into intelligent for forwarding packets.
 
-Servers as Networking Boxes for Distributed Switches, Routers, Gateways, and Firewalls
+Servers Playing the Roles of Network Devices
 ---------------------------
 
-The DaoliNet uses standard X86 servers running Linux kernel with Open-v-Switch (OVS) as networking forwarding devices. When joining a cloud resource pool, a server has no any networking confirguration information apart from only knowing the IP addresses of the Openflow Controllers. This means that the Docker hosts joining a cloud resource pool are completely independent of one another, having no whatever knowledge of one another at all. Once real-time configured by the Controller, a Docker host becomes intelligent to forward packets in various network functions, e.g., switching (L2), routing (L3) and gateway-ing (L4: NAT-in-out, Firewall-in-out), and can also form security groups for a cloud tenant, and handle load balancing at the edge of a cloud network.
+The DaoliNet uses standard X86 servers running Linux kernel with Open-v-Switch (OVS) as networking forwarding devices. When joining a cloud resource pool, a server has no any networking confirguration information apart from only knowing the IP addresses of the Openflow Controllers. This means that the Docker hosts joining a cloud resource pool are completely independent of one another, having no whatever knowledge of one another at all. Once real-time configured by the Controller, a Docker host becomes intelligent to forward packets in various network functions, e.g., switching (L2), routing (L3) and gateway (L4: NAT-in-out, and Firewall), and can also form security groups for a cloud tenant, and handle load balance at the edge of a cloud network.
 
 Overlay Network for Distributed Containers
 ------
@@ -58,7 +58,7 @@ When a container (say C1 in the figure below) initiates a communication session 
 
 The packetin lifted to the Controller contains sufficient network metadata: source MAC and IP addresses of C1, destination MAC and IP addresses of C2, plus those of Server1 and Server2. Suppose that the Controller judges from security policy that C1 and C2 can legally communicate, it will respond to Server1 with packeout (PacketOut1), which is a flow sent to Server1 to real-time configure the server. In addition, the Controller will also send a corresponding flow to Server2 as a real-time configuration (PacketOut2). Upon receipt the respective flows by Server1 and Server2, the OVS-es in these two Docker hosts become knowing how to forward the packets, and the Controller will not be contacted any more for the remainder communications session.
 
-The above pair of flows uniquely define a session of connection between C1 and C2 irrespective of the locations of C1 and C2. Let's analyse the following two cases:
+The above pair of flows uniquely define a session of connection between C1 and C2 irrespective of their locations. Let's analyse the following two cases:
 
 Case 1: C1 and C2 are in the same Docker host
 ---
@@ -73,6 +73,11 @@ We also notice that in both cases, there is no need for C1 and C2 to be in the s
 Distributed Gateways
 ---
 NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be hotplug established by the Controller.
+
+No Need of Packet Encapsulation
+---
+Docker is a lightweight container engine. Networking for Docker containers should also be lightweight. In the DaoliNet method, the overlay network for distributed containers uses no packet encapsulation, such as VXLAN for Openstack Neutron, which is a little heavyweight and therefore gets a nick name of "networking hypervisor". Indeed, if an overlay network of containers is built using VXLAN, then not only container-container communications are encapsulated, but also firewal-in-out must go to a so-called virtual tunnel endpoint (vtep) to perform packet encapsulation/decapsulation. That is, the firewall for an overlay network of containers obviously forms a traffic chokepoint. DaoliNet uses NAT and src-port-number to isolate container overlay network, and thus avoids packet encapsulation, therefore firewall policy is distributed by the OpenFlow Controller to each Docker host (a NAT flow which is identified by the src-port-number of a request entity), i.e., firewall for an overlay network of containers is completely distributed to every Docker host which hosts the containers.
+
 
 **More in our website**: http://www.daolicloud.com/html/technology.html
 
