@@ -1,5 +1,5 @@
 This page includes instructions for building your own demo system
-===========
+=================================================================
 
 Prerequisites:
 --------------
@@ -43,9 +43,10 @@ In current directory.
     % vagrant ssh
 
 Visit our system by 10.10.10.10.The login id is "admin", login password is "daolinet", and the instance password is "daoli123".
+If you have restarted the instance, wait 30 seconds when testing it's connectivity.
 
 Deleting:
--------
+---------
 In current directory. 
 
     % vagrant destroy
