@@ -436,7 +436,7 @@ class PacketIPv4(PacketBase):
                     eth_type=ether.ETH_TYPE_IP,
                     eth_src=server.mac_address,
                     ip_proto=pkt_ipv4.proto,
-                    ipv4_src=servernstance.address,
+                    ipv4_src=server.address,
                     ipv4_dst=pkt_ipv4.src,
                     **output_kwargs)
 
