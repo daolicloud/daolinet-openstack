@@ -19,7 +19,7 @@ Top-Level Features
 
 ![](http://www.daolicloud.com/static/topology.png)
 
-***Figure 1, DaoliNet Topology***
+**Figure 1, DaoliNet Topology**
 
 Docker Networking
 =================
@@ -54,14 +54,14 @@ Overlay Network for Distributed Containers
 
 When a container is created in a Docker host server, its network medadata will be captured by DaoliNet Openflow Controller (below we use the Controller for short). The network metadata include: the container's MAC address, the container's IP address, the server's intranet MAC, the server's intranet IP, and the default gateway IP (the default gateway is the server). The Controller will also capture the security group information of the container, i.e., information about a group of containers belonging to one security group, which is specified by the owner of the containers.
 
-When a container (say C1 in the figure below) initiates a communication session to another container (C2), packets from C1 are received by the Docker host (Server1) for to forward to C2 (hosted by Server2). However, Server1 has no switching, routing, or gatewaying information for these packets. In Openflow standard, the OVS in Server1 will ask for help from the Controller by lifting the first packet to the Controller. This packet-lift-to-controller event is called packetin (see PacketIn1 in the figure below).
+When a container (say C1 in Figure 2 below) initiates a communication session to another container (C2), packets from C1 are received by the Docker host (Server1) for to forward to C2 (hosted by Server2). However, Server1 has no switching, routing, or gatewaying information for these packets. In Openflow standard, the OVS in Server1 will ask for help from the Controller by lifting the first packet to the Controller. This packet-lift-to-controller event is called packetin (see PacketIn1 in the figure below).
 
 ![](http://www.daolicloud.com/static/workflow.png)
 
-***Figure 2, NAT-NAT Flow***
+**Figure 2, NAT-NAT Flow**
 
 
-The packetin lifted to the Controller contains sufficient network metadata: source MAC and IP addresses of C1, destination MAC and IP addresses of C2, plus those of Server1 and Server2. Suppose that the Controller judges from security policy that C1 and C2 can legally communicate, it will respond to Server1 with packeout (PacketOut1), which is a flow sent to Server1 to real-time configure the server. In addition, the Controller will also send a corresponding flow to Server2 as a real-time configuration (PacketOut2). Upon receipt the respective flows by Server1 and Server2, the OVS-es in these two Docker hosts become knowing how to forward the packets, and the Controller will not be contacted any more for the remainder communications session.
+The packet-in to the Controller contains network metadata which suffice the Controller to judge whether or not two containers are allowed to communicate. The metadata include: src-MAC and src-IP of C1, dst-MAC and dst-IP of C2, plus those of Server1 and Server2. Suppose that the Controller judges from security group policy that C1 and C2 are allowed to communicate, it will respond to Server1 with packeout (PacketOut1), which is a flow sent to Server1 to real-time configure the server. In addition, the Controller will also send a corresponding flow to Server2 as a real-time configuration (PacketOut2). Upon receipt the respective flows by Server1 and Server2, the OVS-es in these Docker hosts become knowing how to forward the packets, and the Controller will not be contacted any more for the remainder communications session.
 
 The above pair of flows uniquely define a session of connection between C1 and C2 irrespective of their locations. Let's analyse the following two cases:
 
@@ -71,17 +71,23 @@ In this case, Server1 = Server2. The flow packet-out to the Docker Server is MAC
 
 Case 2: C1 and C2 are in different Docker hosts:
 ---
-In this case, Server1 =\= Server2. Two flows will be packet-out to Server1 and Server2, respectively. The flow for Server1 is NAT-out, and that for Server2 is NAT-in, and both flows are identified by the src port number of C1. This port number is a randum number which is created by C1. With these two flows, C1 and C2 are connected. Notice that there is no need to encapsulate packets: with NAT, the packets travelling between the two Docker servers use the underlay IP addresses of the two servers, and the packets travelling between the containers and their respective hosting servers use the respective overlay IP addresses.
+In this case, Server1 =\= Server2. Two flows will be packet-out to Server1 and Server2, respectively. The flow for Server1 is NAT-out, and that for Server2 is NAT-in. Notice that both NAT flows are identified by the src-PORT of the communications initiator, i.e., C1 in Figure 2. This src-PORT of C1 is a randum number created by C1. With these two flows, C1 and C2 are connected. With NAT flows, the packets travelling between the two Docker servers use the underlay IP addresses of the two servers, and the packets travelling between a container and its hosting server use overlay IP address of the container, respectively.
 
-We also notice that in both cases, there is no need for C1 and C2 to be in the same subnet. This is because the OVS-es form distributed and ubiquitous routers in every Docker host!
-
-Distributed Gateways
+OVS Forms Distributed Routers
 ---
-NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be hotplug established by the Controller.
+We notice that there is no need for the IP addresses of C1 and C2 to be in the same subnet. In the case of C1, C2 belonging to different subnets, the OVS-es form distributed and ubiquitous routers in every Docker host.
+
+OVS Forms Distributed Gateways
+---
+NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be hotplug established by the Controller as real-time packet-out configuration of NAT flows. Such a NAT flow is also identified by the src-PORT of the communications initiator.
+
+Network Virtualization
+---
+In DaoliNet, overlay network for distributed containers is virtualized for each pair of containers which are allowed to communicate according to security group policy. The communications initiator, e.g., C1 in Figure 2, upon initiation a communications session will cause its Docker host, e.g., Server1 in Figure 2, to packet-in the request to the Controller who upon seeing C1, C2 in the same security group will packet-out a pair of NAT-NAT flows to the respective Docker hosts. Containers in different security groups are network isolated from one another by different src-port numbers of the respective requestors. The Controller can see the relationship between a src-port number and the network identity in packet-in. 
 
 No Packet Encapsulation, No Firewall Chokepoint
 ---
-Docker is a lightweight container engine which deserves a lightweight networking for containers, too. In DaoliNet: overlay network for distributed containers is virtualized for each pair of containers which are allowed to communicate according to security group policy. The communications initiator, e.g., C1 in Figure 2, upon initiation a communications session will cause its Docker host, e.g., Server1 in Figure 2, to packet-in the request to the Controller who upon seeing C1, C2 in the same security group will packet-out a pair of NAT-NAT flows to the respective Docker hosts. Containers in different security groups are network isolated from one another by different src-port numbers of the respective requestors. The Controller can see the relationship between a src-port number and the network identity in packet-in. This is a lightweight method to isolate overlay network which uses no packet encapsulation for tunnel construction. Packet encapsulation, e.g., VXLAN (aka "network hypervisor") used in Openstack Neutron, is too heavyweight for constructing overlay network for containers. Let's look at the case of firewall for an overlay network constructed from packet encapsulation. Now firewal-in-out must be at a so-called virtual tunnel endpoint (vtep) where packet encapsulation/decapsulation are performed. Such vtep point forms a traffic chokepoint. Since DaoliNet does not use packet encapsulation, firewall policy is simply a NAT flow which the Controller sees between a pair of communications requestor and responder. With OVS being ubiquitously distributed in every Docker server, firewall policy for individual containers are also distributed to every Docker host which hosts the containers. Such real-time flow configuration based firewall has no chokepoint.
+Docker is a lightweight container engine which deserves a lightweight networking for containers, too. DaoliNet's NAT flow based connection between a pair of communications entities is a lightweight method to isolate overlay network. This lightweight network virtualization technique uses no packet encapsulation for tunnel construction. Packet encapsulation, e.g., VXLAN (aka "network hypervisor") used in Openstack Neutron, is too heavyweight for constructing overlay network for containers. Let's look at the case of firewall for an overlay network constructed from packet encapsulation. Now firewal-in-out must be at a so-called virtual tunnel endpoint (vtep) where packet encapsulation/decapsulation are performed. Such vtep point forms a traffic chokepoint. Since DaoliNet does not use packet encapsulation, firewall policy is simply a NAT flow which the Controller sees between a pair of communications requestor and responder. With OVS being ubiquitously distributed in every Docker server, firewall policy for individual containers are also distributed to every Docker host which hosts the containers. Such real-time flow configuration based firewall has no chokepoint.
 
 
 **More in our website**: http://www.daolicloud.com/html/technology.html
