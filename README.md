@@ -61,12 +61,10 @@ The packet-in to the Controller contains network metadata which suffice the Cont
 
 The above pair of flows uniquely define a session of connection between C1 and C2 irrespective of their locations. Let's analyse the following two cases:
 
-Case 1: C1 and C2 are in the same Docker host
----
+**Case 1: C1 and C2 are in the same Docker host**
 In this case, Server1 = Server2. There are two sub-cases. Sub-case 1: the IP addresses of C1 and C2 are in the same subnet. Then the flow packet-out to the Docker Server is MAC address defined, i.e., a switching flow, very simple! Notice that if Controller judges from the security group policy that C1 and C2 are not allowed to communicate, then it will not packet-out a mac flow to the Docker Server, and thereby C1 and C2 will not be able to communicate eventhough they are in the same Docker Server. Sub-case 2: The IP addresses of C1 and C2 are in different subnets. Then the flow packet-out to the Docker server is not only MAC defined, but also IP address defined, i.e., also a routing flow. In this case, the ovs linking the two containers also playing the role of a router.
 
-Case 2: C1 and C2 are in different Docker hosts:
----
+**Case 2: C1 and C2 are in different Docker hosts**
 In this case, Server1 =\= Server2. Two flows will be packet-out to Server1 and Server2, respectively. The flow for Server1 is NAT-out, and that for Server2 is NAT-in. Notice that both NAT flows are identified by the src-PORT of the communications initiator, i.e., C1 in Figure 2. This src-PORT of C1 is a randum number created by C1. With these two flows, C1 and C2 are connected. With NAT flows, the packets travelling between the two Docker servers use the underlay IP addresses of the two servers, and the packets travelling between a container and its hosting server use overlay IP address of the container, respectively.
 
 OVS Forms Distributed Routers
