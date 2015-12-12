@@ -79,7 +79,7 @@ We notice that there is no need for the IP addresses of C1 and C2 to be in the s
 
 OVS Forms Distributed Gateways
 ---
-NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be hotplug established by the Controller as real-time packet-out configuration of NAT flows. Such a NAT flow is also identified by the src-PORT of the communications initiator.
+NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be hotplug established by the Controller as real-time packet-out NAT flows. Such a NAT flow is also identified by src-PORT of a communications initiator.
 
 Network Virtualization
 ---
