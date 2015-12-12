@@ -13,7 +13,6 @@ Top-Level Features
 
 * Pure software implementation, with high availability distribution over any underlying physical network, and plug-and-play easy adding servers to the resource pool.
 
-
 **More in our website**:  http://www.daolicloud.com
 
 
@@ -52,6 +51,7 @@ When a container is created in a Docker host server, its network medadata will b
 
 When a container (say C1 in Figure 2 below) initiates a communication session to another container (C2), packets from C1 are received by the Docker host (Server1) for to forward to C2 (hosted by Server2). However, Server1 has no switching, routing, or gatewaying information for these packets. In Openflow standard, the OVS in Server1 will ask for help from the Controller by lifting the first packet to the Controller. This packet-lift-to-controller event is called packetin (see PacketIn1 in the figure below).
 
+
 ![](http://www.daolicloud.com/static/workflow.png)
 
 **Figure 2, NAT-NAT Flow**
@@ -63,7 +63,7 @@ The above pair of flows uniquely define a session of connection between C1 and C
 
 Case 1: C1 and C2 are in the same Docker host
 ---
-In this case, Server1 = Server2. The flow packet-out to the Docker Server is MAC address defined, i.e., a switch flow, very simple! (Notice that if Controller judges that C1 and C2 are not allowed to communicate, then it will not packet-out a mac flow to the Docker Server, and thereby C1 and C2 will not be able to communicate eventhough they are in the same Docker Server!)
+In this case, Server1 = Server2. There are two sub-cases. Sub-case 1: the IP addresses of C1 and C2 are in the same subnet. Then the flow packet-out to the Docker Server is MAC address defined, i.e., a switching flow, very simple! Notice that if Controller judges from the security group policy that C1 and C2 are not allowed to communicate, then it will not packet-out a mac flow to the Docker Server, and thereby C1 and C2 will not be able to communicate eventhough they are in the same Docker Server. Sub-case 2: The IP addresses of C1 and C2 are in different subnets. Then the flow packet-out to the Docker server is not only MAC defined, but also IP address defined, i.e., also a routing flow. In this case, the ovs linking the two containers also playing the role of a router.
 
 Case 2: C1 and C2 are in different Docker hosts:
 ---
@@ -71,11 +71,11 @@ In this case, Server1 =\= Server2. Two flows will be packet-out to Server1 and S
 
 OVS Forms Distributed Routers
 ---
-We notice that there is no need for the IP addresses of C1 and C2 to be in the same subnet. In the case of C1, C2 belonging to different subnets, the OVS-es form distributed and ubiquitous routers in every Docker host.
+We notice that there is no need for the IP addresses of C1 and C2 to be in the same subnet. In the case of C1, C2 belonging to different subnets, the OVS-es form distributed, ubiquitous and virtualized routers in every Docker host.
 
 OVS Forms Distributed Gateways
 ---
-NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be hotplug established by the Controller as real-time packet-out NAT flows. Such a NAT flow is also identified by src-PORT of a communications initiator.
+NAT-out from a container to a node in the Internet, and Firewall-ingress from an Internet node to a container can also be hotplug established by the Controller as real-time packet-out NAT flows. Such a NAT flow is also identified by src-PORT of a communications initiator. The distributed gateways are reflected in Figure 1 as the Internet connections for each Docker host server.
 
 Lightweight Network Virtualization, No Packet Encapsulation
 ---
