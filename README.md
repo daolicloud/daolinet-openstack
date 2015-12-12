@@ -17,7 +17,7 @@ Top-Level Features
 
 **More in our website**:  http://www.daolicloud.com
 
-![DaoliNet Topology](http://www.daolicloud.com/static/topology.png)
+[Figure 1, DaoliNet Topology](http://www.daolicloud.com/static/topology.png)
 
 Docker Networking
 =================
@@ -54,7 +54,7 @@ When a container is created in a Docker host server, its network medadata will b
 
 When a container (say C1 in the figure below) initiates a communication session to another container (C2), packets from C1 are received by the Docker host (Server1) for to forward to C2 (hosted by Server2). However, Server1 has no switching, routing, or gatewaying information for these packets. In Openflow standard, the OVS in Server1 will ask for help from the Controller by lifting the first packet to the Controller. This packet-lift-to-controller event is called packetin (see PacketIn1 in the figure below).
 
-![Workflow](http://www.daolicloud.com/static/workflow.png)
+[Figure 2, NAT-NAT Flow](http://www.daolicloud.com/static/workflow.png)
 
 The packetin lifted to the Controller contains sufficient network metadata: source MAC and IP addresses of C1, destination MAC and IP addresses of C2, plus those of Server1 and Server2. Suppose that the Controller judges from security policy that C1 and C2 can legally communicate, it will respond to Server1 with packeout (PacketOut1), which is a flow sent to Server1 to real-time configure the server. In addition, the Controller will also send a corresponding flow to Server2 as a real-time configuration (PacketOut2). Upon receipt the respective flows by Server1 and Server2, the OVS-es in these two Docker hosts become knowing how to forward the packets, and the Controller will not be contacted any more for the remainder communications session.
 
@@ -76,7 +76,7 @@ NAT-out from a container to a node in the Internet, and Firewall-ingress from an
 
 No Packet Encapsulation, No Firewall Chokepoint
 ---
-Docker is a lightweight container engine. Networking for Docker containers should also be lightweight. In DaoliNet: overlay network for distributed containers is virtualized using a pair of NAT-NAT flows which are real-time configured by the Controller. Different security groups are isolated from one another by different src-port numbers of communications requestors; the Controller sees the relationship between a src-port number and the network identity in the time of packet-in. This lightweight method for isolation of overlay network uses no packet encapsulation nor tunnel technique. Packet encapsulation, such as VXLAN (aka "networking hypervisor") used in Openstack Neutron, is too heavyweight for containers. Let's look at the case of firewall for an overlay network which is constructed from packet encapsulation. Now firewal-in-out must be at a so-called virtual tunnel endpoint (vtep) where packet encapsulation/decapsulation are performed. Such vtep point forms a traffic chokepoint. Since DaoliNet does not use packet encapsulation, firewall policy is simply a NAT flow which the Controller sees between a pair of communications requestor and responder. With OVS ubiquitously distributed in every Docker server, firewall policy for containers are distributed to every Docker host which hosts the containers. Such real-time flow configuration based firewall has no chokepoint.
+Docker is a lightweight container engine which deserves a lightweight networking for containers, too. In DaoliNet: overlay network for distributed containers is virtualized for each pair of containers which are allowed to communicate according to security group policy. The communications initiator, e.g., C1 in Figure 2, upon initiation a communications session will cause its Docker host, e.g., Server1 in Figure 2, to packet-in the request to the Controller who upon seeing C1, C2 in the same security group will packet-out a pair of NAT-NAT flows to the respective Docker hosts. Containers in different security groups are network isolated from one another by different src-port numbers of the respective requestors. The Controller can see the relationship between a src-port number and the network identity in packet-in. This is a lightweight method to isolate overlay network which uses no packet encapsulation for tunnel construction. Packet encapsulation, e.g., VXLAN (aka "network hypervisor") used in Openstack Neutron, is too heavyweight for constructing overlay network for containers. Let's look at the case of firewall for an overlay network constructed from packet encapsulation. Now firewal-in-out must be at a so-called virtual tunnel endpoint (vtep) where packet encapsulation/decapsulation are performed. Such vtep point forms a traffic chokepoint. Since DaoliNet does not use packet encapsulation, firewall policy is simply a NAT flow which the Controller sees between a pair of communications requestor and responder. With OVS being ubiquitously distributed in every Docker server, firewall policy for individual containers are also distributed to every Docker host which hosts the containers. Such real-time flow configuration based firewall has no chokepoint.
 
 
 **More in our website**: http://www.daolicloud.com/html/technology.html
