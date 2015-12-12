@@ -5,16 +5,16 @@ DaoliNet is a Software Defined Networking (SDN) system that is designed for ligh
 
 Top-Level Features
 ------------------
-* Lightweight and highly efficient virtualization of the network resource on X86 servers, just like Docker's lightweight and highly efficient partition of the CPU resource on X86 servers.
+* Lightweight and highly efficient virtualization of network resource on X86 servers, just like Docker's lightweight and highly efficient partition of CPU resource on X86 servers.
 
 * Docker containers are connected to form VPCs (Virtual Private Clouds) and security groups without any pre-configuration of the participating Docker hosts. Any Docker host has no knowledge of containers in other Docker hosts. Thus scale-out deployment of Docker hosts has a plug-and-play "for dummies" simplicity.
 
-* Overlay network of containers is constructed without using packet encapsulation technologies such as VLAN, VXLAN, GRE, etc. This unique feature of DaoliNet not only greatly saves server resource, just as Docker saves server resource without using hypervisors, but also more importantly simplifies cloud management: an overlay network of containers can be constructed in user-mode and hot-plug manner, can span over different Docker hosts, datacenters, or even behind different firewalls, irrespective of locations of the containers.
+* Overlay network of containers is constructed without using packet encapsulation such as VLAN, VXLAN, GRE, etc. This unique feature of DaoliNet not only greatly saves server resource, just as Docker saves server resource without using hypervisors, but also more importantly simplifies cloud management: an overlay network of containers can be constructed in hot-plug manner, and can span over different Docker hosts, datacenters, or even behind different firewalls, irrespective of locations of the containers.
 
 * Pure software implementation, with high availability distribution over any underlying physical network, and plug-and-play easy adding servers to the resource pool.
 
 **More in our website**:  http://www.daolicloud.com
-
+ 
 
 ![](http://www.daolicloud.com/static/topology.png)
 
@@ -50,7 +50,7 @@ Overlay Network for Distributed Containers
 When a container is created in a Docker host server, its network medadata will be captured by DaoliNet Openflow Controller (below we use the Controller for short). The network metadata include: the container's MAC address, the container's IP address, the server's intranet MAC, the server's intranet IP, and the default gateway IP (the default gateway is the server). The Controller will also capture the security group information of the container, i.e., information about a group of containers belonging to one security group, which is specified by the owner of the containers.
 
 When a container (say C1 in Figure 2 below) initiates a communication session to another container (C2), packets from C1 are received by the Docker host (Server1) for to forward to C2 (hosted by Server2). However, Server1 has no switching, routing, or gatewaying information for these packets. In Openflow standard, the OVS in Server1 will ask for help from the Controller by lifting the first packet to the Controller. This packet-lift-to-controller event is called packetin (see PacketIn1 in the figure below).
-
+ 
 
 ![](http://www.daolicloud.com/static/workflow.png)
 
