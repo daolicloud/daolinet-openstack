@@ -19,7 +19,7 @@ Top-Level Features
 
 ![](http://www.daolicloud.com/static/topology.png)
 
-*Figure 1, DaoliNet Topology*
+***Figure 1, DaoliNet Topology***
 
 Docker Networking
 =================
@@ -58,7 +58,7 @@ When a container (say C1 in the figure below) initiates a communication session 
 
 ![](http://www.daolicloud.com/static/workflow.png)
 
-*Figure 2, NAT-NAT Flow*
+***Figure 2, NAT-NAT Flow***
 
 
 The packetin lifted to the Controller contains sufficient network metadata: source MAC and IP addresses of C1, destination MAC and IP addresses of C2, plus those of Server1 and Server2. Suppose that the Controller judges from security policy that C1 and C2 can legally communicate, it will respond to Server1 with packeout (PacketOut1), which is a flow sent to Server1 to real-time configure the server. In addition, the Controller will also send a corresponding flow to Server2 as a real-time configuration (PacketOut2). Upon receipt the respective flows by Server1 and Server2, the OVS-es in these two Docker hosts become knowing how to forward the packets, and the Controller will not be contacted any more for the remainder communications session.
