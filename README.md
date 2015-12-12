@@ -85,7 +85,7 @@ Docker is a lightweight container engine and deserves an also lightweight networ
 
 No Firewall Chokepoint
 ---
-If an overlay network is constructed from a packet encapsulation technique, then firewal-in-out must be at a so-called virtual tunnel endpoint (vtep) where packet encapsulation/decapsulation are performed. Such vtep point forms a traffic chokepoint. Since DaoliNet does not use packet encapsulation, firewall policy is simply a NAT flow which the Controller sees between a pair of communications requestor and responder. With OVS being ubiquitously distributed in every Docker server, firewall policy for every individual container is also ubiquitously distributed to every Docker host which hosts the container. Such distributed firewall has no chokepoint.
+If an overlay network is constructed from a packet encapsulation technique, then firewal-in-out must be at a so-called virtual tunnel endpoint (vtep) where packet encapsulation (for firewall ingress direction), and packet decapsulation (for firewall egress direction), are processed. Obviously, such vtep points form a traffic chokepoint. Since DaoliNet does not use packet encapsulation, firewall policy is simply a NAT flow which the Controller sees connection request between a pair of communications initiator and responder. With OVS being ubiquitously distributed in every Docker host server, firewall policy for every individual container is also ubiquitously distributed to every Docker host server which hosts the container. Such distributed firewall has no chokepoint. That is why we have drawn in Figure 1 for every Docker host server to have a direct connection to the Internet.
 
 
 **More in our website**: http://www.daolicloud.com/html/technology.html
