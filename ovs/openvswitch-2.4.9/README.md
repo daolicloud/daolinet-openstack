@@ -1,20 +1,14 @@
-Open vswitch expand by daolilcoud
+Openvswitch Extension Work by DaoliNet
 =================================
-Why we want to expand ?
+
+Why Extension?
 ---------------------------------
-Daolicloud is committed to providing cloud computing services enterprises.
-We use openstack platform to provide services. We have our own network vir-
--tualization solution. We use openvswitch for our solution.But we found 
-Open vswitch can not support some network protocols. So we have two development
-of it.
+
+DaoliNet network virtualization solution uses openvswitch (OVS). However, the current version of OVS does not support the ping feature in ICMP. Our extension work adds the ping feature to OVS.
 
 =================================
-Features ?
----------------------------------
-At present it can deal with icmp request&reply packet like regular device when NAT.
 
-=================================
-How to use ?
+How to compile and install
 ---------------------------------
 [INSTALL]
 
