@@ -1,7 +1,7 @@
 What's Ryu
 ==========
 
-Ryu is an OpenFlow Controller which DaoliNet is based on. DaoliNet modified Ryu to suit its novel use.
+Ryu is an OpenFlow Controller which DaoliNet is based on. DaoliNet modified Ryu to suit a number of novel uses of OpenFlow.
 
 Daolicontroller is a software defined networking OpenFlow controller.
 

@@ -1,12 +1,12 @@
 This page includes instructions for building your own demo system
-===========
+=================================================================
 
 Prerequisites:
 --------------
-On the host, equivalent or greater: 
-* VirtualBox 4.3.32 or greater
-* Vagrant 1.7.4
-* In order to run this demo smoothly, you should have 4-core CPU with 4G RAM
+The host you are using to build the demo system should have the following prerequisites:
+* Install VirtualBox 4.3.32 or greater
+* Install Vagrant 1.7.4
+* In order to run the demo smoothly, your host should have 4-core CPU with 4G RAM
 
 Installation Requirements:
 --------------------------
@@ -42,10 +42,11 @@ In current directory.
     % ./pre.sh
     % vagrant ssh
 
-Visit our system by 10.10.10.10.The login id is "admin", login password is "daolinet", and the instance password is "daoli123".
+Visit our system by 10.10.10.10. The login id is "admin", login password is "daolinet", and the instance password is "daoli123".
+If you have stopped and restarted the instance, wait for 30 seconds then testing connectivity.
 
 Deleting:
--------
+---------
 In current directory. 
 
     % vagrant destroy
