@@ -50,9 +50,9 @@ ovs-vsctl add-br br0
 ovs-vsctl add-port br0 eth0
 
 [USE]
-==================================
+
 Example
-----------------------------------
+
 	ovs-ofctl add-flow br-int dl_type=0x800,nw_proto=1,icmp_identify=xxxx,\
 					actions=mod_icmp_identify:xxxx,output:xxx
 
