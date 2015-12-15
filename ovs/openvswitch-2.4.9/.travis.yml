@@ -1,0 +1,42 @@
+language: c
+compiler:
+  - gcc
+  - clang
+
+addons:
+  apt:
+    packages:
+      - bc
+      - gcc-multilib
+      - libssl-dev
+      - llvm-dev
+
+before_install: ./.travis/prepare.sh
+
+before_script: export PATH=$PATH:$HOME/bin
+
+sudo: false
+
+env:
+  - OPTS="--disable-ssl"
+  - TESTSUITE=1 KERNEL=3.18.1
+  - TESTSUITE=1 OPTS="--enable-shared"
+  - BUILD_ENV="-m32" OPTS="--disable-ssl"
+  - KERNEL=3.17.7 DPDK=1
+  - KERNEL=3.17.7 DPDK=1 OPTS="--enable-shared"
+  - KERNEL=4.2.5
+  - KERNEL=4.1.12
+  - KERNEL=3.18.23
+  - KERNEL=3.14.56
+  - KERNEL=3.12.49
+  - KERNEL=3.10.92
+  - KERNEL=3.4.110
+  - KERNEL=3.2.72
+  - KERNEL=2.6.32.68
+
+script: ./.travis/build.sh $OPTS
+
+notifications:
+  email:
+    recipients:
+      - build@openvswitch.org

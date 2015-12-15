@@ -1,0 +1,1332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="ovn-sb" title="OVN Southbound Database">
+  <p>
+    This database holds logical and physical configuration and state for the
+    Open Virtual Network (OVN) system to support virtual network abstraction.
+    For an introduction to OVN, please see <code>ovn-architecture</code>(7).
+  </p>
+
+  <p>
+    The OVN Southbound database sits at the center of the OVN
+    architecture.  It is the one component that speaks both southbound
+    directly to all the hypervisors and gateways, via
+    <code>ovn-controller</code>/<code>ovn-controller-vtep</code>, and
+    northbound to the Cloud Management System, via <code>ovn-northd</code>:
+  </p>
+
+  <h2>Database Structure</h2>
+
+  <p>
+    The OVN Southbound database contains three classes of data with
+    different properties, as described in the sections below.
+  </p>
+
+  <h3>Physical Network (PN) data</h3>
+
+  <p>
+    PN tables contain information about the chassis nodes in the system.  This
+    contains all the information necessary to wire the overlay, such as IP
+    addresses, supported tunnel types, and security keys.
+  </p>
+
+  <p>
+    The amount of PN data is small (O(n) in the number of chassis) and it
+    changes infrequently, so it can be replicated to every chassis.
+  </p>
+
+  <p>
+    The <ref table="Chassis"/> table comprises the PN tables.
+  </p>
+
+  <h3>Logical Network (LN) data</h3>
+
+  <p>
+    LN tables contain the topology of logical switches and routers, ACLs,
+    firewall rules, and everything needed to describe how packets traverse a
+    logical network, represented as logical datapath flows (see Logical
+    Datapath Flows, below).
+  </p>
+
+  <p>
+    LN data may be large (O(n) in the number of logical ports, ACL rules,
+    etc.).  Thus, to improve scaling, each chassis should receive only data
+    related to logical networks in which that chassis participates.  Past
+    experience shows that in the presence of large logical networks, even
+    finer-grained partitioning of data, e.g. designing logical flows so that
+    only the chassis hosting a logical port needs related flows, pays off
+    scale-wise.  (This is not necessary initially but it is worth bearing in
+    mind in the design.)
+  </p>
+
+  <p>
+    The LN is a slave of the cloud management system running northbound of OVN.
+    That CMS determines the entire OVN logical configuration and therefore the
+    LN's content at any given time is a deterministic function of the CMS's
+    configuration, although that happens indirectly via the
+    <ref db="OVN_Northbound"/> database and <code>ovn-northd</code>.
+  </p>
+
+  <p>
+    LN data is likely to change more quickly than PN data.  This is especially
+    true in a container environment where VMs are created and destroyed (and
+    therefore added to and deleted from logical switches) quickly.
+  </p>
+
+  <p>
+    <ref table="Logical_Flow"/> and <ref table="Multicast_Group"/> contain LN
+    data.
+  </p>
+
+  <h3>Bindings data</h3>
+
+  <p>
+    Bindings data link logical and physical components.  They show the current
+    placement of logical components (such as VMs and VIFs) onto chassis, and
+    map logical entities to the values that represent them in tunnel
+    encapsulations.
+  </p>
+
+  <p>
+    Bindings change frequently, at least every time a VM powers up or down
+    or migrates, and especially quickly in a container environment.  The
+    amount of data per VM (or VIF) is small.
+  </p>
+
+  <p>
+    Each chassis is authoritative about the VMs and VIFs that it hosts at any
+    given time and can efficiently flood that state to a central location, so
+    the consistency needs are minimal.
+  </p>
+
+  <p>
+    The <ref table="Port_Binding"/> and <ref table="Datapath_Binding"/> tables
+    contain binding data.
+  </p>
+
+  <h2>Common Columns</h2>
+
+  <p>
+    Some tables contain a special column named <code>external_ids</code>.  This
+    column has the same form and purpose each place that it appears, so we
+    describe it here to save space later.
+  </p>
+
+  <dl>
+    <dt><code>external_ids</code>: map of string-string pairs</dt>
+    <dd>
+      Key-value pairs for use by the software that manages the OVN Southbound
+      database rather than by
+      <code>ovn-controller</code>/<code>ovn-controller-vtep</code>.  In
+      particular, <code>ovn-northd</code> can use key-value pairs in this
+      column to relate entities in the southbound database to higher-level
+      entities (such as entities in the OVN Northbound database).  Individual
+      key-value pairs in this column may be documented in some cases to aid
+      in understanding and troubleshooting, but the reader should not mistake
+      such documentation as comprehensive.
+    </dd>
+  </dl>
+
+  <table name="Chassis" title="Physical Network Hypervisor and Gateway Information">
+    <p>
+      Each row in this table represents a hypervisor or gateway (a chassis) in
+      the physical network (PN).  Each chassis, via
+      <code>ovn-controller</code>/<code>ovn-controller-vtep</code>, adds
+      and updates its own row, and keeps a copy of the remaining rows to
+      determine how to reach other hypervisors.
+    </p>
+
+    <p>
+      When a chassis shuts down gracefully, it should remove its own row.
+      (This is not critical because resources hosted on the chassis are equally
+      unreachable regardless of whether the row is present.)  If a chassis
+      shuts down permanently without removing its row, some kind of manual or
+      automatic cleanup is eventually needed; we can devise a process for that
+      as necessary.
+    </p>
+
+    <column name="name">
+      A chassis name, taken from <ref key="system-id" table="Open_vSwitch"
+      column="external_ids" db="Open_vSwitch"/> in the Open_vSwitch
+      database's <ref table="Open_vSwitch" db="Open_vSwitch"/> table.  OVN does
+      not prescribe a particular format for chassis names.
+    </column>
+
+    <group title="Encapsulation Configuration">
+      <p>
+        OVN uses encapsulation to transmit logical dataplane packets
+        between chassis.
+      </p>
+
+      <column name="encaps">
+        Points to supported encapsulation configurations to transmit
+        logical dataplane packets to this chassis.  Each entry is a <ref
+        table="Encap"/> record that describes the configuration.
+      </column>
+    </group>
+
+     <group title="Gateway Configuration">
+       <p>
+        A <dfn>gateway</dfn> is a chassis that forwards traffic between the
+        OVN-managed part of a logical network and a physical VLAN, extending a
+        tunnel-based logical network into a physical network.  Gateways are
+        typically dedicated nodes that do not host VMs and will be controlled
+        by <code>ovn-controller-vtep</code>.
+      </p>
+
+      <column name="vtep_logical_switches">
+        Stores all VTEP logical switch names connected by this gateway
+        chassis.  The <ref table="Port_Binding"/> table entry with
+        <ref column="options" table="Port_Binding"/>:<code>vtep-physical-switch</code>
+        equal <ref table="Chassis"/> <ref column="name" table="Chassis"/>, and
+        <ref column="options" table="Port_Binding"/>:<code>vtep-logical-switch</code>
+        value in <ref table="Chassis"/>
+        <ref column="vtep_logical_switches" table="Chassis"/>, will be
+        associated with this <ref table="Chassis"/>.
+      </column>
+     </group>
+  </table>
+
+  <table name="Encap" title="Encapsulation Types">
+    <p>
+      The <ref column="encaps" table="Chassis"/> column in the <ref
+      table="Chassis"/> table refers to rows in this table to identify
+      how OVN may transmit logical dataplane packets to this chassis.
+      Each chassis, via <code>ovn-controller</code>(8) or
+      <code>ovn-controller-vtep</code>(8), adds and updates its own rows
+      and keeps a copy of the remaining rows to determine how to reach
+      other chassis.
+    </p>
+
+    <column name="type">
+      The encapsulation to use to transmit packets to this chassis.
+      Hypervisors must use either <code>geneve</code> or
+      <code>stt</code>.  Gateways may use <code>vxlan</code>,
+      <code>geneve</code>, or <code>stt</code>.
+    </column>
+
+    <column name="options">
+      Options for configuring the encapsulation, e.g. IPsec parameters when
+      IPsec support is introduced.  No options are currently defined.
+    </column>
+
+    <column name="ip">
+      The IPv4 address of the encapsulation tunnel endpoint.
+    </column>
+  </table>
+
+  <table name="Logical_Flow" title="Logical Network Flows">
+    <p>
+      Each row in this table represents one logical flow.
+      <code>ovn-northd</code> populates this table with logical flows
+      that implement the L2 and L3 topologies specified in the
+      <ref db="OVN_Northbound"/> database.  Each hypervisor, via
+      <code>ovn-controller</code>, translates the logical flows into
+      OpenFlow flows specific to its hypervisor and installs them into
+      Open vSwitch.
+    </p>
+
+    <p>
+      Logical flows are expressed in an OVN-specific format, described here.  A
+      logical datapath flow is much like an OpenFlow flow, except that the
+      flows are written in terms of logical ports and logical datapaths instead
+      of physical ports and physical datapaths.  Translation between logical
+      and physical flows helps to ensure isolation between logical datapaths.
+      (The logical flow abstraction also allows the OVN centralized
+      components to do less work, since they do not have to separately
+      compute and push out physical flows to each chassis.)
+    </p>
+
+    <p>
+      The default action when no flow matches is to drop packets.
+    </p>
+
+    <p><em>Architectural Logical Life Cycle of a Packet</em></p>
+
+    <p>
+      This following description focuses on the life cycle of a packet through
+      a logical datapath, ignoring physical details of the implementation.
+      Please refer to <em>Architectural Physical Life Cycle of a Packet</em> in
+      <code>ovn-architecture</code>(7) for the physical information.
+    </p>
+
+    <p>
+      The description here is written as if OVN itself executes these steps,
+      but in fact OVN (that is, <code>ovn-controller</code>) programs Open
+      vSwitch, via OpenFlow and OVSDB, to execute them on its behalf.
+    </p>
+
+    <p>
+      At a high level, OVN passes each packet through the logical datapath's
+      logical ingress pipeline, which may output the packet to one or more
+      logical port or logical multicast groups.  For each such logical output
+      port, OVN passes the packet through the datapath's logical egress
+      pipeline, which may either drop the packet or deliver it to the
+      destination.  Between the two pipelines, outputs to logical multicast
+      groups are expanded into logical ports, so that the egress pipeline only
+      processes a single logical output port at a time.  Between the two
+      pipelines is also where, when necessary, OVN encapsulates a packet in a
+      tunnel (or tunnels) to transmit to remote hypervisors.
+    </p>
+
+    <p>
+      In more detail, to start, OVN searches the <ref table="Logical_Flow"/>
+      table for a row with correct <ref column="logical_datapath"/>, a <ref
+      column="pipeline"/> of <code>ingress</code>, a <ref column="table_id"/>
+      of 0, and a <ref column="match"/> that is true for the packet.  If none
+      is found, OVN drops the packet.  If OVN finds more than one, it chooses
+      the match with the highest <ref column="priority"/>.  Then OVN executes
+      each of the actions specified in the row's <ref table="actions"/> column,
+      in the order specified.  Some actions, such as those to modify packet
+      headers, require no further details.  The <code>next</code> and
+      <code>output</code> actions are special.
+    </p>
+
+    <p>
+      The <code>next</code> action causes the above process to be repeated
+      recursively, except that OVN searches for <ref column="table_id"/> of 1
+      instead of 0.  Similarly, any <code>next</code> action in a row found in
+      that table would cause a further search for a <ref column="table_id"/> of
+      2, and so on.  When recursive processing completes, flow control returns
+      to the action following <code>next</code>.
+    </p>
+
+    <p>
+      The <code>output</code> action also introduces recursion.  Its effect
+      depends on the current value of the <code>outport</code> field.  Suppose
+      <code>outport</code> designates a logical port.  First, OVN compares
+      <code>inport</code> to <code>outport</code>; if they are equal, it treats
+      the <code>output</code> as a no-op.  In the common case, where they are
+      different, the packet enters the egress pipeline.  This transition to the
+      egress pipeline discards register data, e.g. <code>reg0</code> ...
+      <code>reg4</code> and connection tracking state, to achieve
+      uniform behavior regardless of whether the egress pipeline is on a
+      different hypervisor (because registers aren't preserve across
+      tunnel encapsulation).
+    </p>
+
+    <p>
+      To execute the egress pipeline, OVN again searches the <ref
+      table="Logical_Flow"/> table for a row with correct <ref
+      column="logical_datapath"/>, a <ref column="table_id"/> of 0, a <ref
+      column="match"/> that is true for the packet, but now looking for a <ref
+      column="pipeline"/> of <code>egress</code>.  If no matching row is found,
+      the output becomes a no-op.  Otherwise, OVN executes the actions for the
+      matching flow (which is chosen from multiple, if necessary, as already
+      described).
+    </p>
+
+    <p>
+      In the <code>egress</code> pipeline, the <code>next</code> action acts as
+      already described, except that it, of course, searches for
+      <code>egress</code> flows.  The <code>output</code> action, however, now
+      directly outputs the packet to the output port (which is now fixed,
+      because <code>outport</code> is read-only within the egress pipeline).
+    </p>
+
+    <p>
+      The description earlier assumed that <code>outport</code> referred to a
+      logical port.  If it instead designates a logical multicast group, then
+      the description above still applies, with the addition of fan-out from
+      the logical multicast group to each logical port in the group.  For each
+      member of the group, OVN executes the logical pipeline as described, with
+      the logical output port replaced by the group member.
+    </p>
+
+    <p><em>Pipeline Stages</em></p>
+
+    <p>
+      <code>ovn-northd</code> is responsible for populating the
+      <ref table="Logical_Flow"/> table, so the stages are an
+      implementation detail and subject to change.  This section
+      describes the current logical flow table.
+    </p>
+
+    <p>
+      The ingress pipeline consists of the following stages:
+    </p>
+    <ul>
+      <li>
+        Port Security (Table 0): Validates the source address, drops
+        packets with a VLAN tag, and, if configured, verifies that the
+        logical port is allowed to send with the source address.
+      </li>
+
+      <li>
+        L2 Destination Lookup (Table 1): Forwards known unicast
+        addresses to the appropriate logical port.  Unicast packets to
+        unknown hosts are forwarded to logical ports configured with the
+        special <code>unknown</code> mac address.  Broadcast, and
+        multicast are flooded to all ports in the logical switch.
+      </li>
+    </ul>
+
+    <p>
+      The egress pipeline consists of the following stages:
+    </p>
+    <ul>
+      <li>
+        ACL (Table 0): Applies any specified access control lists.
+      </li>
+
+      <li>
+        Port Security (Table 1): If configured, verifies that the
+        logical port is allowed to receive packets with the destination
+        address.
+      </li>
+    </ul>
+
+    <column name="logical_datapath">
+      The logical datapath to which the logical flow belongs.
+    </column>
+
+    <column name="pipeline">
+      <p>
+        The primary flows used for deciding on a packet's destination are the
+        <code>ingress</code> flows.  The <code>egress</code> flows implement
+        ACLs.  See <em>Logical Life Cycle of a Packet</em>, above, for details.
+      </p>
+    </column>
+
+    <column name="table_id">
+      The stage in the logical pipeline, analogous to an OpenFlow table number.
+    </column>
+
+    <column name="priority">
+      The flow's priority.  Flows with numerically higher priority take
+      precedence over those with lower.  If two logical datapath flows with the
+      same priority both match, then the one actually applied to the packet is
+      undefined.
+    </column>
+
+    <column name="match">
+      <p>
+        A matching expression.  OVN provides a superset of OpenFlow matching
+        capabilities, using a syntax similar to Boolean expressions in a
+        programming language.
+      </p>
+
+      <p>
+        The most important components of match expression are
+        <dfn>comparisons</dfn> between <dfn>symbols</dfn> and
+        <dfn>constants</dfn>, e.g. <code>ip4.dst == 192.168.0.1</code>,
+        <code>ip.proto == 6</code>, <code>arp.op == 1</code>, <code>eth.type ==
+        0x800</code>.  The logical AND operator <code>&amp;&amp;</code> and
+        logical OR operator <code>||</code> can combine comparisons into a
+        larger expression.
+      </p>
+
+      <p>
+        Matching expressions also support parentheses for grouping, the logical
+        NOT prefix operator <code>!</code>, and literals <code>0</code> and
+        <code>1</code> to express ``false'' or ``true,'' respectively.  The
+        latter is useful by itself as a catch-all expression that matches every
+        packet.
+      </p>
+
+      <p><em>Symbols</em></p>
+
+      <p>
+        <em>Type</em>.  Symbols have <dfn>integer</dfn> or <dfn>string</dfn>
+        type.  Integer symbols have a <dfn>width</dfn> in bits.
+      </p>
+
+      <p>
+        <em>Kinds</em>.  There are three kinds of symbols:
+      </p>
+
+      <ul>
+        <li>
+          <p>
+            <dfn>Fields</dfn>.  A field symbol represents a packet header or
+            metadata field.  For example, a field
+            named <code>vlan.tci</code> might represent the VLAN TCI field in a
+            packet.
+          </p>
+
+          <p>
+            A field symbol can have integer or string type.  Integer fields can
+            be nominal or ordinal (see <em>Level of Measurement</em>,
+            below).
+          </p>
+        </li>
+
+        <li>
+          <p>
+            <dfn>Subfields</dfn>.  A subfield represents a subset of bits from
+            a larger field.  For example, a field <code>vlan.vid</code> might
+            be defined as an alias for <code>vlan.tci[0..11]</code>.  Subfields
+            are provided for syntactic convenience, because it is always
+            possible to instead refer to a subset of bits from a field
+            directly.
+          </p>
+
+          <p>
+            Only ordinal fields (see <em>Level of Measurement</em>,
+            below) may have subfields.  Subfields are always ordinal.
+          </p>
+        </li>
+
+        <li>
+          <p>
+            <dfn>Predicates</dfn>.  A predicate is shorthand for a Boolean
+            expression.  Predicates may be used much like 1-bit fields.  For
+            example, <code>ip4</code> might expand to <code>eth.type ==
+            0x800</code>.  Predicates are provided for syntactic convenience,
+            because it is always possible to instead specify the underlying
+            expression directly.
+          </p>
+
+          <p>
+            A predicate whose expansion refers to any nominal field or
+            predicate (see <em>Level of Measurement</em>, below) is nominal;
+            other predicates have Boolean level of measurement.
+          </p>
+        </li>
+      </ul>
+
+      <p>
+        <em>Level of Measurement</em>.  See
+        http://en.wikipedia.org/wiki/Level_of_measurement for the statistical
+        concept on which this classification is based.  There are three
+        levels:
+      </p>
+
+      <ul>
+        <li>
+          <p>
+            <dfn>Ordinal</dfn>.  In statistics, ordinal values can be ordered
+            on a scale.  OVN considers a field (or subfield) to be ordinal if
+            its bits can be examined individually.  This is true for the
+            OpenFlow fields that OpenFlow or Open vSwitch makes ``maskable.''
+          </p>
+
+          <p>
+            Any use of a nominal field may specify a single bit or a range of
+            bits, e.g. <code>vlan.tci[13..15]</code> refers to the PCP field
+            within the VLAN TCI, and <code>eth.dst[40]</code> refers to the
+            multicast bit in the Ethernet destination address.
+          </p>
+
+          <p>
+            OVN supports all the usual arithmetic relations (<code>==</code>,
+            <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>,
+            <code>&gt;</code>, and <code>&gt;=</code>) on ordinal fields and
+            their subfields, because OVN can implement these in OpenFlow and
+            Open vSwitch as collections of bitwise tests.
+          </p>
+        </li>
+
+        <li>
+          <p>
+            <dfn>Nominal</dfn>.  In statistics, nominal values cannot be
+            usefully compared except for equality.  This is true of OpenFlow
+            port numbers, Ethernet types, and IP protocols are examples: all of
+            these are just identifiers assigned arbitrarily with no deeper
+            meaning.  In OpenFlow and Open vSwitch, bits in these fields
+            generally aren't individually addressable.
+          </p>
+
+          <p>
+            OVN only supports arithmetic tests for equality on nominal fields,
+            because OpenFlow and Open vSwitch provide no way for a flow to
+            efficiently implement other comparisons on them.  (A test for
+            inequality can be sort of built out of two flows with different
+            priorities, but OVN matching expressions always generate flows with
+            a single priority.)
+          </p>
+
+          <p>
+            String fields are always nominal.
+          </p>
+        </li>
+
+        <li>
+          <p>
+            <dfn>Boolean</dfn>.  A nominal field that has only two values, 0
+            and 1, is somewhat exceptional, since it is easy to support both
+            equality and inequality tests on such a field: either one can be
+            implemented as a test for 0 or 1.
+          </p>
+
+          <p>
+            Only predicates (see above) have a Boolean level of measurement.
+          </p>
+
+          <p>
+            This isn't a standard level of measurement.
+          </p>
+        </li>
+      </ul>
+
+      <p>
+        <em>Prerequisites</em>.  Any symbol can have prerequisites, which are
+        additional condition implied by the use of the symbol.  For example,
+        For example, <code>icmp4.type</code> symbol might have prerequisite
+        <code>icmp4</code>, which would cause an expression <code>icmp4.type ==
+        0</code> to be interpreted as <code>icmp4.type == 0 &amp;&amp;
+        icmp4</code>, which would in turn expand to <code>icmp4.type == 0
+        &amp;&amp; eth.type == 0x800 &amp;&amp; ip4.proto == 1</code> (assuming
+        <code>icmp4</code> is a predicate defined as suggested under
+        <em>Types</em> above).
+      </p>
+
+      <p><em>Relational operators</em></p>
+
+      <p>
+        All of the standard relational operators <code>==</code>,
+        <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>,
+        <code>&gt;</code>, and <code>&gt;=</code> are supported.  Nominal
+        fields support only <code>==</code> and <code>!=</code>, and only in a
+        positive sense when outer <code>!</code> are taken into account,
+        e.g. given string field <code>inport</code>, <code>inport ==
+        "eth0"</code> and <code>!(inport != "eth0")</code> are acceptable, but
+        not <code>inport != "eth0"</code>.
+      </p>
+
+      <p>
+        The implementation of <code>==</code> (or <code>!=</code> when it is
+        negated), is more efficient than that of the other relational
+        operators.
+      </p>
+
+      <p><em>Constants</em></p>
+
+      <p>
+        Integer constants may be expressed in decimal, hexadecimal prefixed by
+        <code>0x</code>, or as dotted-quad IPv4 addresses, IPv6 addresses in
+        their standard forms, or Ethernet addresses as colon-separated hex
+        digits.  A constant in any of these forms may be followed by a slash
+        and a second constant (the mask) in the same form, to form a masked
+        constant.  IPv4 and IPv6 masks may be given as integers, to express
+        CIDR prefixes.
+      </p>
+
+      <p>
+        String constants have the same syntax as quoted strings in JSON (thus,
+        they are Unicode strings).
+      </p>
+
+      <p>
+        Some operators support sets of constants written inside curly braces
+        <code>{</code> ... <code>}</code>.  Commas between elements of a set,
+        and after the last elements, are optional.  With <code>==</code>,
+        ``<code><var>field</var> == { <var>constant1</var>,
+        <var>constant2</var>,</code> ... <code>}</code>'' is syntactic sugar
+        for ``<code><var>field</var> == <var>constant1</var> ||
+        <var>field</var> == <var>constant2</var> || </code>...<code></code>.
+        Similarly, ``<code><var>field</var> != { <var>constant1</var>,
+        <var>constant2</var>, </code>...<code> }</code>'' is equivalent to
+        ``<code><var>field</var> != <var>constant1</var> &amp;&amp;
+        <var>field</var> != <var>constant2</var> &amp;&amp;
+        </code>...<code></code>''.
+      </p>
+
+      <p><em>Miscellaneous</em></p>
+
+      <p>
+        Comparisons may name the symbol or the constant first,
+        e.g. <code>tcp.src == 80</code> and <code>80 == tcp.src</code> are both
+        acceptable.
+      </p>
+
+      <p>
+        Tests for a range may be expressed using a syntax like <code>1024 &lt;=
+        tcp.src &lt;= 49151</code>, which is equivalent to <code>1024 &lt;=
+        tcp.src &amp;&amp; tcp.src &lt;= 49151</code>.
+      </p>
+
+      <p>
+        For a one-bit field or predicate, a mention of its name is equivalent
+        to <code><var>symobl</var> == 1</code>, e.g. <code>vlan.present</code>
+        is equivalent to <code>vlan.present == 1</code>.  The same is true for
+        one-bit subfields, e.g. <code>vlan.tci[12]</code>.  There is no
+        technical limitation to implementing the same for ordinal fields of all
+        widths, but the implementation is expensive enough that the syntax
+        parser requires writing an explicit comparison against zero to make
+        mistakes less likely, e.g. in <code>tcp.src != 0</code> the comparison
+        against 0 is required.
+      </p>
+
+      <p>
+        <em>Operator precedence</em> is as shown below, from highest to lowest.
+        There are two exceptions where parentheses are required even though the
+        table would suggest that they are not: <code>&amp;&amp;</code> and
+        <code>||</code> require parentheses when used together, and
+        <code>!</code> requires parentheses when applied to a relational
+        expression.  Thus, in <code>(eth.type == 0x800 || eth.type == 0x86dd)
+        &amp;&amp; ip.proto == 6</code> or <code>!(arp.op == 1)</code>, the
+        parentheses are mandatory.
+      </p>
+
+      <ul>
+        <li><code>()</code></li>
+        <li><code>==   !=   &lt;   &lt;=   &gt;   &gt;=</code></li>
+        <li><code>!</code></li>
+        <li><code>&amp;&amp;   ||</code></li>
+      </ul>
+
+      <p>
+        <em>Comments</em> may be introduced by <code>//</code>, which extends
+        to the next new-line.  Comments within a line may be bracketed by
+        <code>/*</code> and <code>*/</code>.  Multiline comments are not
+        supported.
+      </p>
+
+      <p><em>Symbols</em></p>
+
+      <p>
+        Most of the symbols below have integer type.  Only <code>inport</code>
+        and <code>outport</code> have string type.  <code>inport</code> names a
+        logical port.  Thus, its value is a <ref column="logical_port"/> name
+        from the <ref table="Port_Binding"/> table.  <code>outport</code> may
+        name a logical port, as <code>inport</code>, or a logical multicast
+        group defined in the <ref table="Multicast_Group"/> table.  For both
+        symbols, only names within the flow's logical datapath may be used.
+      </p>
+
+      <ul>
+        <li><code>reg0</code>...<code>reg4</code></li>
+        <li><code>inport</code> <code>outport</code></li>
+        <li><code>eth.src</code> <code>eth.dst</code> <code>eth.type</code></li>
+        <li><code>vlan.tci</code> <code>vlan.vid</code> <code>vlan.pcp</code> <code>vlan.present</code></li>
+        <li><code>ip.proto</code> <code>ip.dscp</code> <code>ip.ecn</code> <code>ip.ttl</code> <code>ip.frag</code></li>
+        <li><code>ip4.src</code> <code>ip4.dst</code></li>
+        <li><code>ip6.src</code> <code>ip6.dst</code> <code>ip6.label</code></li>
+        <li><code>arp.op</code> <code>arp.spa</code> <code>arp.tpa</code> <code>arp.sha</code> <code>arp.tha</code></li>
+        <li><code>tcp.src</code> <code>tcp.dst</code> <code>tcp.flags</code></li>
+        <li><code>udp.src</code> <code>udp.dst</code></li>
+        <li><code>sctp.src</code> <code>sctp.dst</code></li>
+        <li><code>icmp4.type</code> <code>icmp4.code</code></li>
+        <li><code>icmp6.type</code> <code>icmp6.code</code></li>
+        <li><code>nd.target</code> <code>nd.sll</code> <code>nd.tll</code></li>
+        <li>
+          <p>
+            <code>ct_state</code>, which has the following Boolean subfields:
+          </p>
+          <ul>
+            <li><code>ct.new</code>: True for a new flow</li>
+            <li><code>ct.est</code>: True for an established flow</li>
+            <li><code>ct.rel</code>: True for a related flow</li>
+            <li><code>ct.rpl</code>: True for a reply flow</li>
+            <li><code>ct.inv</code>: True for a connection entry in a bad state</li>
+          </ul>
+          <p>
+            <code>ct_state</code> and its subfields are initialized by the
+            <code>ct_next</code> action, described below.
+          </p>
+        </li>
+      </ul>
+
+      <p>
+        The following predicates are supported:
+      </p>
+
+      <ul>
+        <li><code>eth.bcast</code> expands to <code>eth.dst == ff:ff:ff:ff:ff:ff</code></li>
+        <li><code>eth.mcast</code> expands to <code>eth.dst[40]</code></li>
+        <li><code>vlan.present</code> expands to <code>vlan.tci[12]</code></li>
+        <li><code>ip4</code> expands to <code>eth.type == 0x800</code></li>
+        <li><code>ip4.mcast</code> expands to <code>ip4.dst[28..31] == 0xe</code></li>
+        <li><code>ip6</code> expands to <code>eth.type == 0x86dd</code></li>
+        <li><code>ip</code> expands to <code>ip4 || ip6</code></li>
+        <li><code>icmp4</code> expands to <code>ip4 &amp;&amp; ip.proto == 1</code></li>
+        <li><code>icmp6</code> expands to <code>ip6 &amp;&amp; ip.proto == 58</code></li>
+        <li><code>icmp</code> expands to <code>icmp4 || icmp6</code></li>
+        <li><code>ip.is_frag</code> expands to <code>ip.frag[0]</code></li>
+        <li><code>ip.later_frag</code> expands to <code>ip.frag[1]</code></li>
+        <li><code>ip.first_frag</code> expands to <code>ip.is_frag &amp;&amp; !ip.later_frag</code></li>
+        <li><code>arp</code> expands to <code>eth.type == 0x806</code></li>
+        <li><code>nd</code> expands to <code>icmp6.type == {135, 136} &amp;&amp; icmp6.code == 0</code></li>
+        <li><code>tcp</code> expands to <code>ip.proto == 6</code></li>
+        <li><code>udp</code> expands to <code>ip.proto == 17</code></li>
+        <li><code>sctp</code> expands to <code>ip.proto == 132</code></li>
+      </ul>
+    </column>
+
+    <column name="actions">
+      <p>
+        Logical datapath actions, to be executed when the logical flow
+        represented by this row is the highest-priority match.
+      </p>
+
+      <p>
+        Actions share lexical syntax with the <ref column="match"/> column.  An
+        empty set of actions (or one that contains just white space or
+        comments), or a set of actions that consists of just
+        <code>drop;</code>, causes the matched packets to be dropped.
+        Otherwise, the column should contain a sequence of actions, each
+        terminated by a semicolon.
+      </p>
+
+      <p>
+        The following actions are defined:
+      </p>
+
+      <dl>
+        <dt><code>output;</code></dt>
+        <dd>
+          <p>
+            In the ingress pipeline, this action executes the
+            <code>egress</code> pipeline as a subroutine.  If
+            <code>outport</code> names a logical port, the egress pipeline
+            executes once; if it is a multicast group, the egress pipeline runs
+            once for each logical port in the group.
+          </p>
+
+          <p>
+            In the egress pipeline, this action performs the actual
+            output to the <code>outport</code> logical port.  (In the egress
+            pipeline, <code>outport</code> never names a multicast group.)
+          </p>
+
+          <p>
+            Output to the input port is implicitly dropped, that is,
+            <code>output</code> becomes a no-op if <code>outport</code> ==
+            <code>inport</code>.  Occasionally it may be useful to override
+            this behavior, e.g. to send an ARP reply to an ARP request; to do
+            so, use <code>inport = "";</code> to set the logical input port to
+            an empty string (which should not be used as the name of any
+            logical port).
+          </p>
+        </dd>
+
+        <dt><code>next;</code></dt>
+        <dt><code>next(<var>table</var>);</code></dt>
+        <dd>
+          Executes another logical datapath table as a subroutine.  By default,
+          the table after the current one is executed.  Specify
+          <var>table</var> to jump to a specific table in the same pipeline.
+        </dd>
+
+        <dt><code><var>field</var> = <var>constant</var>;</code></dt>
+        <dd>
+          <p>
+            Sets data or metadata field <var>field</var> to constant value
+            <var>constant</var>, e.g. <code>outport = "vif0";</code> to set the
+            logical output port.  To set only a subset of bits in a field,
+            specify a subfield for <var>field</var> or a masked
+            <var>constant</var>, e.g. one may use <code>vlan.pcp[2] = 1;</code>
+            or <code>vlan.pcp = 4/4;</code> to set the most sigificant bit of
+            the VLAN PCP.
+          </p>
+
+          <p>
+            Assigning to a field with prerequisites implicitly adds those
+            prerequisites to <ref column="match"/>; thus, for example, a flow
+            that sets <code>tcp.dst</code> applies only to TCP flows,
+            regardless of whether its <ref column="match"/> mentions any TCP
+            field.
+          </p>
+
+          <p>
+            Not all fields are modifiable (e.g. <code>eth.type</code> and
+            <code>ip.proto</code> are read-only), and not all modifiable fields
+            may be partially modified (e.g. <code>ip.ttl</code> must assigned
+            as a whole).  The <code>outport</code> field is modifiable in the
+            <code>ingress</code> pipeline but not in the <code>egress</code>
+            pipeline.
+          </p>
+        </dd>
+
+        <dt><code><var>field1</var> = <var>field2</var>;</code></dt>
+        <dd>
+          <p>
+            Sets data or metadata field <var>field1</var> to the value of data
+            or metadata field <var>field2</var>, e.g. <code>reg0 =
+            ip4.src;</code> copies <code>ip4.src</code> into <code>reg0</code>.
+            To modify only a subset of a field's bits, specify a subfield for
+            <var>field1</var> or <var>field2</var> or both, e.g. <code>vlan.pcp
+            = reg0[0..2];</code> copies the least-significant bits of
+            <code>reg0</code> into the VLAN PCP.
+          </p>
+
+          <p>
+            <var>field1</var> and <var>field2</var> must be the same type,
+            either both string or both integer fields.  If they are both
+            integer fields, they must have the same width.
+          </p>
+
+          <p>
+            If <var>field1</var> or <var>field2</var> has prerequisites, they
+            are added implicitly to <ref column="match"/>.  It is possible to
+            write an assignment with contradictory prerequisites, such as
+            <code>ip4.src = ip6.src[0..31];</code>, but the contradiction means
+            that a logical flow with such an assignment will never be matched.
+          </p>
+        </dd>
+
+        <dt><code><var>field1</var> &lt;-&gt; <var>field2</var>;</code></dt>
+        <dd>
+          <p>
+            Similar to <code><var>field1</var> = <var>field2</var>;</code>
+            except that the two values are exchanged instead of copied.  Both
+            <var>field1</var> and <var>field2</var> must modifiable.
+          </p>
+        </dd>
+
+        <dt><code>ip.ttl--;</code></dt>
+        <dd>
+          <p>
+            Decrements the IPv4 or IPv6 TTL.  If this would make the TTL zero
+            or negative, then processing of the packet halts; no further
+            actions are processed.  (To properly handle such cases, a
+            higher-priority flow should match on
+            <code>ip.ttl == {0, 1};</code>.)
+          </p>
+
+          <p><b>Prerequisite:</b> <code>ip</code></p>
+        </dd>
+
+        <dt><code>ct_next;</code></dt>
+        <dd>
+          <p>
+            Apply connection tracking to the flow, initializing
+            <code>ct_state</code> for matching in later tables.
+            Automatically moves on to the next table, as if followed by
+            <code>next</code>.
+          </p>
+
+          <p>
+            As a side effect, IP fragments will be reassembled for matching.
+            If a fragmented packet is output, then it will be sent with any
+            overlapping fragments squashed.  The connection tracking state is
+            scoped by the logical port, so overlapping addresses may be used.
+            To allow traffic related to the matched flow, execute
+            <code>ct_commit</code>.
+          </p>
+
+          <p>
+            It is possible to have actions follow <code>ct_next</code>,
+            but they will not have access to any of its side-effects and
+            is not generally useful.
+          </p>
+        </dd>
+
+        <dt><code>ct_commit;</code></dt>
+        <dd>
+          Commit the flow to the connection tracking entry associated
+          with it by a previous call to <code>ct_next</code>.
+        </dd>
+      </dl>
+
+      <p>
+        The following actions will likely be useful later, but they have not
+        been thought out carefully.
+      </p>
+
+      <dl>
+
+        <dt><code>arp { <var>action</var>; </code>...<code> };</code></dt>
+        <dd>
+          <p>
+            Temporarily replaces the IPv4 packet being processed by an ARP
+            packet and executes each nested <var>action</var> on the ARP
+            packet.  Actions following the <var>arp</var> action, if any, apply
+            to the original, unmodified packet.
+          </p>
+
+          <p>
+            The ARP packet that this action operates on is initialized based on
+            the IPv4 packet being processed, as follows.  These are default
+            values that the nested actions will probably want to change:
+          </p>
+
+          <ul>
+            <li><code>eth.src</code> unchanged</li>
+            <li><code>eth.dst</code> unchanged</li>
+            <li><code>eth.type = 0x0806</code></li>
+            <li><code>arp.op = 1</code> (ARP request)</li>
+            <li><code>arp.sha</code> copied from <code>eth.src</code></li>
+            <li><code>arp.spa</code> copied from <code>ip4.src</code></li>
+            <li><code>arp.tha = 00:00:00:00:00:00</code></li>
+            <li><code>arp.tpa</code> copied from <code>ip4.dst</code></li>
+          </ul>
+
+          <p><b>Prerequisite:</b> <code>ip4</code></p>
+        </dd>
+
+        <dt><code>icmp4 { <var>action</var>; </code>...<code> };</code></dt>
+        <dd>
+          <p>
+            Temporarily replaces the IPv4 packet being processed by an ICMPv4
+            packet and executes each nested <var>action</var> on the ICMPv4
+            packet.  Actions following the <var>icmp4</var> action, if any,
+            apply to the original, unmodified packet.
+          </p>
+
+          <p>
+            The ICMPv4 packet that this action operates on is initialized based
+            on the IPv4 packet being processed, as follows.  These are default
+            values that the nested actions will probably want to change.
+            Ethernet and IPv4 fields not listed here are not changed:
+          </p>
+
+          <ul>
+            <li><code>ip.proto = 1</code> (ICMPv4)</li>
+            <li><code>ip.frag = 0</code> (not a fragment)</li>
+            <li><code>icmp4.type = 3</code> (destination unreachable)</li>
+            <li><code>icmp4.code = 1</code> (host unreachable)</li>
+          </ul>
+
+          <p>
+            Details TBD.
+          </p>
+
+          <p><b>Prerequisite:</b> <code>ip4</code></p>
+        </dd>
+
+        <dt><code>tcp_reset;</code></dt>
+        <dd>
+          <p>
+            This action transforms the current TCP packet according to the
+            following pseudocode:
+          </p>
+
+          <pre>
+if (tcp.ack) {
+        tcp.seq = tcp.ack;
+} else {
+        tcp.ack = tcp.seq + length(tcp.payload);
+        tcp.seq = 0;
+}
+tcp.flags = RST;
+</pre>
+
+          <p>
+            Then, the action drops all TCP options and payload data, and
+            updates the TCP checksum.
+          </p>
+
+          <p>
+            Details TBD.
+          </p>
+
+          <p><b>Prerequisite:</b> <code>tcp</code></p>
+        </dd>
+      </dl>
+    </column>
+
+    <column name="external_ids" key="stage-name">
+      Human-readable name for this flow's stage in the pipeline.
+    </column>
+
+    <group title="Common Columns">
+      The overall purpose of these columns is described under <code>Common
+      Columns</code> at the beginning of this document.
+
+      <column name="external_ids"/>
+    </group>
+  </table>
+
+  <table name="Multicast_Group" title="Logical Port Multicast Groups">
+    <p>
+      The rows in this table define multicast groups of logical ports.
+      Multicast groups allow a single packet transmitted over a tunnel to a
+      hypervisor to be delivered to multiple VMs on that hypervisor, which
+      uses bandwidth more efficiently.
+    </p>
+
+    <p>
+      Each row in this table defines a logical multicast group numbered <ref
+      column="tunnel_key"/> within <ref column="datapath"/>, whose logical
+      ports are listed in the <ref column="ports"/> column.
+    </p>
+
+    <column name="datapath">
+      The logical datapath in which the multicast group resides.
+    </column>
+
+    <column name="tunnel_key">
+      The value used to designate this logical egress port in tunnel
+      encapsulations.  An index forces the key to be unique within the <ref
+      column="datapath"/>.  The unusual range ensures that multicast group IDs
+      do not overlap with logical port IDs.
+    </column>
+
+    <column name="name">
+      <p>
+        The logical multicast group's name.  An index forces the name to be
+        unique within the <ref column="datapath"/>.  Logical flows in the
+        ingress pipeline may output to the group just as for individual logical
+        ports, by assigning the group's name to <code>outport</code> and
+        executing an <code>output</code> action.
+      </p>
+
+      <p>
+        Multicast group names and logical port names share a single namespace
+        and thus should not overlap (but the database schema cannot enforce
+        this).  To try to avoid conflicts, <code>ovn-northd</code> uses names
+        that begin with <code>_MC_</code>.
+      </p>
+    </column>
+
+    <column name="ports">
+      The logical ports included in the multicast group.  All of these ports
+      must be in the <ref column="datapath"/> logical datapath (but the
+      database schema cannot enforce this).
+    </column>
+  </table>
+
+  <table name="Datapath_Binding" title="Physical-Logical Datapath Bindings">
+    <p>
+      Each row in this table identifies physical bindings of a logical
+      datapath.  A logical datapath implements a logical pipeline among the
+      ports in the <ref table="Port_Binding"/> table associated with it.  In
+      practice, the pipeline in a given logical datapath implements either a
+      logical switch or a logical router.
+    </p>
+
+    <column name="tunnel_key">
+      The tunnel key value to which the logical datapath is bound.
+      The <code>Tunnel Encapsulation</code> section in
+      <code>ovn-architecture</code>(7) describes how tunnel keys are
+      constructed for each supported encapsulation.
+    </column>
+
+    <group title="OVN_Northbound Relationship">
+      <p>
+        Each row in <ref table="Datapath_Binding"/> is associated with some
+        logical datapath.  <code>ovn-northd</code> uses these keys to track the
+        association of a logical datapath with concepts in the <ref
+        db="OVN_Northbound"/> database.
+      </p>
+
+      <column name="external_ids" key="logical-switch" type='{"type": "uuid"}'>
+        For a logical datapath that represents a logical switch,
+        <code>ovn-northd</code> stores in this key the UUID of the
+        corresponding <ref table="Logical_Switch" db="OVN_Northbound"/> row in
+        the <ref db="OVN_Northbound"/> database.
+      </column>
+
+      <column name="external_ids" key="logical-router" type='{"type": "uuid"}'>
+        For a logical datapath that represents a logical router,
+        <code>ovn-northd</code> stores in this key the UUID of the
+        corresponding <ref table="Logical_Router" db="OVN_Northbound"/> row in
+        the <ref db="OVN_Northbound"/> database.
+      </column>
+    </group>
+
+    <group title="Common Columns">
+      The overall purpose of these columns is described under <code>Common
+      Columns</code> at the beginning of this document.
+
+      <column name="external_ids"/>
+    </group>
+  </table>
+
+  <table name="Port_Binding" title="Physical-Logical Port Bindings">
+    <p>
+      Most rows in this table identify the physical location of a logical port.
+      (The exceptions are logical patch ports, which do not have any physical
+      location.)
+    </p>
+
+    <p>
+      For every <code>Logical_Port</code> record in <code>OVN_Northbound</code>
+      database, <code>ovn-northd</code> creates a record in this table.
+      <code>ovn-northd</code> populates and maintains every column except
+      the <code>chassis</code> column, which it leaves empty in new records.
+    </p>
+
+    <p>
+      <code>ovn-controller</code>/<code>ovn-controller-vtep</code>
+      populates the <code>chassis</code> column for the records that
+      identify the logical ports that are located on its hypervisor/gateway,
+      which <code>ovn-controller</code>/<code>ovn-controller-vtep</code> in
+      turn finds out by monitoring the local hypervisor's Open_vSwitch
+      database, which identifies logical ports via the conventions described
+      in <code>IntegrationGuide.md</code>.
+    </p>
+
+    <p>
+      When a chassis shuts down gracefully, it should clean up the
+      <code>chassis</code> column that it previously had populated.
+      (This is not critical because resources hosted on the chassis are equally
+      unreachable regardless of whether their rows are present.)  To handle the
+      case where a VM is shut down abruptly on one chassis, then brought up
+      again on a different one,
+      <code>ovn-controller</code>/<code>ovn-controller-vtep</code> must
+      overwrite the <code>chassis</code> column with new information.
+    </p>
+
+    <group title="Core Features">
+      <column name="datapath">
+        The logical datapath to which the logical port belongs.
+      </column>
+
+      <column name="logical_port">
+        A logical port, taken from <ref table="Logical_Port" column="name"
+        db="OVN_Northbound"/> in the OVN_Northbound database's <ref
+        table="Logical_Port" db="OVN_Northbound"/> table.  OVN does not
+        prescribe a particular format for the logical port ID.
+      </column>
+
+      <column name="chassis">
+        The physical location of the logical port.  To successfully identify a
+        chassis, this column must be a <ref table="Chassis"/> record.  This is
+        populated by
+        <code>ovn-controller</code>/<code>ovn-controller-vtep</code>.
+      </column>
+
+      <column name="tunnel_key">
+        <p>
+          A number that represents the logical port in the key (e.g. STT key or
+          Geneve TLV) field carried within tunnel protocol packets.
+        </p>
+
+        <p>
+          The tunnel ID must be unique within the scope of a logical datapath.
+        </p>
+      </column>
+
+      <column name="mac">
+        <p>
+          The Ethernet address or addresses used as a source address on the
+          logical port, each in the form
+          <var>xx</var>:<var>xx</var>:<var>xx</var>:<var>xx</var>:<var>xx</var>:<var>xx</var>.
+          The string <code>unknown</code> is also allowed to indicate that the
+          logical port has an unknown set of (additional) source addresses.
+        </p>
+
+        <p>
+          A VM interface would ordinarily have a single Ethernet address.  A
+          gateway port might initially only have <code>unknown</code>, and then
+          add MAC addresses to the set as it learns new source addresses.
+        </p>
+      </column>
+
+      <column name="type">
+        <p>
+          A type for this logical port.  Logical ports can be used to model other
+          types of connectivity into an OVN logical switch.  The following types
+          are defined:
+        </p>
+
+        <dl>
+          <dt>(empty string)</dt>
+          <dd>VM (or VIF) interface.</dd>
+
+          <dt><code>patch</code></dt>
+          <dd>
+            One of a pair of logical ports that act as if connected by a patch
+            cable.  Useful for connecting two logical datapaths, e.g. to connect
+            a logical router to a logical switch or to another logical router.
+          </dd>
+
+          <dt><code>localnet</code></dt>
+          <dd>
+            A connection to a locally accessible network from each
+            <code>ovn-controller</code> instance.  A logical switch can only
+            have a single <code>localnet</code> port attached and at most one
+            regular logical port.  This is used to model direct connectivity to
+            an existing network.
+          </dd>
+
+          <dt><code>vtep</code></dt>
+          <dd>
+            A port to a logical switch on a VTEP gateway chassis.  In order to
+            get this port correctly recognized by the OVN controller, the <ref
+            column="options"
+            table="Port_Binding"/>:<code>vtep-physical-switch</code> and <ref
+            column="options"
+            table="Port_Binding"/>:<code>vtep-logical-switch</code> must also
+            be defined.
+          </dd>
+        </dl>
+      </column>
+    </group>
+
+    <group title="Patch Options">
+      <p>
+        These options apply to logical ports with <ref column="type"/> of
+        <code>patch</code>.
+      </p>
+
+      <column name="options" key="peer">
+        The <ref column="logical_port"/> in the <ref table="Port_Binding"/>
+        record for the other side of the patch.  The named <ref
+        column="logical_port"/> must specify this <ref column="logical_port"/>
+        in its own <code>peer</code> option.  That is, the two patch logical
+        ports must have reversed <ref column="logical_port"/> and
+        <code>peer</code> values.
+      </column>
+    </group>
+
+    <group title="Localnet Options">
+      <p>
+        These options apply to logical ports with <ref column="type"/> of
+        <code>localnet</code>.
+      </p>
+
+      <column name="options" key="network_name">
+        Required.  <code>ovn-controller</code> uses the configuration entry
+        <code>ovn-bridge-mappings</code> to determine how to connect to this
+        network.  <code>ovn-bridge-mappings</code> is a list of network names
+        mapped to a local OVS bridge that provides access to that network.  An
+        example of configuring <code>ovn-bridge-mappings</code> would be:
+
+        <pre>$ ovs-vsctl set open . external-ids:ovn-bridge-mappings=physnet1:br-eth0,physnet2:br-eth1</pre>
+
+        <p>
+          When a logical switch has a <code>localnet</code> port attached,
+          every chassis that may have a local vif attached to that logical
+          switch must have a bridge mapping configured to reach that
+          <code>localnet</code>.  Traffic that arrives on a
+          <code>localnet</code> port is never forwarded over a tunnel to
+          another chassis.
+        </p>
+      </column>
+
+      <column name="tag">
+        If set, indicates that the port represents a connection to a specific
+        VLAN on a locally accessible network. The VLAN ID is used to match
+        incoming traffic and is also added to outgoing traffic.
+      </column>
+    </group>
+
+    <group title="VTEP Options">
+      <p>
+        These options apply to logical ports with <ref column="type"/> of
+        <code>vtep</code>.
+      </p>
+
+      <column name="options" key="vtep-physical-switch">
+        Required. The name of the VTEP gateway.
+      </column>
+
+      <column name="options" key="vtep-logical-switch">
+        Required.  A logical switch name connected by the VTEP gateway.  Must
+        be set when <ref column="type"/> is <code>vtep</code>.
+      </column>
+    </group>
+
+    <group title="Nested Containers">
+      <p>
+        These columns support containers nested within a VM.  Specifically,
+        they are used when <ref column="type"/> is empty and <ref
+        column="logical_port"/> identifies the interface of a container spawned
+        inside a VM.  They are empty for containers or VMs that run directly on
+        a hypervisor.
+      </p>
+
+      <column name="parent_port">
+        This is taken from
+        <ref table="Logical_Port" column="parent_name" db="OVN_Northbound"/>
+        in the OVN_Northbound database's <ref table="Logical_Port"
+        db="OVN_Northbound"/> table.
+      </column>
+
+      <column name="tag">
+        <p>
+          Identifies the VLAN tag in the network traffic associated with that
+          container's network interface.
+        </p>
+
+        <p>
+          This column is used for a different purpose when <ref column="type"/>
+          is <code>localnet</code> (see <code>Localnet Options</code>, above).
+        </p>
+      </column>
+    </group>
+  </table>
+</database>

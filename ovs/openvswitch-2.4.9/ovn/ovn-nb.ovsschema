@@ -1,0 +1,94 @@
+{
+    "name": "OVN_Northbound",
+    "version": "2.0.0",
+    "cksum": "3515938918 4583",
+    "tables": {
+        "Logical_Switch": {
+            "columns": {
+                "name": {"type": "string"},
+                "ports": {"type": {"key": {"type": "uuid",
+                                           "refTable": "Logical_Port",
+                                           "refType": "strong"},
+                                   "min": 0,
+                                   "max": "unlimited"}},
+                "acls": {"type": {"key": {"type": "uuid",
+                                          "refTable": "ACL",
+                                          "refType": "strong"},
+                                  "min": 0,
+                                  "max": "unlimited"}},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "isRoot": true},
+        "Logical_Port": {
+            "columns": {
+                "name": {"type": "string"},
+                "type": {"type": "string"},
+                "options": {
+                     "type": {"key": "string",
+                              "value": "string",
+                              "min": 0,
+                              "max": "unlimited"}},
+                "parent_name": {"type": {"key": "string", "min": 0, "max": 1}},
+                "tag": {
+                     "type": {"key": {"type": "integer",
+                                      "minInteger": 1,
+                                      "maxInteger": 4095},
+                              "min": 0, "max": 1}},
+                "addresses": {"type": {"key": "string",
+                                       "min": 0,
+                                       "max": "unlimited"}},
+                "port_security": {"type": {"key": "string",
+                                           "min": 0,
+                                           "max": "unlimited"}},
+                "up": {"type": {"key": "boolean", "min": 0, "max": 1}},
+                "enabled": {"type": {"key": "boolean", "min": 0, "max": 1}},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "indexes": [["name"]],
+            "isRoot": false},
+        "ACL": {
+            "columns": {
+                "priority": {"type": {"key": {"type": "integer",
+                                              "minInteger": 0,
+                                              "maxInteger": 32767}}},
+                "direction": {"type": {"key": {"type": "string",
+                                            "enum": ["set", ["from-lport", "to-lport"]]}}},
+                "match": {"type": "string"},
+                "action": {"type": {"key": {"type": "string",
+                                            "enum": ["set", ["allow", "allow-related", "drop", "reject"]]}}},
+                "log": {"type": "boolean"},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "isRoot": false},
+        "Logical_Router": {
+            "columns": {
+                "name": {"type": "string"},
+                "ports": {"type": {"key": {"type": "uuid",
+                                           "refTable": "Logical_Router_Port",
+                                           "refType": "strong"},
+                                   "min": 0,
+                                   "max": "unlimited"}},
+                "default_gw": {"type": {"key": "string", "min": 0, "max": 1}},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "isRoot": true},
+        "Logical_Router_Port": {
+            "columns": {
+                "name": {"type": "string"},
+                "network": {"type": "string"},
+                "mac": {"type": "string"},
+                "peer": {"type": {"key": {"type": "uuid",
+                                          "refTable": "Logical_Router_Port",
+                                          "refType": "strong"},
+                                  "min": 0, "max": 1}},
+                "enabled": {"type": {"key": "boolean", "min": 0, "max": 1}},
+                "external_ids": {
+                    "type": {"key": "string", "value": "string",
+                             "min": 0, "max": "unlimited"}}},
+            "isRoot": false}
+    }
+}

@@ -1,0 +1,270 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AA_REFRESH_INTERVAL	bridge.c	218;"	d	file:
+IFACE_STAT	bridge.c	2352;"	d	file:
+IFACE_STAT	bridge.c	2354;"	d	file:
+IFACE_STAT	bridge.c	2371;"	d	file:
+IFACE_STAT	bridge.c	2378;"	d	file:
+IFACE_STATS	bridge.c	2338;"	d	file:
+IFACE_STATS	bridge.c	2382;"	d	file:
+LINUX	system-stats.c	54;"	d	file:
+LINUX	system-stats.c	57;"	d	file:
+OVS_REQUIRES	system-stats.c	/^discard_stats(void) OVS_REQUIRES(mutex)$/;"	f
+STATUS_CHECK_AGAIN_MSEC	bridge.c	205;"	d	file:
+SYSTEM_STATS_INTERVAL	system-stats.c	525;"	d	file:
+USER_HZ	system-stats.c	229;"	d	file:
+VSWITCHD_BRIDGE_H	bridge.h	17;"	d
+VSWITCHD_SYSTEM_STATS	system-stats.h	17;"	d
+VSWITCHD_XENSERVER_H	xenserver.h	17;"	d
+VSWITCH_DOT_DIAGRAM_ARG	automake.mk	/^VSWITCH_DOT_DIAGRAM_ARG = --er-diagram=$(VSWITCH_PIC)$/;"	m
+VSWITCH_PIC	automake.mk	/^VSWITCH_PIC = vswitchd\/vswitch.pic$/;"	m
+aa_mapping	bridge.c	/^struct aa_mapping {$/;"	s	file:
+aa_refresh_timer	bridge.c	/^static long long int aa_refresh_timer = LLONG_MIN;$/;"	v	file:
+add_del_bridges	bridge.c	/^add_del_bridges(const struct ovsrec_open_vswitch *cfg)$/;"	f	file:
+add_ofp_port	bridge.c	/^add_ofp_port(ofp_port_t port, ofp_port_t *ports, size_t *n, size_t *allocated)$/;"	f	file:
+add_vlan_splinter_ports	bridge.c	/^add_vlan_splinter_ports(struct bridge *br,$/;"	f	file:
+all_bridges	bridge.c	/^static struct hmap all_bridges = HMAP_INITIALIZER(&all_bridges);$/;"	v	typeref:struct:hmap	file:
+allocated_recs	bridge.c	/^static size_t n_recs, allocated_recs;$/;"	v	file:
+booted	system-stats.c	/^    long long int booted;       \/* ms since monitor started. *\/$/;"	m	struct:process_info	file:
+br_name	bridge.c	/^    char *br_name;$/;"	m	struct:aa_mapping	file:
+br_refresh_datapath_info	bridge.c	/^br_refresh_datapath_info(struct bridge *br)$/;"	f	file:
+br_refresh_rstp_status	bridge.c	/^br_refresh_rstp_status(struct bridge *br)$/;"	f	file:
+br_refresh_stp_status	bridge.c	/^br_refresh_stp_status(struct bridge *br)$/;"	f	file:
+bridge	bridge.c	/^    struct bridge *bridge;$/;"	m	struct:aa_mapping	typeref:struct:aa_mapping::bridge	file:
+bridge	bridge.c	/^    struct bridge *bridge;$/;"	m	struct:mirror	typeref:struct:mirror::bridge	file:
+bridge	bridge.c	/^    struct bridge *bridge;$/;"	m	struct:port	typeref:struct:port::bridge	file:
+bridge	bridge.c	/^VLOG_DEFINE_THIS_MODULE(bridge);$/;"	v
+bridge	bridge.c	/^struct bridge {$/;"	s	file:
+bridge_aa_mapping_configure	bridge.c	/^bridge_aa_mapping_configure(struct aa_mapping *m)$/;"	f	file:
+bridge_aa_mapping_create	bridge.c	/^bridge_aa_mapping_create(struct bridge *br,$/;"	f	file:
+bridge_aa_mapping_destroy	bridge.c	/^bridge_aa_mapping_destroy(struct aa_mapping *m)$/;"	f	file:
+bridge_aa_mapping_find	bridge.c	/^bridge_aa_mapping_find(struct bridge *br, const int64_t isid)$/;"	f	file:
+bridge_aa_need_refresh	bridge.c	/^bridge_aa_need_refresh(struct bridge *br)$/;"	f	file:
+bridge_aa_refresh_queued	bridge.c	/^bridge_aa_refresh_queued(struct bridge *br)$/;"	f	file:
+bridge_aa_update_trunks	bridge.c	/^bridge_aa_update_trunks(struct port *port, struct bridge_aa_vlan *m)$/;"	f	file:
+bridge_add_ports	bridge.c	/^bridge_add_ports(struct bridge *br, const struct shash *wanted_ports)$/;"	f	file:
+bridge_add_ports__	bridge.c	/^bridge_add_ports__(struct bridge *br, const struct shash *wanted_ports,$/;"	f	file:
+bridge_collect_wanted_ports	bridge.c	/^bridge_collect_wanted_ports(struct bridge *br,$/;"	f	file:
+bridge_configure_aa	bridge.c	/^bridge_configure_aa(struct bridge *br)$/;"	f	file:
+bridge_configure_datapath_id	bridge.c	/^bridge_configure_datapath_id(struct bridge *br)$/;"	f	file:
+bridge_configure_dp_desc	bridge.c	/^bridge_configure_dp_desc(struct bridge *br)$/;"	f	file:
+bridge_configure_forward_bpdu	bridge.c	/^bridge_configure_forward_bpdu(struct bridge *br)$/;"	f	file:
+bridge_configure_ipfix	bridge.c	/^bridge_configure_ipfix(struct bridge *br)$/;"	f	file:
+bridge_configure_local_iface_netdev	bridge.c	/^bridge_configure_local_iface_netdev(struct bridge *br,$/;"	f	file:
+bridge_configure_mac_table	bridge.c	/^bridge_configure_mac_table(struct bridge *br)$/;"	f	file:
+bridge_configure_mcast_snooping	bridge.c	/^bridge_configure_mcast_snooping(struct bridge *br)$/;"	f	file:
+bridge_configure_mirrors	bridge.c	/^bridge_configure_mirrors(struct bridge *br)$/;"	f	file:
+bridge_configure_netflow	bridge.c	/^bridge_configure_netflow(struct bridge *br)$/;"	f	file:
+bridge_configure_remotes	bridge.c	/^bridge_configure_remotes(struct bridge *br,$/;"	f	file:
+bridge_configure_rstp	bridge.c	/^bridge_configure_rstp(struct bridge *br, bool enable_rstp)$/;"	f	file:
+bridge_configure_sflow	bridge.c	/^bridge_configure_sflow(struct bridge *br, int *sflow_bridge_number)$/;"	f	file:
+bridge_configure_spanning_tree	bridge.c	/^bridge_configure_spanning_tree(struct bridge *br)$/;"	f	file:
+bridge_configure_stp	bridge.c	/^bridge_configure_stp(struct bridge *br, bool enable_stp)$/;"	f	file:
+bridge_configure_tables	bridge.c	/^bridge_configure_tables(struct bridge *br)$/;"	f	file:
+bridge_create	bridge.c	/^bridge_create(const struct ovsrec_bridge *br_cfg)$/;"	f	file:
+bridge_del_ports	bridge.c	/^bridge_del_ports(struct bridge *br, const struct shash *wanted_ports)$/;"	f	file:
+bridge_delete_ofprotos	bridge.c	/^bridge_delete_ofprotos(void)$/;"	f	file:
+bridge_delete_or_reconfigure_ports	bridge.c	/^bridge_delete_or_reconfigure_ports(struct bridge *br)$/;"	f	file:
+bridge_destroy	bridge.c	/^bridge_destroy(struct bridge *br)$/;"	f	file:
+bridge_exit	bridge.c	/^bridge_exit(void)$/;"	f
+bridge_get_allowed_versions	bridge.c	/^bridge_get_allowed_versions(struct bridge *br)$/;"	f	file:
+bridge_get_controllers	bridge.c	/^bridge_get_controllers(const struct bridge *br,$/;"	f	file:
+bridge_get_memory_usage	bridge.c	/^bridge_get_memory_usage(struct simap *usage)$/;"	f
+bridge_has_bond_fake_iface	bridge.c	/^bridge_has_bond_fake_iface(const struct bridge *br, const char *name)$/;"	f	file:
+bridge_init	bridge.c	/^bridge_init(const char *remote)$/;"	f
+bridge_init_ofproto	bridge.c	/^bridge_init_ofproto(const struct ovsrec_open_vswitch *cfg)$/;"	f	file:
+bridge_lookup	bridge.c	/^bridge_lookup(const char *name)$/;"	f	file:
+bridge_ofproto_controller_for_mgmt	bridge.c	/^bridge_ofproto_controller_for_mgmt(const struct bridge *br,$/;"	f	file:
+bridge_ofproto_controller_from_ovsrec	bridge.c	/^bridge_ofproto_controller_from_ovsrec(const struct ovsrec_controller *c,$/;"	f	file:
+bridge_pick_datapath_id	bridge.c	/^bridge_pick_datapath_id(struct bridge *br,$/;"	f	file:
+bridge_pick_local_hw_addr	bridge.c	/^bridge_pick_local_hw_addr(struct bridge *br, struct eth_addr *ea,$/;"	f	file:
+bridge_reconfigure	bridge.c	/^COVERAGE_DEFINE(bridge_reconfigure);$/;"	v
+bridge_reconfigure	bridge.c	/^bridge_reconfigure(const struct ovsrec_open_vswitch *ovs_cfg)$/;"	f	file:
+bridge_run	bridge.c	/^bridge_run(void)$/;"	f
+bridge_run__	bridge.c	/^bridge_run__(void)$/;"	f	file:
+bridge_unixctl_dump_flows	bridge.c	/^bridge_unixctl_dump_flows(struct unixctl_conn *conn, int argc OVS_UNUSED,$/;"	f	file:
+bridge_unixctl_dump_flows	bridge.c	/^static unixctl_cb_func bridge_unixctl_dump_flows;$/;"	v	file:
+bridge_unixctl_reconnect	bridge.c	/^bridge_unixctl_reconnect(struct unixctl_conn *conn, int argc,$/;"	f	file:
+bridge_unixctl_reconnect	bridge.c	/^static unixctl_cb_func bridge_unixctl_reconnect;$/;"	v	file:
+bridge_wait	bridge.c	/^bridge_wait(void)$/;"	f
+cfg	bridge.c	/^    const struct ovsrec_bridge *cfg;$/;"	m	struct:bridge	typeref:struct:bridge::ovsrec_bridge	file:
+cfg	bridge.c	/^    const struct ovsrec_interface *cfg;$/;"	m	struct:iface	typeref:struct:iface::ovsrec_interface	file:
+cfg	bridge.c	/^    const struct ovsrec_mirror *cfg;$/;"	m	struct:mirror	typeref:struct:mirror::ovsrec_mirror	file:
+cfg	bridge.c	/^    const struct ovsrec_port *cfg;$/;"	m	struct:port	typeref:struct:port::ovsrec_port	file:
+change_seq	bridge.c	/^    uint64_t change_seq;$/;"	m	struct:iface	file:
+collect_in_band_managers	bridge.c	/^collect_in_band_managers(const struct ovsrec_open_vswitch *ovs_cfg,$/;"	f	file:
+collect_splinter_vlans	bridge.c	/^collect_splinter_vlans(const struct ovsrec_open_vswitch *ovs_cfg)$/;"	f	file:
+cond	system-stats.c	/^static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;$/;"	v	file:
+configure_splinter_port	bridge.c	/^configure_splinter_port(struct port *port)$/;"	f	file:
+connectivity_seqno	bridge.c	/^static uint64_t connectivity_seqno = LLONG_MIN;$/;"	v	file:
+count_crashes	system-stats.c	/^count_crashes(pid_t pid)$/;"	f	file:
+cputime	system-stats.c	/^    long long int cputime;      \/* ms of CPU used during 'uptime'. *\/$/;"	m	struct:process_info	file:
+cputime	system-stats.c	/^    long long int cputime;      \/* ms of CPU used during 'uptime'. *\/$/;"	m	struct:raw_process_info	file:
+crashes	system-stats.c	/^    int crashes;                \/* # of crashes (usually 0). *\/$/;"	m	struct:process_info	file:
+daemonize_txn	bridge.c	/^static struct ovsdb_idl_txn *daemonize_txn;$/;"	v	typeref:struct:ovsdb_idl_txn	file:
+default_ea	bridge.c	/^    struct eth_addr default_ea; \/* Default MAC. *\/$/;"	m	struct:bridge	typeref:struct:bridge::eth_addr	file:
+discover_types	bridge.c	/^discover_types(const struct ovsrec_open_vswitch *cfg)$/;"	f	file:
+dpid_from_hash	bridge.c	/^dpid_from_hash(const void *data, size_t n)$/;"	f	file:
+ds	bridge.c	/^    struct ds *ds;$/;"	m	struct:qos_unixctl_show_cbdata	typeref:struct:qos_unixctl_show_cbdata::ds	file:
+ea	bridge.c	/^    struct eth_addr ea;         \/* Bridge Ethernet Address. *\/$/;"	m	struct:bridge	typeref:struct:bridge::eth_addr	file:
+enable_lacp	bridge.c	/^enable_lacp(struct port *port, bool *activep)$/;"	f	file:
+enable_system_stats	bridge.c	/^enable_system_stats(const struct ovsrec_open_vswitch *cfg)$/;"	f	file:
+enabled	system-stats.c	/^static bool enabled;$/;"	v	file:
+equal_pathnames	bridge.c	/^equal_pathnames(const char *a, const char *b, size_t b_stoplen)$/;"	f	file:
+find_local_hw_addr	bridge.c	/^find_local_hw_addr(const struct bridge *br, struct eth_addr *ea,$/;"	f	file:
+free_registered_recs	bridge.c	/^free_registered_recs(void)$/;"	f	file:
+get_boot_time	system-stats.c	/^get_boot_time(void)$/;"	f	file:
+get_cpu_cores	system-stats.c	/^get_cpu_cores(struct smap *stats)$/;"	f	file:
+get_filesys_stats	system-stats.c	/^get_filesys_stats(struct smap *stats OVS_UNUSED)$/;"	f	file:
+get_load_average	system-stats.c	/^get_load_average(struct smap *stats OVS_UNUSED)$/;"	f	file:
+get_memory_stats	system-stats.c	/^get_memory_stats(struct smap *stats)$/;"	f	file:
+get_page_size	system-stats.c	/^get_page_size(void)$/;"	f	file:
+get_process_info	system-stats.c	/^get_process_info(pid_t pid, struct process_info *pinfo)$/;"	f	file:
+get_process_stats	system-stats.c	/^get_process_stats(struct smap *stats)$/;"	f	file:
+get_raw_process_info	system-stats.c	/^get_raw_process_info(pid_t pid, struct raw_process_info *raw)$/;"	f	file:
+hmap_node	bridge.c	/^    struct hmap_node hmap_node; \/* Element in struct bridge's "ports" hmap. *\/$/;"	m	struct:port	typeref:struct:port::hmap_node	file:
+hmap_node	bridge.c	/^    struct hmap_node hmap_node; \/* In struct bridge's "mappings" hmap. *\/$/;"	m	struct:aa_mapping	typeref:struct:aa_mapping::hmap_node	file:
+hmap_node	bridge.c	/^    struct hmap_node hmap_node; \/* In struct bridge's "mirrors" hmap. *\/$/;"	m	struct:mirror	typeref:struct:mirror::hmap_node	file:
+host_uuid	xenserver.c	/^static char *host_uuid;$/;"	v	file:
+idl	bridge.c	/^static struct ovsdb_idl *idl;$/;"	v	typeref:struct:ovsdb_idl	file:
+idl_seqno	bridge.c	/^static unsigned int idl_seqno;$/;"	v	file:
+if_change_cb	bridge.c	/^if_change_cb(void *aux OVS_UNUSED)$/;"	f	file:
+iface	bridge.c	/^    struct iface *iface;$/;"	m	struct:qos_unixctl_show_cbdata	typeref:struct:qos_unixctl_show_cbdata::iface	file:
+iface	bridge.c	/^struct iface {$/;"	s	file:
+iface_by_name	bridge.c	/^    struct hmap iface_by_name;  \/* "struct iface"s indexed by name. *\/$/;"	m	struct:bridge	typeref:struct:bridge::hmap	file:
+iface_clear_db_record	bridge.c	/^iface_clear_db_record(const struct ovsrec_interface *if_cfg, char *errp)$/;"	f	file:
+iface_configure_cfm	bridge.c	/^iface_configure_cfm(struct iface *iface)$/;"	f	file:
+iface_configure_lacp	bridge.c	/^iface_configure_lacp(struct iface *iface, struct lacp_slave_settings *s)$/;"	f	file:
+iface_configure_qos	bridge.c	/^iface_configure_qos(struct iface *iface, const struct ovsrec_qos *qos)$/;"	f	file:
+iface_create	bridge.c	/^iface_create(struct bridge *br, const struct ovsrec_interface *iface_cfg,$/;"	f	file:
+iface_destroy	bridge.c	/^iface_destroy(struct iface *iface)$/;"	f	file:
+iface_destroy__	bridge.c	/^iface_destroy__(struct iface *iface)$/;"	f	file:
+iface_do_create	bridge.c	/^iface_do_create(const struct bridge *br,$/;"	f	file:
+iface_find	bridge.c	/^iface_find(const char *name)$/;"	f	file:
+iface_from_ofp_port	bridge.c	/^iface_from_ofp_port(const struct bridge *br, ofp_port_t ofp_port)$/;"	f	file:
+iface_get_requested_ofp_port	bridge.c	/^iface_get_requested_ofp_port(const struct ovsrec_interface *cfg)$/;"	f	file:
+iface_get_type	bridge.c	/^iface_get_type(const struct ovsrec_interface *iface,$/;"	f	file:
+iface_is_internal	bridge.c	/^iface_is_internal(const struct ovsrec_interface *iface,$/;"	f	file:
+iface_is_synthetic	bridge.c	/^iface_is_synthetic(const struct iface *iface)$/;"	f	file:
+iface_lookup	bridge.c	/^iface_lookup(const struct bridge *br, const char *name)$/;"	f	file:
+iface_pick_ofport	bridge.c	/^iface_pick_ofport(const struct ovsrec_interface *cfg)$/;"	f	file:
+iface_refresh_cfm_stats	bridge.c	/^iface_refresh_cfm_stats(struct iface *iface)$/;"	f	file:
+iface_refresh_netdev_status	bridge.c	/^iface_refresh_netdev_status(struct iface *iface)$/;"	f	file:
+iface_refresh_ofproto_status	bridge.c	/^iface_refresh_ofproto_status(struct iface *iface)$/;"	f	file:
+iface_refresh_stats	bridge.c	/^iface_refresh_stats(struct iface *iface)$/;"	f	file:
+iface_set_mac	bridge.c	/^iface_set_mac(const struct bridge *br, const struct port *port, struct iface *iface)$/;"	f	file:
+iface_set_netdev_config	bridge.c	/^iface_set_netdev_config(const struct ovsrec_interface *iface_cfg,$/;"	f	file:
+iface_set_ofport	bridge.c	/^iface_set_ofport(const struct ovsrec_interface *if_cfg, ofp_port_t ofport)$/;"	f	file:
+iface_validate_ofport__	bridge.c	/^iface_validate_ofport__(size_t n, int64_t *ofport)$/;"	f	file:
+ifaces	bridge.c	/^    struct hmap ifaces;         \/* "struct iface"s indexed by ofp_port. *\/$/;"	m	struct:bridge	typeref:struct:bridge::hmap	file:
+ifaces	bridge.c	/^    struct ovs_list ifaces;    \/* List of "struct iface"s. *\/$/;"	m	struct:port	typeref:struct:port::ovs_list	file:
+ifaces_changed	bridge.c	/^static bool ifaces_changed = false;$/;"	v	file:
+ifnotifier	bridge.c	/^static struct if_notifier *ifnotifier;$/;"	v	typeref:struct:if_notifier	file:
+initial_config_done	bridge.c	/^static bool initial_config_done;$/;"	v	file:
+isid	bridge.c	/^    uint32_t isid;$/;"	m	struct:aa_mapping	file:
+main	ovs-vswitchd.c	/^main(int argc, char *argv[])$/;"	f
+mappings	bridge.c	/^    struct hmap mappings;       \/* "struct" indexed by UUID *\/$/;"	m	struct:bridge	typeref:struct:bridge::hmap	file:
+mirror	bridge.c	/^struct mirror {$/;"	s	file:
+mirror_collect_ports	bridge.c	/^mirror_collect_ports(struct mirror *m,$/;"	f	file:
+mirror_configure	bridge.c	/^mirror_configure(struct mirror *m)$/;"	f	file:
+mirror_create	bridge.c	/^mirror_create(struct bridge *br, const struct ovsrec_mirror *cfg)$/;"	f	file:
+mirror_destroy	bridge.c	/^mirror_destroy(struct mirror *m)$/;"	f	file:
+mirror_find_by_uuid	bridge.c	/^mirror_find_by_uuid(struct bridge *br, const struct uuid *uuid)$/;"	f	file:
+mirror_refresh_stats	bridge.c	/^mirror_refresh_stats(struct mirror *m)$/;"	f	file:
+mirrors	bridge.c	/^    struct hmap mirrors;        \/* "struct mirror" indexed by UUID. *\/$/;"	m	struct:bridge	typeref:struct:bridge::hmap	file:
+mutex	system-stats.c	/^static struct ovs_mutex mutex = OVS_MUTEX_INITIALIZER;$/;"	v	typeref:struct:ovs_mutex	file:
+n_recs	bridge.c	/^static size_t n_recs, allocated_recs;$/;"	v	file:
+name	bridge.c	/^    char *name;                 \/* Host network device name. *\/$/;"	m	struct:iface	file:
+name	bridge.c	/^    char *name;                 \/* User-specified arbitrary name. *\/$/;"	m	struct:bridge	file:
+name	bridge.c	/^    char *name;$/;"	m	struct:mirror	file:
+name	bridge.c	/^    char *name;$/;"	m	struct:port	file:
+name	system-stats.c	/^    char name[18];              \/* Name (surrounded by parentheses). *\/$/;"	m	struct:raw_process_info	file:
+name_node	bridge.c	/^    struct hmap_node name_node; \/* In struct bridge's "iface_by_name" hmap. *\/$/;"	m	struct:iface	typeref:struct:iface::hmap_node	file:
+netdev	bridge.c	/^    struct netdev *netdev;      \/* Network device. *\/$/;"	m	struct:iface	typeref:struct:iface::netdev	file:
+node	bridge.c	/^    struct hmap_node node;      \/* In 'all_bridges'. *\/$/;"	m	struct:bridge	typeref:struct:bridge::hmap_node	file:
+ofp12_controller_role_to_str	bridge.c	/^ofp12_controller_role_to_str(enum ofp12_controller_role role)$/;"	f	file:
+ofp_port	bridge.c	/^    ofp_port_t ofp_port;        \/* OpenFlow port number. *\/$/;"	m	struct:iface	file:
+ofp_port_node	bridge.c	/^    struct hmap_node ofp_port_node; \/* In struct bridge's "ifaces" hmap. *\/$/;"	m	struct:iface	typeref:struct:iface::hmap_node	file:
+ofproto	bridge.c	/^    struct ofproto *ofproto;    \/* OpenFlow switch. *\/$/;"	m	struct:bridge	typeref:struct:bridge::ofproto	file:
+ovs_vswitchd_exit	ovs-vswitchd.c	/^ovs_vswitchd_exit(struct unixctl_conn *conn, int argc OVS_UNUSED,$/;"	f	file:
+ovs_vswitchd_exit	ovs-vswitchd.c	/^static unixctl_cb_func ovs_vswitchd_exit;$/;"	v	file:
+ovsrec_fscs_is_valid	bridge.c	/^ovsrec_fscs_is_valid(const struct ovsrec_flow_sample_collector_set *fscs,$/;"	f	file:
+ovsrec_ipfix_is_valid	bridge.c	/^ovsrec_ipfix_is_valid(const struct ovsrec_ipfix *ipfix)$/;"	f	file:
+parse_options	ovs-vswitchd.c	/^parse_options(int argc, char *argv[], char **unixctl_pathp)$/;"	f	file:
+port	bridge.c	/^    struct port *port;          \/* Containing port. *\/$/;"	m	struct:iface	typeref:struct:iface::port	file:
+port	bridge.c	/^struct port {$/;"	s	file:
+port_configure	bridge.c	/^port_configure(struct port *port)$/;"	f	file:
+port_configure_bond	bridge.c	/^port_configure_bond(struct port *port, struct bond_settings *s)$/;"	f	file:
+port_configure_lacp	bridge.c	/^port_configure_lacp(struct port *port, struct lacp_settings *s)$/;"	f	file:
+port_configure_rstp	bridge.c	/^port_configure_rstp(const struct ofproto *ofproto, struct port *port,$/;"	f	file:
+port_configure_stp	bridge.c	/^port_configure_stp(const struct ofproto *ofproto, struct port *port,$/;"	f	file:
+port_create	bridge.c	/^port_create(struct bridge *br, const struct ovsrec_port *cfg)$/;"	f	file:
+port_del_ifaces	bridge.c	/^port_del_ifaces(struct port *port)$/;"	f	file:
+port_destroy	bridge.c	/^port_destroy(struct port *port)$/;"	f	file:
+port_elem	bridge.c	/^    struct ovs_list port_elem;  \/* Element in struct port's "ifaces" list. *\/$/;"	m	struct:iface	typeref:struct:iface::ovs_list	file:
+port_is_bond_fake_iface	bridge.c	/^port_is_bond_fake_iface(const struct port *port)$/;"	f	file:
+port_is_synthetic	bridge.c	/^port_is_synthetic(const struct port *port)$/;"	f	file:
+port_lookup	bridge.c	/^port_lookup(const struct bridge *br, const char *name)$/;"	f	file:
+port_refresh_bond_status	bridge.c	/^port_refresh_bond_status(struct port *port, bool force_update)$/;"	f	file:
+port_refresh_rstp_status	bridge.c	/^port_refresh_rstp_status(struct port *port)$/;"	f	file:
+port_refresh_stp_stats	bridge.c	/^port_refresh_stp_stats(struct port *port)$/;"	f	file:
+port_refresh_stp_status	bridge.c	/^port_refresh_stp_status(struct port *port)$/;"	f	file:
+ports	bridge.c	/^    struct hmap ports;          \/* "struct port"s indexed by name. *\/$/;"	m	struct:bridge	typeref:struct:bridge::hmap	file:
+ppid	system-stats.c	/^    pid_t ppid;                 \/* Parent. *\/$/;"	m	struct:raw_process_info	file:
+process_info	system-stats.c	/^struct process_info {$/;"	s	file:
+qos_unixctl_show	bridge.c	/^qos_unixctl_show(struct unixctl_conn *conn, int argc OVS_UNUSED,$/;"	f	file:
+qos_unixctl_show	bridge.c	/^static unixctl_cb_func qos_unixctl_show;$/;"	v	file:
+qos_unixctl_show_cbdata	bridge.c	/^struct qos_unixctl_show_cbdata {$/;"	s	file:
+qos_unixctl_show_queue	bridge.c	/^qos_unixctl_show_queue(unsigned int queue_id,$/;"	f	file:
+queue_ids_include	bridge.c	/^queue_ids_include(const struct ovsdb_datum *queues, int64_t target)$/;"	f	file:
+raw_process_info	system-stats.c	/^struct raw_process_info {$/;"	s	file:
+read_host_uuid	xenserver.c	/^read_host_uuid(void)$/;"	f	file:
+reconfigure_system_stats	bridge.c	/^reconfigure_system_stats(const struct ovsrec_open_vswitch *cfg)$/;"	f	file:
+recs	bridge.c	/^static struct ovsrec_port **recs;$/;"	v	typeref:struct:ovsrec_port	file:
+refresh_controller_status	bridge.c	/^refresh_controller_status(void)$/;"	f	file:
+register_rec	bridge.c	/^register_rec(struct ovsrec_port *rec)$/;"	f	file:
+rss	system-stats.c	/^    unsigned long int rss;      \/* Resident set size, in kB. *\/$/;"	m	struct:process_info	file:
+rss	system-stats.c	/^    unsigned long int rss;      \/* Resident set size, in kB. *\/$/;"	m	struct:raw_process_info	file:
+run_stats_update	bridge.c	/^run_stats_update(void)$/;"	f	file:
+run_status_update	bridge.c	/^run_status_update(void)$/;"	f	file:
+run_system_stats	bridge.c	/^run_system_stats(void)$/;"	f	file:
+stats_timer	bridge.c	/^static long long int stats_timer = LLONG_MIN;$/;"	v	file:
+stats_timer_interval	bridge.c	/^static int stats_timer_interval;$/;"	v	file:
+stats_txn	bridge.c	/^static struct ovsdb_idl_txn *stats_txn;$/;"	v	typeref:struct:ovsdb_idl_txn	file:
+stats_update_wait	bridge.c	/^stats_update_wait(void)$/;"	f	file:
+status_txn	bridge.c	/^static struct ovsdb_idl_txn *status_txn;$/;"	v	typeref:struct:ovsdb_idl_txn	file:
+status_txn_try_again	bridge.c	/^static bool status_txn_try_again;$/;"	v	file:
+status_update_wait	bridge.c	/^status_update_wait(void)$/;"	f	file:
+synth_local_iface	bridge.c	/^    struct ovsrec_interface synth_local_iface;$/;"	m	struct:bridge	typeref:struct:bridge::ovsrec_interface	file:
+synth_local_ifacep	bridge.c	/^    struct ovsrec_interface *synth_local_ifacep;$/;"	m	struct:bridge	typeref:struct:bridge::ovsrec_interface	file:
+synth_local_port	bridge.c	/^    struct ovsrec_port synth_local_port;$/;"	m	struct:bridge	typeref:struct:bridge::ovsrec_port	file:
+synthesize_splinter_port	bridge.c	/^synthesize_splinter_port(const char *real_dev_name,$/;"	f	file:
+system_stats	system-stats.c	/^VLOG_DEFINE_THIS_MODULE(system_stats);$/;"	v
+system_stats_enable	system-stats.c	/^system_stats_enable(bool enable)$/;"	f
+system_stats_run	system-stats.c	/^system_stats_run(void)$/;"	f
+system_stats_thread_func	system-stats.c	/^system_stats_thread_func(void *arg OVS_UNUSED)$/;"	f	file:
+system_stats_wait	system-stats.c	/^system_stats_wait(void)$/;"	f
+ticks_to_ms	system-stats.c	/^ticks_to_ms(unsigned long long int ticks)$/;"	f	file:
+type	bridge.c	/^    char *type;                 \/* Datapath type. *\/$/;"	m	struct:bridge	file:
+type	bridge.c	/^    const char *type;           \/* Usually same as cfg->type. *\/$/;"	m	struct:iface	file:
+uptime	system-stats.c	/^    long long int uptime;       \/* ms since last (re)started by monitor. *\/$/;"	m	struct:process_info	file:
+uptime	system-stats.c	/^    long long int uptime;       \/* ms since started. *\/$/;"	m	struct:raw_process_info	file:
+usage	ovs-vswitchd.c	/^usage(void)$/;"	f	file:
+uuid	bridge.c	/^    struct uuid uuid;           \/* UUID of this "mirror" record in database. *\/$/;"	m	struct:mirror	typeref:struct:mirror::uuid	file:
+vlan	bridge.c	/^    uint16_t vlan;$/;"	m	struct:aa_mapping	file:
+vlan_splinters_enabled_anywhere	bridge.c	/^static bool vlan_splinters_enabled_anywhere;$/;"	v	file:
+vlan_splinters_is_enabled	bridge.c	/^vlan_splinters_is_enabled(const struct ovsrec_interface *iface_cfg)$/;"	f	file:
+vswitchd	ovs-vswitchd.c	/^VLOG_DEFINE_THIS_MODULE(vswitchd);$/;"	v
+vswitchd_ovs_vswitchd_LDADD	automake.mk	/^vswitchd_ovs_vswitchd_LDADD = \\$/;"	m
+vswitchd_ovs_vswitchd_LDFLAGS	automake.mk	/^vswitchd_ovs_vswitchd_LDFLAGS = $(AM_LDFLAGS) $(DPDK_vswitchd_LDFLAGS)$/;"	m
+vswitchd_ovs_vswitchd_SOURCES	automake.mk	/^vswitchd_ovs_vswitchd_SOURCES = \\$/;"	m
+vsz	system-stats.c	/^    unsigned long int vsz;      \/* Virtual size, in kB. *\/$/;"	m	struct:process_info	file:
+vsz	system-stats.c	/^    unsigned long int vsz;      \/* Virtual size, in kB. *\/$/;"	m	struct:raw_process_info	file:
+want_mlockall	ovs-vswitchd.c	/^static bool want_mlockall;$/;"	v	file:
+wanted_ports	bridge.c	/^    struct shash wanted_ports;$/;"	m	struct:bridge	typeref:struct:bridge::shash	file:
+xenserver	xenserver.c	/^VLOG_DEFINE_THIS_MODULE(xenserver);$/;"	v
+xenserver_get_host_uuid	xenserver.c	/^xenserver_get_host_uuid(void)$/;"	f
