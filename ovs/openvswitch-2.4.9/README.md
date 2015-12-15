@@ -15,9 +15,9 @@ At present it can deal with icmp request&reply packet like regular device when N
 
 =================================
 How to use ?
----------------------------------
+
 [INSTALL]
----------------------------------
+
 ./boot.sh
 
 ./configure --with-linux=/lib/modules/`uname -r`/build --prefix=/usr --localstatedir=/var
@@ -49,9 +49,8 @@ ovs-vsctl add-br br0
 
 ovs-vsctl add-port br0 eth0
 
-----------------------------------
 [USE]
-----------------------------------
+
 Example
 
 	ovs-ofctl add-flow br-int dl_type=0x800,nw_proto=1,icmp_identify=xxxx,\
