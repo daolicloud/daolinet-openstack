@@ -4,7 +4,7 @@ Openvswitch Extension Work by DaoliNet
 Why Extension?
 ---------------------------------
 
-DaoliNet network virtualization solution uses openvswitch (OVS). However, the current version of OVS does not support the ping feature in ICMP. Our extension work adds the ping feature to OVS.
+DaoliNet network virtualization solution uses openvswitch (OVS). However, the current version of OVS does not support the ping feature in ICMP. Our extension work adds the ping feature to OVS. If you want us to add other OVS features, please contact us: daolinet@gmail.com, or daolinet@daolicloud.com
 
 =================================
 
