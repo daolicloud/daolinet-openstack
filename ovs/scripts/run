@@ -1,0 +1,147 @@
+#!/bin/bash
+
+SCRIPT="/.daolirc"
+OVSCTL="/usr/bin/ovs-vsctl"
+
+DEFAULT_DEV=$(ip route | awk '$1=="default" {print $5}')
+DEFAULT_GATEWAY=$(ip route | awk '$1=="default" {print $3}')
+
+. $PWD/daolienv
+
+: ${PRV_DEV:=$DEFAULT_DEV}
+: ${PUB_DEV:=$DEFAULT_DEV}
+: ${DB_HOST:=localhost}
+: ${DB_PWD:=""}
+: ${GATEWAY:=false}
+: ${GATEWAY_ADDR:="10.10.10.1"}
+
+install() {
+  if [ "$DEFAULT_DEV" = "br-int" ]; then
+    echo "You are already installation."
+    exit 0
+  fi
+  local pub_addr=$(ip addr show $PUB_DEV | awk '$1=="inet" {print $2}')
+  local pub_mac=$(ip addr show $PUB_DEV | awk '$1=="link/ether" {print $2}')
+  if [ -z "$pub_addr" ]; then
+    echo "The device $PUB_DEV is no address."
+    exit 2
+  fi
+  local prv_addr=$(ip addr show $PRV_DEV | awk '$1=="inet" {print $2}')
+  local prv_mac=$(ip addr show $PRV_DEV | awk '$1=="link/ether" {print $2}')
+  if [ -z "$prv_addr" ]; then
+    echo "The device $PRV_DEV is no address."
+    exit 2
+  fi
+
+  : ${IDC_ID:=0}
+  : ${PUB_IP:=${pub_addr%/*}}
+  [ -e "$SCRIPT" ] || touch $SCRIPT
+  crudini --set $SCRIPT PUBLIC DEVICE $PUB_DEV
+  crudini --set $SCRIPT PUBLIC ADDRESS $pub_addr
+  crudini --set $SCRIPT PUBLIC MACADDRESS $pub_mac
+  crudini --set $SCRIPT PRIVATE DEVICE $PRV_DEV
+  crudini --set $SCRIPT PRIVATE ADDRESS $prv_addr
+  crudini --set $SCRIPT PRIVATE MACADDRESS $prv_mac
+
+  systemctl stop NetworkManager
+  systemctl disable NetworkManager
+  pkill dhclient
+  rpm -q mariadb || yum install -y mariadb
+  $OVSCTL --may-exist add-br br-int
+  ip link set dev br-int up
+  $OVSCTL --may-exist add-port br-int $PUB_DEV
+  ip addr flush dev $PUB_DEV
+  ip addr add $pub_addr dev br-int
+  ip link set dev $PUB_DEV up
+  $OVSCTL set Bridge br-int other_config:hwaddr="$pub_mac"
+  if [ "$DEFAULT_DEV" = "$PUB_DEV" ] || [ "$DEFAULT_DEV" = "$PRV_DEV" ]; then
+    ip route add default via $DEFAULT_GATEWAY
+    crudini --set $SCRIPT GATEWAY ADDRESS $DEFAULT_GATEWAY
+  fi
+  if [ "$PUB_DEV" != "$PRV_DEV" ]; then
+    GATEWAY=true
+    $OVSCTL --may-exist add-port br-int br-tap -- set Interface br-tap type=internal
+    $OVSCTL --may-exist add-port br-int $PRV_DEV
+    ip link set dev br-tap up
+    ip addr delete $prv_addr dev $PRV_DEV
+    ip addr add $prv_addr dev br-tap
+    ip link set dev $PRV_DEV up
+    ip link set dev br-tap address $prv_mac
+  fi
+  rebuild
+  cp daoliboot /usr/bin/
+  cp daoliboot.service /usr/lib/systemd/system/
+  systemctl enable daoliboot
+  echo "Installation Successfully."
+}
+rebuild() {
+  local pub_dev=$(crudini --get $SCRIPT PUBLIC DEVICE)
+  local pub_addr=$(crudini --get $SCRIPT PUBLIC ADDRESS)
+  local pub_mac=$(crudini --get $SCRIPT PUBLIC MACADDRESS)
+  local prv_dev=$(crudini --get $SCRIPT PRIVATE DEVICE)
+  local prv_addr=$(crudini --get $SCRIPT PRIVATE ADDRESS)
+  local prv_mac=$(crudini --get $SCRIPT PRIVATE MACADDRESS)
+  local datapath=$($OVSCTL get Bridge br-int datapath_id|awk '{gsub("\"","");print $1}')
+  local idc_mac=
+  if [ "$PUB_DEV" != "$PRV_DEV" ]; then
+    idc_mac=$(arping -I br-int $GATEWAY_ADDR -c 1 -w 1.5|grep Unicast|awk -F[][] '{print $2}'|tail -1)
+  fi
+  SQL="INSERT INTO gateways(created_at,datapath_id,hostname,idc_id,idc_mac,vint_dev,vint_mac,vext_dev,vext_ip,ext_dev,ext_mac,ext_ip,int_dev,int_mac,int_ip,is_gateway,deleted) VALUE(NOW(),'$datapath','$(hostname)',$IDC_ID,'$idc_mac','br-tap','$prv_mac','br-int','$PUB_IP','$pub_dev','$pub_mac','${pub_addr%/*}','$prv_dev','$prv_mac','${prv_addr%/*}',$GATEWAY,0)"
+  mysqlexec "$SQL"
+}
+
+mysqlexec() {
+  mysql -unova -h$DB_HOST -p$DB_PWD nova -e "$@"
+}
+
+uninstall() {
+  if [ ! -f "$SCRIPT" ]; then
+    echo "You are already uninstallation."
+    exit 0
+  fi
+  local pub_dev=$(crudini --get $SCRIPT PUBLIC DEVICE)
+  local pub_addr=$(crudini --get $SCRIPT PUBLIC ADDRESS)
+  $OVSCTL --if-exists del-port br-int $pub_dev
+  ip addr flush dev br-int
+  ip addr flush dev $pub_dev
+  ip addr add $pub_addr dev $pub_dev
+
+  local prv_dev=$(crudini --get $SCRIPT PRIVATE DEVICE)
+  $OVSCTL --if-exists del-port br-int $prv_dev
+  if [ "$pub_dev" != "$prv_dev" ]; then
+    local prv_addr=$(crudini --get $SCRIPT PRIVATE ADDRESS)
+    ip addr flush dev br-tap
+    ip addr flush dev $prv_dev
+    ip addr add $prv_addr dev $prv_dev
+  fi
+  local gateway=$(crudini --get $SCRIPT GATEWAY ADDRESS)
+  if [ "$?" -eq 0 ] && [ -n "$gateway" ]; then
+    ip route add default via $gateway
+  fi
+
+  [ -e "$SCRIPT" ] && rm -f $SCRIPT
+  mysqlexec "DELETE FROM gateways WHERE hostname='$(hostname)'"
+  echo "Uninstallation Successfully."
+}
+
+usage() {
+  echo "usage: $0 install|uninstall"
+  echo
+  echo "Options:"
+  echo "  Export the controller database host and pasword"
+  echo "    export DB_HOST=<host>"
+  echo "    export DB_PWD=<password>"
+  exit 2
+}
+
+case "$1" in
+  install)
+    install
+  ;;
+  uninstall)
+    uninstall
+  ;;
+  *)
+    usage
+  ;;
+esac

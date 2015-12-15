@@ -1,0 +1,34 @@
+#!/bin/bash
+
+SCRIPT="/.daolirc"
+OVSCTL="/usr/bin/ovs-vsctl"
+
+if [ ! -e "$SCRIPT" ]; then
+  echo "File $SCRIPT do not exists."
+  exit 1
+fi
+
+systemctl start openvswitch
+systemctl start docker
+pub_dev=$(crudini --get $SCRIPT PUBLIC DEVICE)
+pub_addr=$(crudini --get $SCRIPT PUBLIC ADDRESS)
+ip link set br-int up
+ip addr delete $pub_addr dev $pub_dev
+ip addr flush dev $pub_dev
+ip addr add $pub_addr dev br-int
+ip link set $pub_dev up
+prv_dev=$(crudini --get $SCRIPT PRIVATE DEVICE)
+if [ "$pub_dev" != "$prv_dev" ]; then
+  prv_addr=$(crudini --get $SCRIPT PRIVATE ADDRESS)
+  prv_mac=$(crudini --get $SCRIPT PRIVATE MACADDRESS)
+  ip link set br-tap up
+  ip link set $prv_dev up
+  ip addr flush dev $prv_dev
+  ip addr add $prv_addr dev br-tap
+  ip link set dev br-tap address $prv_mac
+fi
+
+gateway=$(crudini --get $SCRIPT GATEWAY ADDRESS)
+if [ "$?" -eq 0 ] && [ -n "$gateway" ]; then
+  ip route add default via $gateway
+fi

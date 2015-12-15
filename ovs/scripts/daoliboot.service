@@ -1,0 +1,11 @@
+[Unit]
+Description=DaoliBoot Service
+After=syslog.target network.target docker.target
+
+[Service]
+Type=forking
+User=root
+ExecStart=/usr/bin/daoliboot
+
+[Install]
+WantedBy=multi-user.target
