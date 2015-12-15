@@ -19,15 +19,19 @@ How to use ?
 [INSTALL]
 ---------------------------------
 ./boot.sh
+
 ./configure --with-linux=/lib/modules/`uname -r`/build --prefix=/usr --localstatedir=/var
 
-make 
+make
+
 make install
 
 make modules_install
+
 /sbin/modprobe openvswitch
 
 mkdir -p /usr/local/etc/openvswitch
+
 ovsdb-tool create /usr/local/etc/openvswitch/conf.db vswitchd/vswitch.ovsschema
 
 ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
@@ -38,18 +42,22 @@ ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
                      --pidfile --detach
 
 ovs-vsctl --no-wait init
+
 ovs-vswitchd --pidfile --detach
+
 ovs-vsctl add-br br0
+
 ovs-vsctl add-port br0 eth0
 
 ----------------------------------
 [USE]
 ----------------------------------
 Example
+
 	ovs-ofctl add-flow br-int dl_type=0x800,nw_proto=1,icmp_identify=xxxx,\
 					actions=mod_icmp_identify:xxxx,output:xxx
 
 ==================================
 CONTACT US
 ----------------------------------
-nvi@daolicloud.com
+daolinet@daolicloud.com
