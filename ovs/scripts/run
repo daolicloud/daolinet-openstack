@@ -70,7 +70,7 @@ install() {
   fi
   rebuild
   cp daoliboot /usr/bin/
-  cp daoliboot.service /usr/lib/systemd/system/
+  cp *.service /usr/lib/systemd/system/
   systemctl enable daoliboot
   echo "Installation Successfully."
 }
