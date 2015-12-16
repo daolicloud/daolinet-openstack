@@ -1,4 +1,4 @@
-What is DaoliNet?
+DaoliNet for Lightweight Docker Networking
 =================
 
 DaoliNet is a Software Defined Networking (SDN) system that is designed for lightweight network connections for Docker containers, with high availability, performance and scale-out.
