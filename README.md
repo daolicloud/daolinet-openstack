@@ -21,7 +21,7 @@ Top-Level Features
 **Figure 1, DaoliNet Topology**
 
 
-Docker Networking
+Docker in Need of Lightweight Networking
 =================
 
 Docker is awesome! It is a container engine to virtualize server CPUs much more efficient than a hypervisor does for virtual machines (VMs). A Docker host can partition an X86 server into thousands of containers. Containers are playing more and more roles in cloud computing in place of VMs. However, because each Docker host is created independently from one another, containers in different Docker hosts are by default not connected one another. We need an efficient and lightweight networking solution to connect containers which are distributed in multiple Docker hosts.
