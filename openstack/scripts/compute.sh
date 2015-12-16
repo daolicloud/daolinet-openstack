@@ -17,4 +17,4 @@ systemctl enable docker.service
 systemctl start docker.service
 systemctl restart openstack-nova-compute
 
-echo "Installation Successfully
+echo "Installation Successfully"
