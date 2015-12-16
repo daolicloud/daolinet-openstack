@@ -56,5 +56,6 @@ systemctl restart openstack-nova-network
 systemctl restart openstack-nova-conductor
 systemctl restart openstack-nova-compute
 systemctl restart openstack-glance-api
+systemctl restart httpd
 
 echo "Installation Successfully"
