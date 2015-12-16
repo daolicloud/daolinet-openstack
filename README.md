@@ -11,7 +11,7 @@ Top-Level Features
 
 * Overlay network of containers is constructed without using packet encapsulation such as VLAN, VXLAN, GRE, etc. This unique feature of DaoliNet not only greatly saves server resource, just as Docker saves server resource without using hypervisors, but also more importantly simplifies cloud management: an overlay network of containers can be constructed in hot-plug manner, and can span over different Docker hosts, datacenters, or even behind different firewalls, irrespective of locations of the containers.
 
-* Pure software implementation, with high availability distribution over any underlying physical network, and plug-and-play easy adding servers to the resource pool.
+* Pure software implementation using Open-V-Switch (OVS) which is ubiquitously distributed in every Linux server, as distributed switches, routers, gateways and firewalls, with high availability and plug-and-play ease of adding servers to the resource pool.
 
 **More in our website**:  http://www.daolicloud.com
  
