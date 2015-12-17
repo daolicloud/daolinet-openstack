@@ -4,7 +4,8 @@ Install OpenStack:
 ------------------
 RDO Quickstart:
 Deploying RDO is a quick and easy process if your system is CentOS.
-        % https://www.rdoproject.org/install/quickstart/
+
+        https://www.rdoproject.org/install/quickstart/
 
 Other Ways:
 Please visit OpenStack website:
