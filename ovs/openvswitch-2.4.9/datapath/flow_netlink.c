@@ -345,7 +345,7 @@ static const struct ovs_len_tbl ovs_key_lens[OVS_KEY_ATTR_MAX + 1] = {
 	[OVS_KEY_ATTR_TUNNEL]	 = { .len = OVS_ATTR_NESTED,
 				     .next = ovs_tunnel_key_lens, },
 	[OVS_KEY_ATTR_MPLS]	 = { .len = sizeof(struct ovs_key_mpls) },
-	[OVS_KEY_SET_ICMP_ID]    = { .len = sizeof(struct ovs_key_ipv4) },//add by daolicloud
+	[OVS_KEY_SET_ICMP_ID]    = { .len = sizeof(struct ovs_key_ipv4) },//added by daolicloud
 };
 
 static bool check_attr_len(unsigned int attr_len, unsigned int expected_len)
@@ -1000,7 +1000,7 @@ static int ovs_key_from_nlattrs(struct sw_flow_match *match, u64 attrs,
 				htons(icmp_key->icmp_type), is_mask);
 		SW_FLOW_KEY_PUT(match, tp.dst,
 				htons(icmp_key->icmp_code), is_mask);
-                //add by daolicloud
+                //added by daolicloud
 		SW_FLOW_KEY_PUT(match, tp.flags,
 				htons(icmp_key->icmp_identify), is_mask);
 		/////
@@ -1490,7 +1490,7 @@ static int __ovs_nla_put_key(const struct sw_flow_key *swkey,
 			icmp_key = nla_data(nla);
 			icmp_key->icmp_type = ntohs(output->tp.src);
 			icmp_key->icmp_code = ntohs(output->tp.dst);
-			//add by daolicloud
+			//added by daolicloud
 			icmp_key->icmp_identify = ntohs(output->tp.flags);
 			/////
 		} else if (swkey->eth.type == htons(ETH_P_IPV6) &&
@@ -1896,7 +1896,7 @@ static int validate_set(const struct nlattr *a,
 	const struct ovs_key_ipv4 *ipv4_key;
 	const struct ovs_key_ipv6 *ipv6_key;
 	int err;
-        //add by daolicloud
+        //added by daolicloud
 	case OVS_KEY_SET_ICMP_ID:
 		if (flow_key->ip.proto != IPPROTO_ICMP)
 			return -EINVAL;

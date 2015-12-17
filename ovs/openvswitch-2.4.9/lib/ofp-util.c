@@ -226,7 +226,7 @@ ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
     if (!(ofpfw & OFPFW10_TP_DST)) {
         wc->masks.tp_dst = OVS_BE16_MAX;
     }
-    //add by daolicloud
+    //added by daolicloud
     if (!(ofpfw & OFPFW10_ICMP_ID)) {
 	    wc->masks.ipv6_label = UINT16_MAX;
     }
@@ -257,7 +257,7 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
                                struct match *match)
 {
     uint32_t ofpfw = ntohl(ofmatch->wildcards) & OFPFW10_ALL;
-    //add by daolicloud
+    //added by daolicloud
     ovs_be16 *t = (ovs_be16 *)&ofmatch->pad2;
     /////
     /* Initialize match->wc. */
@@ -276,7 +276,7 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
     match->flow.nw_tos = ofmatch->nw_tos & IP_DSCP_MASK;
     match->flow.nw_proto = ofmatch->nw_proto;
 
-    //add by daolicloud
+    //added by daolicloud
     match->flow.ipv6_label = *t;
     /////
     /* Translate VLANs. */
@@ -339,7 +339,7 @@ ofputil_match_to_ofp10_match(const struct match *match,
     if (!wc->masks.tp_dst) {
         ofpfw |= OFPFW10_TP_DST;
     }
-    //add by daolicloud
+    //added by daolicloud
     if (!wc->masks.ipv6_label) {
 	    ofpfw |= OFPFW10_ICMP_ID;
     }
@@ -387,7 +387,7 @@ ofputil_match_to_ofp10_match(const struct match *match,
     ofmatch->tp_dst = match->flow.tp_dst;
     memset(ofmatch->pad1, '\0', sizeof ofmatch->pad1);
     memset(ofmatch->pad2, '\0', sizeof ofmatch->pad2);
-    //add by daolicloud
+    //added by daolicloud
     memcpy(ofmatch->pad2, &match->flow.ipv6_label, sizeof ofmatch->pad2);
 }
 
@@ -540,7 +540,7 @@ ofputil_match_from_ofp11_match(const struct ofp11_match *ofmatch,
                     return OFPERR_OFPBMC_BAD_FIELD;
                 }
             }
-	    //add by daolicloud
+	    //added by daolicloud
 	    VLOG_ERR("-------------");
             if ((wc & OFPFW11_ICMP_ID)) {
 		    ovs_be16 *t = (ovs_be16 *)&ofmatch->pad2;
@@ -597,7 +597,7 @@ ofputil_match_to_ofp11_match(const struct match *match,
     } else {
         ofmatch->in_port = ofputil_port_to_ofp11(match->flow.in_port.ofp_port);
     }
-    //add by daolicloud
+    //added by daolicloud
     if (!match->wc.masks.ipv6_label) {
 	wc |= OFPFW11_ICMP_ID;
         memcpy(ofmatch->pad2, (void *)&match->flow.ipv6_label, sizeof ofmatch->pad2);
@@ -6603,7 +6603,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         MAY_IPV6        = 1 << 6, /* ipv6_src, ipv6_dst, ipv6_label */
         MAY_ND_TARGET   = 1 << 7, /* nd_target */
         MAY_MPLS        = 1 << 8, /* mpls label and tc */
-	MAY_ICMP_ID     = 1 << 9, /* icmp identify add by daolicloud */
+	MAY_ICMP_ID     = 1 << 9, /* icmp identify added by daolicloud */
     } may_match;
 
     struct flow_wildcards wc;
@@ -6616,7 +6616,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
             match->flow.nw_proto == IPPROTO_SCTP ||
             match->flow.nw_proto == IPPROTO_ICMP) {
             may_match |= MAY_TP_ADDR;
-	    //add by daolicloud
+	    //added by daolicloud
 	    if(match->flow.nw_proto == IPPROTO_ICMP){
 		    may_match |= MAY_ICMP_ID;
 	    }
@@ -6667,7 +6667,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
     if (!(may_match & MAY_ARP_THA)) {
         WC_UNMASK_FIELD(&wc, arp_tha);
     }
-//add by daolicloud
+//added by daolicloud
     if (!(may_match & MAY_IPV6)) {
 	if ((may_match & MAY_ICMP_ID)){
            wc.masks.ipv6_src = wc.masks.ipv6_dst = in6addr_any;

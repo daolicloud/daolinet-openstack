@@ -133,7 +133,7 @@ void match_set_nw_frag(struct match *, uint8_t nw_frag);
 void match_set_nw_frag_masked(struct match *, uint8_t nw_frag, uint8_t mask);
 void match_set_icmp_type(struct match *, uint8_t);
 void match_set_icmp_code(struct match *, uint8_t);
-//add by daolicloud
+//added by daolicloud
 void match_set_icmp(struct match *match, ovs_be16 id);
 void match_set_icmp_masked(struct match *match, ovs_be16 port, ovs_be16 mask);
 void match_set_icmp_identify(struct match *match, ovs_be16 id);

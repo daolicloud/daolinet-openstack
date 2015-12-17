@@ -41,7 +41,7 @@
 #include "gso.h"
 #include "vlan.h"
 #include "vport.h"
-//add by daolicloud
+//added by daolicloud
 #define DHCPDISCOVER    1
 #define DHCPOFFER       2
 #define DHCPREQUEST     3
@@ -63,6 +63,7 @@ struct arpft {
     unsigned char       ar_tha[ETH_ALEN];   /* target hardware address  */
     unsigned char       ar_tip[4];
 };
+//added by daolicloud
 static int set_icmp_identify(struct sk_buff *skb,const struct ovs_key_ipv4 *ipv4_key);
 /////
 static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
@@ -287,7 +288,7 @@ static int set_eth_addr(struct sk_buff *skb, struct sw_flow_key *flow_key,
 		return err;
 
 	skb_postpull_rcsum(skb, eth_hdr(skb), ETH_ALEN * 2);
-//add by daolicloud
+//added by daolicloud
         if (ETH_P_ARP == ntohs(eth_hdr(skb)->h_proto)) {
             struct arphdr *p = arp_hdr(skb);
             unsigned char ip[4];
@@ -319,7 +320,7 @@ static int set_eth_addr(struct sk_buff *skb, struct sw_flow_key *flow_key,
 	ether_addr_copy(flow_key->eth.dst, eth_hdr(skb)->h_dest);
 	return 0;
 }
-//add by daolicloud
+//added by daolicloud
 struct dhcphdr {
   u8 op, htype, hlen, hops;
   u32 xid;
@@ -390,7 +391,7 @@ static void update_ip_l4_checksum(struct sk_buff *skb, struct iphdr *nh,
 	} else if (nh->protocol == IPPROTO_UDP) {
 		if (likely(transport_len >= sizeof(struct udphdr))) {
 			struct udphdr *uh = udp_hdr(skb);
-			//add by daolicloud
+			//added by daolicloud
                         if (uh->source == htons(68) && uh->dest == htons(67)) {
                                 int ofset = 0;
                                 __be16 len = ntohs(uh->len) - sizeof(struct udphdr) - sizeof(struct dhcphdr);
@@ -912,7 +913,7 @@ static int execute_masked_set_action(struct sk_buff *skb,
 		err = set_ipv4(skb, flow_key, nla_data(a),
 			       get_mask(a, struct ovs_key_ipv4 *));
 		break;
-	//add by daolicloud
+	//added by daolicloud
         case OVS_KEY_SET_ICMP_ID:
         	err = set_icmp_identify(skb, nla_data(a));
         	break;
@@ -1141,7 +1142,7 @@ int ovs_execute_actions(struct datapath *dp, struct sk_buff *skb,
 	 */
 	return err;
 }
-//add by daolicloud
+//added by daolicloud
 static int set_icmp_identify(struct sk_buff *skb,
                              const struct ovs_key_ipv4 *ipv4_key)
 {

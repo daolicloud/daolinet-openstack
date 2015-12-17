@@ -836,7 +836,7 @@ nxm_put_ip(struct ofpbuf *b, const struct match *match, enum ofp_version oxm)
     nxm_put_32m(b, MFF_IPV6_LABEL, oxm,
                 flow->ipv6_label, match->wc.masks.ipv6_label);
 */
-    //add by daolicloud
+    //added by daolicloud
     if (!(is_icmpv4(flow))) {
 	nxm_put_32m(b, MFF_IPV6_LABEL, oxm,
 			flow->ipv6_label, match->wc.masks.ipv6_label);
@@ -872,7 +872,7 @@ nxm_put_ip(struct ofpbuf *b, const struct match *match, enum ofp_version oxm)
                 nxm_put_8(b, MFF_ICMPV4_CODE, oxm,
                           ntohs(flow->tp_dst));
             }
-            //add by daolicloud
+            //added by daolicloud
 	    if (match->wc.masks.ipv6_label) {
 		    nxm_put_16m(b, MFF_ICMPV4_IDENTIFY, oxm,
 				flow->ipv6_label,match->wc.masks.ipv6_label);

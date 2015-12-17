@@ -241,7 +241,7 @@ parse_field(const struct mf_field *mf, const char *s, struct match *match,
          * existence of the field, so use a no-op value. */
         s = "0/0";
     }
-    //add by daolicloud
+    //added by daolicloud
     /////
     error = mf_parse(mf, s, &value, &mask);
     if (!error) {

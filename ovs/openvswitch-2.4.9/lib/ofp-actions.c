@@ -1547,7 +1547,7 @@ format_SET_IPV4_SRC(const struct ofpact_ipv4 *a, struct ds *s)
 {
     ds_put_format(s, "mod_nw_src:"IP_FMT, IP_ARGS(a->ipv4));
 }
-//add by daolicloud
+//added by daolicloud
 static void
 format_SET_ICMP_ID(const struct ofpact_l4_port *a, struct ds *s)
 {
@@ -1720,7 +1720,7 @@ decode_OFPAT_RAW_SET_TP_SRC(ovs_be16 port,
     ofpact_put_SET_L4_SRC_PORT(out)->port = ntohs(port);
     return 0;
 }
-//add by daolicloud
+//added by daolicloud
 static enum ofperr
 decode_OFPAT_RAW_SET_ICMP_ID(ovs_be16 port,
                             enum ofp_version ofp_version OVS_UNUSED,
@@ -1796,7 +1796,7 @@ parse_SET_L4_SRC_PORT(char *arg, struct ofpbuf *ofpacts,
     return str_to_u16(arg, "source port",
                       &ofpact_put_SET_L4_SRC_PORT(ofpacts)->port);
 }
-//add by daolicloud
+//added by daolicloud
 static char * OVS_WARN_UNUSED_RESULT
 parse_SET_ICMP_ID(char *arg, struct ofpbuf *ofpacts,
                       enum ofputil_protocol *usable_protocols OVS_UNUSED)
@@ -5321,7 +5321,7 @@ ofpact_is_set_or_move_action(const struct ofpact *a)
     case OFPACT_SET_IP_TTL:
     case OFPACT_SET_IPV4_DST:
     case OFPACT_SET_IPV4_SRC:
-//add by daolicloud
+//added by daolicloud
     case OFPACT_SET_ICMP_ID:
     case OFPACT_SET_L4_DST_PORT:
     case OFPACT_SET_L4_SRC_PORT:
@@ -5392,7 +5392,7 @@ ofpact_is_allowed_in_actions_set(const struct ofpact *a)
     case OFPACT_SET_IP_TTL:
     case OFPACT_SET_IPV4_DST:
     case OFPACT_SET_IPV4_SRC:
-//add by daolicloud
+//added by daolicloud
     case OFPACT_SET_ICMP_ID:
     case OFPACT_SET_L4_DST_PORT:
     case OFPACT_SET_L4_SRC_PORT:
@@ -5613,7 +5613,7 @@ ovs_instruction_type_from_ofpact_type(enum ofpact_type type)
     case OFPACT_SET_ETH_DST:
     case OFPACT_SET_IPV4_SRC:
     case OFPACT_SET_IPV4_DST:
-    //add by daolicloud
+    //added by daolicloud
     case OFPACT_SET_ICMP_ID:
     case OFPACT_SET_IP_DSCP:
     case OFPACT_SET_IP_ECN:
@@ -6085,7 +6085,7 @@ ofpact_check__(enum ofputil_protocol *usable_protocols, struct ofpact *a,
 
     case OFPACT_SET_ETH_SRC:
     case OFPACT_SET_ETH_DST:
-    //add by daolicloud
+    //added by daolicloud
     case OFPACT_SET_ICMP_ID:
         return 0;
 
@@ -6704,7 +6704,7 @@ ofpact_outputs_to_port(const struct ofpact *ofpact, ofp_port_t port)
     case OFPACT_SET_IP_DSCP:
     case OFPACT_SET_IP_ECN:
     case OFPACT_SET_IP_TTL:
-//add by daolicloud
+//added by daolicloud
     case OFPACT_SET_ICMP_ID:
     case OFPACT_SET_L4_SRC_PORT:
     case OFPACT_SET_L4_DST_PORT:
