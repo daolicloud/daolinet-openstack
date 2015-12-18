@@ -2,6 +2,7 @@ import os
 import sys
 import six
 import copy
+import socket
 
 from eventlet import greenthread
 from oslo_config import cfg
@@ -107,7 +108,9 @@ class PacketIPv4(PacketBase):
                 mod_outkwargs['udp_dst'] = dst_port
 
         else:
-            outkwargs = inkwargs = {'icmpv4_id': pkt_tp.id}
+            #outkwargs = inkwargs = {'icmpv4_id': pkt_tp.id}
+            outkwargs = {'icmpv4_id': pkt_tp.id}
+            inkwargs = {'icmpv4_id': socket.ntohs(pkt_tp.id)}
             mod_inkwargs = mod_outkwargs = {'icmpv4_id': src_port}
 
         return (inkwargs, outkwargs, mod_inkwargs, mod_outkwargs)
@@ -139,10 +142,13 @@ class PacketIPv4(PacketBase):
                 mod_inkeys.append(ofp_set(udp_src=dst_port))
                 mod_outkeys.append(ofp_set(udp_dst=dst_port))
         else:
-            inkeys = [ofp_set(icmpv4_id=pkt_tp.id)]
-            outkeys = inkeys
+            #inkeys = [ofp_set(icmpv4_id=pkt_tp.id)]
+            #outkeys = inkeys
+            inkeys = [ofp_set(icmpv4_id=socket.ntohs(pkt_tp.id))]
+            outkeys = [ofp_set(icmpv4_id=pkt_tp.id)]
 
-            mod_inkeys = [ofp_set(icmpv4_id=src_port)]
+            #mod_inkeys = [ofp_set(icmpv4_id=src_port)]
+            mod_inkeys = [ofp_set(icmpv4_id=socket.ntohs(src_port))]
 
             if dst_port is not None:
                 mod_inkeys.append(ofp_set(icmpv4_id=dst_port))
@@ -727,7 +733,7 @@ class PacketIPv4(PacketBase):
         in_port = msg.match['in_port']
 
         if pkt_ipv4.proto == inet.IPPROTO_ICMP:
-            src_key = self.filter_port(pkt_tp.id)
+            src_key = socket.ntohs(self.filter_port(pkt_tp.id))
             #src_key = pkt_tp.id
         else:
             src_key = self.filter_port(pkt_tp.src_port)

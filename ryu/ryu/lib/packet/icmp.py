@@ -82,7 +82,8 @@ class icmp(packet_base.PacketBase):
         self.type = type_
         self.code = code
         self.csum = csum
-        self.id = id
+        import socket
+        self.id = socket.ntohs(id)
         self.data = data
 
     @classmethod

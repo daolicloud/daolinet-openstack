@@ -836,7 +836,7 @@ oxm_types = [
     # EXT-233 Output match Extension
     # NOTE(yamamoto): The spec says uint64_t but I assume it's an error.
     oxm_fields.ONFExperimenter('actset_output', 43, type_desc.Int4),
-    oxm_fields.OpenFlowBasic('icmpv4_id', 43, type_desc.Int2),
+    oxm_fields.OpenFlowBasic('icmpv4_id', 44, type_desc.Int2),
 ] + nx_match.oxm_types
 
 oxm_fields.generate(__name__)
