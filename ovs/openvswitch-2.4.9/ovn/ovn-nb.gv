@@ -1,0 +1,16 @@
+digraph OVN_Northbound {
+	rankdir=LR;
+	size="6.5,4";
+	margin="0";
+	node [shape=box];
+	edge [dir=none, arrowhead=none, arrowtail=none];
+	Logical_Port [];
+	Logical_Router_Port [];
+	Logical_Router_Port -> Logical_Router_Port [label="peer?"];
+	Logical_Router [style=bold];
+	Logical_Router -> Logical_Router_Port [label="ports*"];
+	Logical_Switch [style=bold];
+	Logical_Switch -> ACL [label="acls*"];
+	Logical_Switch -> Logical_Port [label="ports*"];
+	ACL [];
+}

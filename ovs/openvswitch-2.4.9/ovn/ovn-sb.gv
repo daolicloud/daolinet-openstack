@@ -1,0 +1,19 @@
+digraph OVN_Southbound {
+	rankdir=LR;
+	size="6.5,4";
+	margin="0";
+	node [shape=box];
+	edge [dir=none, arrowhead=none, arrowtail=none];
+	Datapath_Binding [style=bold];
+	Logical_Flow [style=bold];
+	Logical_Flow -> Datapath_Binding [label="logical_datapath"];
+	Multicast_Group [style=bold];
+	Multicast_Group -> Port_Binding [style=dotted, label="ports+"];
+	Multicast_Group -> Datapath_Binding [label="datapath"];
+	Chassis [style=bold];
+	Chassis -> Encap [label="encaps+"];
+	Encap [];
+	Port_Binding [style=bold];
+	Port_Binding -> Datapath_Binding [label="datapath"];
+	Port_Binding -> Chassis [style=dotted, label="chassis?"];
+}
