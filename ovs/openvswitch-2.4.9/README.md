@@ -8,7 +8,7 @@ DaoliNet network virtualization solution uses openvswitch (OVS). However, the cu
 
 If you want us to add other OVS features, please contact us: daolinet@gmail.com, or daolinet@daolicloud.com
 
-Source code containing DaoliNet's work is commented with //add by daolicloud
+Source code containing DaoliNet's work is commented with //added by daolicloud
 
 =================================
 

@@ -162,7 +162,7 @@ ovs_key_attr_to_string(enum ovs_key_attr attr, char *namebuf, size_t bufsize)
     case OVS_KEY_ATTR_MPLS: return "mpls";
     case OVS_KEY_ATTR_DP_HASH: return "dp_hash";
     case OVS_KEY_ATTR_RECIRC_ID: return "recirc_id";
-//add by daolicloud
+//added by daolicloud
     case OVS_KEY_SET_ICMP_ID: return "icmp_identify";
 
     case __OVS_KEY_ATTR_MAX:
@@ -1399,7 +1399,7 @@ static const struct attr_len_tbl ovs_flow_key_attr_lens[OVS_KEY_ATTR_MAX + 1] = 
     [OVS_KEY_ATTR_ICMPV6]    = { .len = sizeof(struct ovs_key_icmpv6) },
     [OVS_KEY_ATTR_ARP]       = { .len = sizeof(struct ovs_key_arp) },
     [OVS_KEY_ATTR_ND]        = { .len = sizeof(struct ovs_key_nd) },
-    [OVS_KEY_SET_ICMP_ID]    = { .len = sizeof(struct ovs_key_ipv4) },//add by daolicloud
+    [OVS_KEY_SET_ICMP_ID]    = { .len = sizeof(struct ovs_key_ipv4) },//added by daolicloud
     [OVS_KEY_ATTR_CT_STATE]  = { .len = 4 },
     [OVS_KEY_ATTR_CT_ZONE]   = { .len = 2 },
     [OVS_KEY_ATTR_CT_MARK]   = { .len = 4 },
@@ -2276,7 +2276,7 @@ format_odp_key_attr(const struct nlattr *a, const struct nlattr *ma,
         }
         break;
 
-    //add by daolicloud
+    //added by daolicloud
     case OVS_KEY_SET_ICMP_ID:
         break;
     case OVS_KEY_ATTR_PRIORITY:
@@ -3913,7 +3913,7 @@ odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
                                                 sizeof *icmp_key);
             icmp_key->icmp_type = ntohs(data->tp_src);
             icmp_key->icmp_code = ntohs(data->tp_dst);
-            //add by daolicloud
+            //added by daolicloud
             icmp_key->icmp_identify = ntohs(data->ipv6_label);
             /////
         } else if (flow->dl_type == htons(ETH_TYPE_IPV6)
@@ -4445,7 +4445,7 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
             flow->tp_src = htons(icmp_key->icmp_type);
             flow->tp_dst = htons(icmp_key->icmp_code);
             expected_bit = OVS_KEY_ATTR_ICMP;
-            //add by daolicloud
+            //added by daolicloud
             flow->ipv6_label = htons(icmp_key->icmp_identify);
             /////
         }
@@ -4960,7 +4960,7 @@ commit_set_ether_addr_action(const struct flow *flow, struct flow *base_flow,
         put_ethernet_key(&mask, &wc->masks);
     }
 }
-//add by daolicloud
+//added by daolicloud
 static void
 commit_icmp_action(const struct flow *flow, struct flow *base_flow,
                              struct ofpbuf *odp_actions,
@@ -5241,7 +5241,7 @@ commit_set_icmp_action(const struct flow *flow, struct flow *base_flow,
 {
     struct ovs_key_icmp key, mask, base;
     enum ovs_key_attr attr;
-    //add by daolicloud
+    //added by daolicloud
     key.icmp_identify = mask.icmp_identify = base.icmp_identify = 0;
     /////
     get_icmp_key(flow, &key);
@@ -5432,7 +5432,7 @@ commit_odp_actions(const struct flow *flow, struct flow *base,
                    bool use_masked)
 {
     enum slow_path_reason slow1, slow2;
-    //add by daolicloud
+    //added by daolicloud
     commit_icmp_action(flow, base, odp_actions, wc);
     /////
     commit_set_ether_addr_action(flow, base, odp_actions, wc, use_masked);

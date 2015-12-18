@@ -560,7 +560,7 @@ static int key_extract(struct sk_buff *skb, struct sw_flow_key *key)
 				 */
 				key->tp.src = htons(icmp->type);
 				key->tp.dst = htons(icmp->code);
-				//add by daolicloud
+				//added by daolicloud
 				key->tp.flags = htons(icmp->un.echo.id);
 				/////
 			} else {

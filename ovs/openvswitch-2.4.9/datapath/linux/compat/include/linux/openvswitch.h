@@ -357,7 +357,7 @@ enum ovs_key_attr {
 	/* Only used within kernel data path. */
 	OVS_KEY_ATTR_TUNNEL_INFO,  /* struct ovs_tunnel_info */
 #endif
-	OVS_KEY_SET_ICMP_ID = 27, //add by daolicloud
+	OVS_KEY_SET_ICMP_ID = 27, //added by daolicloud
 	__OVS_KEY_ATTR_MAX
 };
 
@@ -445,7 +445,7 @@ struct ovs_key_sctp {
 struct ovs_key_icmp {
 	__u8 icmp_type;
 	__u8 icmp_code;
-	//add by daolicloud
+	//added by daolicloud
 	__be16 icmp_identify;
 };
 

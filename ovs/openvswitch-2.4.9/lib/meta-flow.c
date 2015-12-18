@@ -311,7 +311,7 @@ mf_is_all_wild(const struct mf_field *mf, const struct flow_wildcards *wc)
         return !wc->masks.tp_dst;
     case MFF_TCP_FLAGS:
         return !wc->masks.tcp_flags;
-    //add by daolicloud
+    //added by daolicloud
     case MFF_ICMPV4_IDENTIFY:
         return !wc->masks.ipv6_label;
     case MFF_N_IDS:
@@ -519,7 +519,7 @@ mf_is_value_valid(const struct mf_field *mf, const union mf_value *value)
     case MFF_IPV4_SRC:
     case MFF_IPV4_DST:
     case MFF_IPV6_SRC:
-    //add by daolicloud
+    //added by daolicloud
     case MFF_ICMPV4_IDENTIFY:
     case MFF_IPV6_DST:
     case MFF_IP_PROTO:
@@ -821,7 +821,7 @@ mf_get_value(const struct mf_field *mf, const struct flow *flow,
     case MFF_ND_TARGET:
         value->ipv6 = flow->nd_target;
         break;
-    //add by daolicloud
+    //added by daolicloud
     case MFF_ICMPV4_IDENTIFY:
 	value->be16 = flow->ipv6_label;
 	break;
@@ -1054,7 +1054,7 @@ mf_set_value(const struct mf_field *mf,
         match_set_tp_src(match, value->be16);
         break;
 
-    //add by daolicloud
+    //added by daolicloud
     case MFF_ICMPV4_IDENTIFY:
 	match_set_icmp_identify(match, value->be16);
 	break;
@@ -1361,7 +1361,7 @@ mf_set_flow_value(const struct mf_field *mf,
     case MFF_SCTP_SRC:
         flow->tp_src = value->be16;
         break;
-    //add by daolicloud
+    //added by daolicloud
     case MFF_ICMPV4_IDENTIFY:
         flow->ipv6_label = value->be16;
         break;
@@ -1621,7 +1621,7 @@ mf_set_wild(const struct mf_field *mf, struct match *match, char **err_str)
         memset(&match->wc.masks.ipv6_dst, 0, sizeof match->wc.masks.ipv6_dst);
         memset(&match->flow.ipv6_dst, 0, sizeof match->flow.ipv6_dst);
         break;
-    //add by daolicloud
+    //added by daolicloud
     case MFF_ICMPV4_IDENTIFY:
     case MFF_IPV6_LABEL:
         match->wc.masks.ipv6_label = htonl(0);
@@ -1913,7 +1913,7 @@ mf_set(const struct mf_field *mf,
     case MFF_SCTP_SRC:
         match_set_tp_src_masked(match, value->be16, mask->be16);
         break;
-    //add by daolicloud
+    //added by daolicloud
     case MFF_ICMPV4_IDENTIFY:
 	match_set_icmp_identify(match, value->be16);
 	break;
@@ -1928,7 +1928,7 @@ mf_set(const struct mf_field *mf,
         match_set_tcp_flags_masked(match, value->be16, mask->be16);
         break;
 /*
-//add by daolicloud
+//added by daolicloud
     case MFF_ICMPV4_IDENTIFY:
 	//        VLOG_ERR("----------icmp-----------\n");
 	match_set_icmp_masked(match, value->be16, mask->be16);

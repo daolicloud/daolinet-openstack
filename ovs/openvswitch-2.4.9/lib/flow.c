@@ -555,7 +555,7 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
 
         /* Push both source and destination address at once. */
         miniflow_push_words(mf, nw_src, &nh->ip_src, 1);
-        //add by daolicloud
+        //added by daolicloud
         if (nh->ip_proto == IPPROTO_ICMP) {
             if (OVS_LIKELY(size >= ICMP_HEADER_LEN)) {
                 const void *data1 = data;
