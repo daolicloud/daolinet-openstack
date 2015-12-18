@@ -11,7 +11,7 @@ fi
 NSQL_CLI=$(echo $NOVA_CONF | sed 's/@[^\/]*//' | awk -F[:/] '{printf "%s -u%s -p%s %s ",$1,$4,$5,$6}')
 KSQL_CLI=$(echo $KEYSTONE_CONF | sed 's/@[^\/]*//' | awk -F[:/] '{printf "%s -u%s -p%s %s -e ",$1,$4,$5,$6}')
 
-yum remove openstack-neutron openstack-neutron-ml2 python-neutron openstack-neutron-openvswitch openstack-neutron-common openvswitch
+yum remove openstack-neutron openstack-neutron-ml2 python-neutron openstack-neutron-openvswitch openstack-neutron-common openvswitch -y
 rm -rf /etc/neutron/ /var/lib/neutron/
 $KSQL_CLI "delete from endpoint where service_id in (select id from service where type='network');delete from service where type='network';";
 
@@ -28,11 +28,12 @@ admin_token=$(crudini --get /etc/keystone/keystone.conf DEFAULT admin_token)
 local_settings="/usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py"
 cp /etc/openstack-dashboard/local_settings $local_settings
 if [ -z "$(cat $local_settings | grep ADMIN_TOKEN)" ]; then
-  echo "ADMIN_TOKEN=$admin_token" >> $local_settings
+  echo "ADMIN_TOKEN=\"$admin_token\"" >> $local_settings
 fi
 
 rpm -q docker || yum install -y docker
 rpm -q docker-python || yum install -y docker-python
+rpm -q openstack-nova-network || yum install -y openstack-nova-network
 openstack-config --set /etc/nova/nova.conf DEFAULT compute_driver novadocker.virt.docker.DockerDriver
 openstack-config --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
 openstack-config --set /etc/nova/nova.conf DEFAULT compute_manager nova.daolicloud.compute_manager.ComputeManager
