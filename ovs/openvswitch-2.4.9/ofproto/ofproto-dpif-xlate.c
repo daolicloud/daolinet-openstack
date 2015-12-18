@@ -4105,7 +4105,7 @@ recirc_unroll_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
         case OFPACT_SET_IP_DSCP:
         case OFPACT_SET_IP_ECN:
         case OFPACT_SET_IP_TTL:
-        //add by daolicloud
+        //added by daolicloud
         case OFPACT_SET_ICMP_ID:
         case OFPACT_SET_L4_SRC_PORT:
         case OFPACT_SET_L4_DST_PORT:
@@ -4386,7 +4386,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
                 flow->nw_ttl = ofpact_get_SET_IP_TTL(a)->ttl;
             }
             break;
-        //add by daolicloud
+        //added by daolicloud
 	case OFPACT_SET_ICMP_ID:
 	    if (ctx->xin->flow.dl_type == htons(ETH_TYPE_IP)) {
 		    memset(&wc->masks.nw_proto, 0xff, sizeof wc->masks.nw_proto);

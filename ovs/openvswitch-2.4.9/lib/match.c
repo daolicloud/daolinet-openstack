@@ -595,7 +595,7 @@ match_set_tp_dst_masked(struct match *match, ovs_be16 port, ovs_be16 mask)
     match->wc.masks.tp_dst = mask;
 }
 
-//add by daolicloud
+//added by daolicloud
 void match_set_icmp(struct match *match, ovs_be16 id)
 {
     match_set_icmp_masked(match, id, htons(UINT16_MAX));
@@ -1267,7 +1267,7 @@ match_format(const struct match *match, struct ds *s, int priority)
         f->nw_proto == IPPROTO_ICMP) {
         format_be16_masked(s, "icmp_type", f->tp_src, wc->masks.tp_src);
         format_be16_masked(s, "icmp_code", f->tp_dst, wc->masks.tp_dst);
-        //add by daolicloud
+        //added by daolicloud
         format_be16_masked(s, "icmp_identify",*(ovs_be16*)(&f->ipv6_label),*(ovs_be16*)(&wc->masks.ipv6_label));
         printf("hello world:%d\n",f->ipv6_label);
         /////

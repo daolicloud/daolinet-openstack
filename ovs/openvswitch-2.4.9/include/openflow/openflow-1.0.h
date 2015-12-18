@@ -214,7 +214,7 @@ enum ofp10_flow_wildcards {
 
     OFPFW10_DL_VLAN_PCP = 1 << 20, /* VLAN priority. */
     OFPFW10_NW_TOS = 1 << 21, /* IP ToS (DSCP field, 6 bits). */
-    //add by daolicloud
+    //added by daolicloud
     OFPFW10_ICMP_ID    = 1 << 22,
     /* Wildcard all fields. */
     OFPFW10_ALL = ((1 << 23) - 1)
