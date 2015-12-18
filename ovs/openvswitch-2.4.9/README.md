@@ -28,11 +28,11 @@ How to compile and install
 
 	/sbin/modprobe openvswitch
 
-	mkdir -p /usr/local/etc/openvswitch
+	mkdir -p /usr/etc/openvswitch
 
-	ovsdb-tool create /usr/local/etc/openvswitch/conf.db vswitchd/vswitch.ovsschema
+	ovsdb-tool create /usr/etc/openvswitch/conf.db vswitchd/vswitch.ovsschema
 
-	ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
+	ovsdb-server --remote=punix:/var/run/openvswitch/db.sock \
         	             --remote=db:Open_vSwitch,Open_vSwitch,manager_options \
         	             --private-key=db:Open_vSwitch,SSL,private_key \
         	             --certificate=db:Open_vSwitch,SSL,certificate \
@@ -43,9 +43,9 @@ How to compile and install
 
 	ovs-vswitchd --pidfile --detach
 
-	ovs-vsctl add-br br0
+	ovs-vsctl add-br br-int
 
-	ovs-vsctl add-port br0 eth0
+	ovs-vsctl add-port br-int eth0
 
 
 [USE]
