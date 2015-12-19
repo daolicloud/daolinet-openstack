@@ -78,4 +78,4 @@ Download Docker Image:
 	Download testing image from docker repositries.
 	% docker pull daolicloud/centos6.6-ssh
         % . ./keystonerc_admin
-        % docker save daolicloud/centos6.6-ssh | docker image-create --name daolicloud/centos6.6-ssh --disk-format raw --controller-format docker --visibility public
+        % docker save daolicloud/centos6.6-ssh | glance image-create --name daolicloud/centos6.6-ssh --disk-format raw --container-format docker --visibility public
