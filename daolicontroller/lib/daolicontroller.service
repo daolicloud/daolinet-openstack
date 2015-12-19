@@ -7,7 +7,7 @@ Type=notify
 TimeoutStartSec=0
 Restart=always
 User=root
-ExecStart=/usr/bin/daoliagent
+ExecStart=/usr/bin/daolicontroller
 
 [Install]
 WantedBy=multi-user.target
