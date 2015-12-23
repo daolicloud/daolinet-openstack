@@ -45,6 +45,8 @@ Install Controller:
 
 Install Openvswitch:
 --------------------
+        You can run:
+        ============
                %  ./boot.sh
                %  ./configure --with-linux=/lib/modules/`uname -r`/build --prefix=/usr --localstatedir=/var
                %  make
@@ -61,6 +63,9 @@ Install Openvswitch:
                                       --pidfile --detach
                %  ovs-vsctl --no-wait init
                %  ovs-vswitchd --pidfile --detach
+        or run:
+        =======
+               % bash ./setup.sh
 
         Edit daolienv file:
         ==================
