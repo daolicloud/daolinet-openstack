@@ -39,7 +39,7 @@ The DaoliNet Network Virtualization is based on OpenFlow Standard, which complet
 
 OpenFlow Controller
 -------------------
-This is a set of distributed web service agents. They receive a "PacketIn" request from a Decker host and reply a "PacketOut" response to the requesting host. A packetin request is a normal network packet that a Docker host receives from a container but does not know how to process switching/routing/gateway-in-out/firewall-in-out, due to lack of configuration intelligence. A packetout response from the Controller is a flow which configures in real time the packetin host to turn it into intelligent for forwarding packets.
+An OpenFlow Controller (below we use the Controller for OpenFlow Controller) is a set of distributed web-service-like agents. It receives a "PacketIn" request from a Decker host and replies a "PacketOut" response to the requesting host. A packetin request is a normal network packet that a Docker host receives from a container but does not know how to process switching/routing/gateway-forwarding/firewall-filtering, due to lack of configuration intelligence. A packetout response from the Controller is a flow which configures in real time a Docker host to turn it into intelligent for forwarding packets.
 
 Servers are Network Devices
 ---------------------------
