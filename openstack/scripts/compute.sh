@@ -2,6 +2,10 @@
 
 rpm -q docker || yum install -y docker
 rpm -q docker-python || yum install -y docker-python
+
+rm -rf /usr/lib/python2.7/site-packages/nova
+cp -r ../nova/ /usr/lib/python2.7/site-packages/
+
 openstack-config --set /etc/nova/nova.conf DEFAULT compute_driver novadocker.virt.docker.DockerDriver
 openstack-config --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
 openstack-config --set /etc/nova/nova.conf DEFAULT compute_manager nova.daolicloud.compute_manager.ComputeManager
