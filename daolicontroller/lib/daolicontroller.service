@@ -3,7 +3,6 @@ Description=OpenFlow Controller
 After=syslog.target network.target
 
 [Service]
-Type=notify
 TimeoutStartSec=0
 Restart=always
 User=root
