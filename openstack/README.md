@@ -34,6 +34,21 @@ Run Scripts:
  		% cd openstack/scripts/
 		% ./compute.sh
 
+        Note:In /etc/nova/api-paste.ini file:
+        =====================================
+             Notes：
+             ---------------------------------------------------
+                 % /v1.1: openstack_compute_api_v21_legacy_v2_compatible
+                 % /v2: openstack_compute_api_v21_legacy_v2_compatible
+             Change：
+             ---------------------------------------------------
+                 % /v1.1: openstack_compute_api_legacy_v2
+                 % /v2: openstack_compute_api_legacy_v2
+             Run:
+             -----------------------------------------------------
+                 % systemctl restart openstack-nova-api
+
+
 Install Controller:
 -------------------
 	% cd ryu/
