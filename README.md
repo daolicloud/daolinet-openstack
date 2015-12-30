@@ -87,9 +87,9 @@ No Firewall Chokepoint
 ---
 If an overlay network is constructed using packet encapsulation, then firewal-in-out must be at a so-called virtual tunnel endpoint (vtep) where packet encapsulation (for firewall ingress direction), and packet decapsulation (for firewall egress direction), are processed. Obviously, such a vtep point forms a traffic chokepoint. Since DaoliNet does not use packet encapsulation, firewall policy is simply a NAT flow (NAT-in flow for firewall ingress direction, NAT-out flow for firewall egress direction) which is packetout provided by the Controller upon seeing connection request between a pair of communications initiator and responder. With OVS being ubiquitously distributed in every Docker host server, firewall policy for every individual container is also ubiquitously distributed to every Docker host server which hosts the container. Such distributed firewall has no chokepoint. That is why we have drawn in Figure 1 for every Docker host server to have a direct connection to the Internet.
 
-Not Limited to Connecting Containers
+Seamless Connecting Virtual Machines and Containers
 ---
-Since OVSes in Linux form distributed switches, routers, gateways and firewalls, 
+Since OVSes form distributed switches, routers, gateways and firewalls, the DaoliNet technology obviously also works for connecting virtual machines (VMs) running on hypervisors (also connecting VMs and containers) as long as OVSes are used with the hypervisors. DaoliNet connecting VMs, containers, and VMs and containers use exactly the same method. Seamless and streamline connecting VMs and containers is the unique feature from DaoliNet.
 
 
 **More in our website:** http://www.daolicloud.com/html/technology.html
