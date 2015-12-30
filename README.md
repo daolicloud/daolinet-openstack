@@ -89,7 +89,7 @@ If an overlay network is constructed using packet encapsulation, then firewal-in
 
 Seamless Connecting Virtual Machines and Containers
 ---
-Since OVSes form distributed switches, routers, gateways and firewalls, the DaoliNet technology obviously also works for connecting virtual machines (VMs) running on hypervisors (also connecting VMs and containers) as long as OVSes are used with the hypervisors. The reader can think that some of the servers in Figures 1 and 2 run hypervisors with VMs on top. DaoliNet connecting VMs, containers, and VMs and containers use exactly the same technique. Seamless and streamline connecting VMs and containers is the unique feature from DaoliNet.
+With DaoliNet, OVSes under OpenFlow Controllers form distributed switches, routers, gateways and firewalls, the DaoliNet technology obviously also works for connecting virtual machines (VMs) running on hypervisors (also connecting VMs and containers) as long as OVSes are also used with hypervisors. The reader can view that some of the Linux servers in Figures 1 and 2 are replaced with hypervisors, and that containers are replaced with VMs. DaoliNet connecting VMs, containers, and between VMs and containers use exactly the same technique. Seamless and streamline connecting VMs and containers is the unique feature from DaoliNet.
 
 
 **More in our website:** http://www.daolicloud.com/html/technology.html
