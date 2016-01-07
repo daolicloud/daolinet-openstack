@@ -1,0 +1,4 @@
+[console_scripts]
+ryu-manager = ryu.cmd.manager:main
+ryu = ryu.cmd.ryu_base:main
+
