@@ -89,7 +89,7 @@ Install Openvswitch:
               % DB_HOST= "Host of database"
               % DB_PWD=  "Password of database"
 
-	%  ./run
+	%  ./run install
 	% ovs-vsctl set-controller br-int tcp:<ControllerAddress>:6633
 
 
