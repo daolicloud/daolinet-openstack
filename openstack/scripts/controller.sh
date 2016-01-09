@@ -25,11 +25,7 @@ rm -rf /usr/share/openstack-dashboard
 cp -r ../openstack-dashboard/ /usr/share/
 
 admin_token=$(crudini --get /etc/keystone/keystone.conf DEFAULT admin_token)
-local_settings="/usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py"
-cp /etc/openstack-dashboard/local_settings $local_settings
-if [ -z "$(cat $local_settings | grep ADMIN_TOKEN)" ]; then
-  echo "ADMIN_TOKEN=\"$admin_token\"" >> $local_settings
-fi
+sed -i 's/^ADMIN_TOKEN=.*/ADMIN_TOKEN=$admin_token/' /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
 
 rpm -q docker || yum install -y docker
 rpm -q docker-python || yum install -y docker-python
