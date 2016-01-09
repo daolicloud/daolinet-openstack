@@ -24,7 +24,7 @@ LOG = logging.getLogger(__name__)
 
 UNKNOWN = "UNKNOWN"
 CONTAINERS = ["ssh", "wordpress", "mysql", "python", "php", "perl",
-              "ruby", "java", "go", "apache" "tomcat", "nginx"]
+              "ruby", "java", "go", "apache", "tomcat", "nginx", "node.js"]
 
 class IndexView(generic.TemplateView):
     template_name = 'project/vpcs/index.html'
@@ -77,6 +77,8 @@ def get_image_type(image):
 
     for cs in CONTAINERS:
         if cs in image.name:
+            if cs == 'node.js':
+                cs = 'nodejs'
             image_type = cs
             break
 
