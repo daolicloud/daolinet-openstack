@@ -333,7 +333,7 @@ class ImagesTable(tables.DataTable):
             launch_actions = (LaunchImage,) + launch_actions
         if getattr(settings, 'LAUNCH_INSTANCE_NG_ENABLED', False):
             launch_actions = (LaunchImageNG,) + launch_actions
-        row_actions = launch_actions + (CreateVolumeFromImage,
-                                        EditImage, UpdateMetadata,
+        #row_actions = launch_actions + (CreateVolumeFromImage,
+        row_actions = launch_actions + (EditImage, UpdateMetadata,
                                         DeleteImage,)
         pagination_param = "image_marker"
