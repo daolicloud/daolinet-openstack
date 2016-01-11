@@ -16,7 +16,7 @@ Top-Level Features
 **More in our website**:  http://www.daolicloud.com
  
 
-![](http://www.daolicloud.com/static/topology.png)
+![](http://www.daolicloud.com/dashboard/static/github/topology.png)
 
 **Figure 1, DaoliNet Topology**
 
@@ -52,7 +52,7 @@ When a container is created in a Docker host server, its network medadata will b
 When a container (say C1 in Figure 2 below) initiates a communication session to another container (C2), packets from C1 are received by the Docker host (Server1) for to forward to C2 (hosted by Server2). However, Server1 has no switching, routing, or gateway information for these packets. In OpenFlow standard, the OVS in Server1 will ask for help from the Controller by lifting the first packet to the Controller. This packet-lift-to-controller event is called packetin (see PacketIn1 in the figure below).
  
 
-![](http://www.daolicloud.com/static/workflow.png)
+![](http://www.daolicloud.com/dashboard/static/github/workflow.png)
 
 **Figure 2, NAT-NAT Flow**
 
