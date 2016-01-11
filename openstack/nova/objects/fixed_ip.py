@@ -213,11 +213,11 @@ class FixedIP(obj_base.NovaPersistentObject, obj_base.NovaObject,
 
     @obj_base.remotable_classmethod
     def fixed_ip_add(cls, context, instance_uuid, network_uuid, network_id,
-                     user_id, address=None, reserved=False):
+                     user_id, address=None, **kwargs):
         db_fixedip = db.fixed_ip_add(context, instance_uuid,
                                      network_uuid, network_id,
                                      user_id, address=address,
-                                     reserved=reserved)
+                                     **kwargs)
         return cls._from_db_object(context, cls(context), db_fixedip)
 
     @obj_base.remotable_classmethod

@@ -1944,9 +1944,9 @@ def instance_tag_exists(context, instance_uuid, tag):
 ###############
 
 def fixed_ip_add(context, instance_uuid, network_uuid, network_id, user_id,
-                 address=None, reserved=False):
+                 address=None, **kwargs):
     return IMPL.fixed_ip_add(context, instance_uuid, network_uuid, network_id,
-                             user_id, address=address, reserved=reserved)
+                             user_id, address=address, **kwargs)
 
 def fixed_ip_delete(context, address, instance_uuid):
     IMPL.fixed_ip_delete(context, address, instance_uuid)

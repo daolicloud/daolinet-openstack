@@ -2,7 +2,7 @@
 {% load url from future %}
 
 {% if firewalls %}
-  {{ firewalls.0.hostname }}:{{ firewalls.0.gateway_port }}
+  {{ firewalls.0.gateway_ip }}:{{ firewalls.0.gateway_port }}
   <a href="#" id="firewall_details_{{ id }}" class="link-popover" rel="popover" tabindex="0" data-trigger="focus" data-content="
 <table class='table table-bordered'>
   <tr>

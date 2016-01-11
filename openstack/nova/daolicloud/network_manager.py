@@ -46,10 +46,6 @@ class SimpleManager(NetworkManager):
         else:
             address = str(address)
 
-        fip = objects.FixedIP.fixed_ip_add(context, instance_id, network['uuid'], 
-                                           network['id'], context.project_id,
-                                           address=address, reserved=reserved)
-
         vif = objects.VirtualInterface.get_by_instance_and_network(
             context, instance_id, network['id'])
         if vif is None:
@@ -61,9 +57,10 @@ class SimpleManager(NetworkManager):
             vif = self._add_virtual_interface(context,
                 instance_id, network['id'])
 
-        fip.allocated = True
-        fip.virtual_interface_id = vif.id
-        fip.save()
+        fip = objects.FixedIP.fixed_ip_add(context, instance_id, network['uuid'], 
+                                           network['id'], context.project_id,
+                                           address=address, reserved=reserved,
+                                           allocated=True, virtual_interface_id=vif.id)
 
         instance = objects.Instance.get_by_uuid(context, instance_id)
 

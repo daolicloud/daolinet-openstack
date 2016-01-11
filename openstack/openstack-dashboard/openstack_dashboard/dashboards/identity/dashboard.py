@@ -22,6 +22,6 @@ class Identity(horizon.Dashboard):
     name = _("Identity")
     slug = "identity"
     default_panel = 'projects'
-
+    permissions = ('openstack.roles.admin',)
 
 horizon.register(Identity)

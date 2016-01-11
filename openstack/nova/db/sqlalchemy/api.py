@@ -6549,7 +6549,7 @@ def generate_ip(context, user_id, network_uuid):
     return ip_address
 
 def fixed_ip_add(context, instance_uuid, network_uuid, network_id, user_id,
-                 address=None, reserved=False):
+                 address=None, **kwargs):
     if not uuidutils.is_uuid_like(instance_uuid):
         raise exception.InvalidUUID(uuid=instance_uuid)
 
@@ -6560,7 +6560,7 @@ def fixed_ip_add(context, instance_uuid, network_uuid, network_id, user_id,
     fixed_ip_ref.address = address
     fixed_ip_ref.network_id = network_id
     fixed_ip_ref.instance_uuid = instance_uuid
-    fixed_ip_ref.reserved = reserved
+    fixed_ip_ref.update(kwargs)
     fixed_ip_ref.save()
 
     return fixed_ip_ref
