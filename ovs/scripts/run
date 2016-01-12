@@ -83,9 +83,10 @@ rebuild() {
   local prv_mac=$(crudini --get $SCRIPT PRIVATE MACADDRESS)
   local datapath=$($OVSCTL get Bridge br-int datapath_id|awk '{gsub("\"","");print $1}')
   local idc_mac=
-  if [ "$PUB_DEV" != "$PRV_DEV" ]; then
-    idc_mac=$(arping -I br-int $GATEWAY_ADDR -c 1 -w 1.5|grep Unicast|awk -F[][] '{print $2}'|tail -1)
+  if [ "$DEFAULT_DEV" = "$PUB_DEV" ] || [ "$DEFAULT_DEV" = "$PRV_DEV" ]; then
+    GATEWAY_ADDR=$DEFAULT_GATEWAY
   fi
+  idc_mac=$(arping -I br-int $GATEWAY_ADDR -c 1 -w 1.5|grep Unicast|awk -F[][] '{print $2}'|tail -1)
   SQL="INSERT INTO gateways(created_at,datapath_id,hostname,idc_id,idc_mac,vint_dev,vint_mac,vext_dev,vext_ip,ext_dev,ext_mac,ext_ip,int_dev,int_mac,int_ip,is_gateway,deleted) VALUE(NOW(),'$datapath','$(hostname)',$IDC_ID,'$idc_mac','br-tap','$prv_mac','br-int','$PUB_IP','$pub_dev','$pub_mac','${pub_addr%/*}','$prv_dev','$prv_mac','${prv_addr%/*}',$GATEWAY,0)"
   mysqlexec "$SQL"
 }
