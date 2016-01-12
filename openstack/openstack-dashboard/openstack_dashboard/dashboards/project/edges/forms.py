@@ -37,6 +37,7 @@ class FirewallForm(forms.SelfHandlingForm):
         choices = []
         tmp_choices = []
 
+        instance = kwargs['initial']['instance']
         gateways = kwargs['initial']['gateways']
         for gateway in gateways:
             item = (gateway.hostname, gateway.vext_ip)
@@ -44,7 +45,8 @@ class FirewallForm(forms.SelfHandlingForm):
                     gateway.vext_ip != gateway.ext_ip:
                 choices.append(item)
             else:
-                tmp_choices.append(item)
+                if gateway.hostname == host:
+                    tmp_choices.append(item)
 
         if not choices:
             choices = tmp_choices

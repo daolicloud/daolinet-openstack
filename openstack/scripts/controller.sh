@@ -41,6 +41,8 @@ openstack-config --set /usr/lib/systemd/system/openstack-nova-compute.service Se
 
 setenforce 0
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
+sed -i 's/"compute_extension:extended_server_attributes": ".*"/"compute_extension:extended_server_attributes": ""/' \
+  /etc/nova/policy.json
 
 $NSQL_CLI -e "alter table fixed_ips drop index uniq_fixed_ips0address0deleted;delete from fixed_ips; delete from networks;insert into networks(created_at,injected,cidr,netmask,bridge,gateway,broadcast,dns1,label,multi_host,uuid,deleted,enable_dhcp,share_address) values(NOW(),0,'10.0.0.0/8','255.0.0.0','br-int','10.255.255.254','10.255.255.255','8.8.8.8','novanetwork',0,'$(uuidgen)',0,0,0),(NOW(),0,'172.16.0.0/12','255.240.0.0','br-int','172.16.255.254','172.31.255.255','8.8.8.8','novanetwork',0,'$(uuidgen)',0,0,0),(NOW(),0,'192.168.0.0/16','255.255.0.0','br-int','192.168.255.254','192.168.255.255','8.8.8.8','novanetwork',0,'$(uuidgen)',0,0,0)"
 $NSQL_CLI < db.sql
