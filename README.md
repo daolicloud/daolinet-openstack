@@ -5,11 +5,11 @@ DaoliNet is a Software Defined Networking (SDN) system that is designed for ligh
 
 Top-Level Features
 ------------------
-* Lightweight and highly efficient virtualization of network resource on X86 servers, just like Docker's lightweight and highly efficient partition of CPU resource on X86 servers.
+* Lightweight and highly efficient connection of Docker containers.
 
-* Docker containers are connected to form VPCs (Virtual Private Clouds) and security groups without any pre-configuration of the participating Docker hosts. Any Docker host has no knowledge of containers in other Docker hosts. Thus scale-out deployment of Docker hosts has a plug-and-play "for dummies" simplicity.
+* Connected containers can be distributed over Docker hosts anywhere, i.e., the Docker hosts can be a mixture of laptops or PCs in your office or home, virtual machines in public clouds such as AWS, or servers in your own datacenter.
 
-* Overlay network of containers is constructed without using packet encapsulation such as VLAN, VXLAN, GRE, etc. This unique feature of DaoliNet not only greatly saves server resource, just as Docker saves server resource without using hypervisors, but also more importantly simplifies cloud management: an overlay network of containers can be constructed in hot-plug manner, and can span over different Docker hosts, datacenters, or even behind different firewalls, irrespective of locations of the containers.
+* The network of connected containers is constructed without using packet encapsulation. This unique feature of DaoliNet not only greatly saves server resource, just as Docker saves server resource without using hypervisors, but also more importantly simplifies cloud management: an overlay network of containers can be constructed in hot-plug manner, and can span over different Docker hosts, datacenters, or even behind different firewalls, irrespective of locations of the containers.
 
 * Pure software implementation using Open-V-Switch (OVS) which is ubiquitously distributed in every Linux server, as distributed switches, routers, gateways and firewalls, with high availability and plug-and-play ease of adding servers to the resource pool.
 
