@@ -37,7 +37,7 @@ The automatic PacketIn by a Docker host to lift the first packet to the Controll
 
 With the use of the Controller, Docker hosts in the system can be in a simple state of not-knowing-one-another. This greatly simplifies the management of Docker hosts for provisioning service HA and LB. There is no need for the Docker hosts to run complex and resource consuming routing algorithms. There is also no need for the Docker hosts to pairwise run a packet encapsulation protocol which is not only resource consuming but also nullifies network diagnosing tools.
 
-If a connection is idle for a threashold of time, the flow will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of resource utilization is very similar to the Linux Container technology that an idling container will not cost server resource. Therefore, the DaoliNet technology for container connection is also lightweight.
+If a connection is idle for a threashold of time, the flow will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of resource utilization is very similar to the Linux Container technology in that an idling container consumes very little server resource. Therefore, DaoliNet is a lightweight networking technology for connecting containers.
 
 **More in our website:** http://www.daolicloud.com/html/technology.html
 
