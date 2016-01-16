@@ -7,7 +7,7 @@ Top-Level Features
 ------------------
 * Lightweight connection of Docker containers, just like Docker's lightweight virtualization of containers without the extra load of a hypervisor, means you can get more out of your hardware resource.
 
-* Connected containers can be distributed over a swarm of Docker hosts anywhere, which are a mixture of laptops or PCs in your office or home, virtual machines or servers in your own datacenter, or public clouds such as AWS.
+* Connected containers can be distributed over a swarm of Docker hosts anywhere, which can be laptops or PCs inside the firewalls of your office or home, virtual machines or servers in your own datacenter, or even in public clouds such as AWS.
 
 * High avalability replication of micro-servicing containers are streamline provisioned to suit the dynamic nature of containers.
 
@@ -26,18 +26,16 @@ Docker is awesome! It is a container engine to virtualize server CPUs much more 
 
 Existing Solutions
 ------------------
-There exists a number of offers for Docker networking: Weave, Flannel, and Colico are well-known open source projects for Docker networking. Calico and Weave, require that each Docker host must provide the full function of a router to perform route discovery and state update with other Docker hosts as routers; this is unfortunately very heaviweight in resource utilization. Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel container packets in-between different Docker hosts; packet encapsulation not only consumes extra load of hardware resource (VXLAN is also known as "network hypervisor"), but also nullifies useful network diagnosing tools such as traceroute. It is a fact that networking is a core feature of Docker that is relatively immature and still under heavy development.
+There exists a number of offers for Docker networking: Weave, Flannel, and Colico are well-known open source projects for Docker networking. Calico and Weave, require that each Docker host must provide the full function of a router to perform route discovery and state update with other Docker hosts as routers; this is unfortunately very heaviweight in resource utilization. Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel container packets in-between different Docker hosts; packet encapsulation not only consumes extra load of hardware resource (VXLAN is also known as "network hypervisor"), but also nullifies useful network diagnosing tools such as traceroute. To date, networking is a core feature of Docker that is relatively immature and still under heavy development.
 
 How DaoliNet Works
 ==================
 
-DaoliNet Network Virtualization
--------------------------------
-The DaoliNet Network Virtualization is based on OpenFlow Standard, which completely separates the control and forward planes for your virtualized cloud network. With DaoliNet, Docker hosts are created and managed independently; there is no deed for them to know one another. This greatly simplifies the management and scalability of Docker cloud. Below let us provide an introduction to important advantages enabled by OpenFlow.
+The DaoliNet is based on OpenFlow Standard. With DaoliNet, Docker hosts do not learn and update routing information from one another; also they are not configured to run encapsulation protocols between them. All a Docker host has to know for networking is an OpenFlow Controller. This simple not-knowing-one-another relationship among Docker hosts greatly simplifies the management and scalability of Docker cloud. Below let us provide an introduction to important advantages which are enabled by OpenFlow.
 
 OpenFlow Controller
 -------------------
-An OpenFlow Controller (below we use the Controller for OpenFlow Controller) is a set of distributed web-service-like agents. It receives a "PacketIn" request from a Decker host and replies a "PacketOut" response to the requesting host. A packetin request is a normal network packet that a Docker host receives from a container but does not know how to process switching/routing/gateway-forwarding/firewall-filtering, due to lack of configuration intelligence. A packetout response from the Controller is a flow which configures in real time a Docker host to turn it into intelligent for forwarding packets.
+An OpenFlow Controller (below we use the Controller for OpenFlow Controller) is a set of distributed web-service-like agents. Upon initiation of connection by a container, its hosting Docker server will "PacketIn" the first packet to the Controller, requesting for routing information. The Controller will respond with "PacketOut" flow to real-time configure Docker servers for them to have complete routing information and thereby establish the requested connection (assuming that the requested connection involves containers over different Docker hosts). If a connection is in idle for a threashold of time, the flow will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This not only saves resource, but also eases the management of Docker hosts since they remain independently from one another. 
 
 Servers are Network Devices
 ---------------------------
