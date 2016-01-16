@@ -27,11 +27,15 @@ How DaoliNet Works
 
 The DaoliNet is based on OpenFlow Standard. With DaoliNet, Docker hosts do not learn and update routing information from one another; also they are not configured to run encapsulation protocols between them. All a Docker host has to know for networking is an OpenFlow Controller. This simple not-knowing-one-another relationship among Docker hosts greatly simplifies the management and scalability of Docker cloud. Below let us provide an introduction to important advantages which are enabled by OpenFlow.
 
-The OpenFlow Technology
+OpenFlow Technology
 -------------------
-OpenFlow uses an OpenFlow Controller (below is shortened to the Controller) which is a logically centralized entity but physically a set of HA distributed web-service-like agents. Upon a container initiation of a connection, its Docker host will "PacketIn" by sending the first packet from the container to the Controller. The Controller will respond with "PacketOut" by issuing flows to the involved Docker hosts for them to establish the connection (assuming that the connection involves containers over different Docker hosts). With the use of the Controller, Docker hosts in the system can be in a simple state of not-knowing-one-another. This greatly simplifies the management of Docker hosts for provisioning service HA and loadbalance. There is no need for the Docker hosts to run complex and resource consuming routing algorithms. There is also no need for the Docker hosts to pairwise run a packet encapsulation protocol which is not only resource consuming but also nullifies network diagnosing tools.
+OpenFlow is an industry standard networking technology. It uses an OpenFlow Controller (below is shortened to the Controller) which is a logically centralized entity but physically a set of HA distributed web-service-like agents.
+
+Upon a container initiation of a connection, its Docker host will "PacketIn" by sending the first packet from the container to the Controller. The Controller will respond with "PacketOut" by issuing flows to the involved Docker hosts for them to establish the connection (assuming that the connection involves containers over different Docker hosts).
 
 The automatic PacketIn by a Docker host to lift the first packet to the Controller, and the PacketOut real-time routing configuration of involved Docker hosts are functions of Open-v-Switch (OVS) which is a standard kernel component in every Linux OS.
+
+With the use of the Controller, Docker hosts in the system can be in a simple state of not-knowing-one-another. This greatly simplifies the management of Docker hosts for provisioning service HA and LB. There is no need for the Docker hosts to run complex and resource consuming routing algorithms. There is also no need for the Docker hosts to pairwise run a packet encapsulation protocol which is not only resource consuming but also nullifies network diagnosing tools.
 
 If a connection is idle for a threashold of time, the flow will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of resource utilization is very similar to the Linux Container technology that an idling container will not cost server resource. Therefore, the DaoliNet technology for container connection is also lightweight.
 
