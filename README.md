@@ -9,7 +9,7 @@ Top-Level Features
 
 * Connected containers can be distributed over a swarm of Docker hosts anywhere, which can be laptops or PCs inside the firewalls of your office or home, virtual machines or servers in your own datacenter, or even in public clouds such as AWS.
 
-* High avalability replication of micro-servicing containers are streamline provisioned to suit the dynamic nature of containers.
+* High avalability replication of micro-servicing containers are streamline provisioned to suit the ephemeral nature of containers.
 
 **More in our website**:  http://www.daolicloud.com
 
