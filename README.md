@@ -9,7 +9,7 @@ Top-Level Features
 
 * Connected containers can be distributed over a swarm of Docker hosts anywhere, which are a mixture of laptops or PCs in your office or home, virtual machines or servers in your own datacenter, or public clouds such as AWS.
 
-* Scale-out resource pool by adding Docker hosts with "for dummies" level of ease.
+* High avalability replication of micro-servicing containers are streamline provisioned.
 
 **More in our website**:  http://www.daolicloud.com
  
@@ -26,7 +26,7 @@ Docker is awesome! It is a container engine to virtualize server CPUs much more 
 
 Existing Solutions
 ------------------
-There exists a number of offers for Docker networking: Weave, Flannel, Libnetwork, and Colico are open source projects for Docker networking. Some of these offers require that each Docker host participating in a cloud must know network information about containers which are hosted by other Docker hosts; e.g, Colico requires that containers have external IP addresses which are visible from outside of their Docker host. Others require that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel overlay container packets in-between different Docker hosts (e.g., Flannel). However, since Docker hosts are created independently from each other, requiring a Docker host to know the network information of containers in all other Docker hosts will greatly complicate cloud management. Also packet encapsulation is similar to running a "networking hypervisor" which is somewhat against the lightweight nature of Docker. In fact, the simplest and preferred network mode for Docker is Network Address Translation (NAT) in which containers in a Docker host do not have externally visible IP addresses; when they communicate with outside world, the Docker host will use its own IP address to NAT translate the internal IP addresses of containers. DaoliNet adopts this simple network mode without having to assign externally visible IP addresses to containers. Also DaoliNet uses no heavyweight packet encapsulation or "networking hypervisor" method.
+There exists a number of offers for Docker networking: Weave, Flannel, and Colico are well-known open source projects for Docker networking. Some of these offers, e.g., Calico and Weave, require that each Docker host must provide the full function of a router to perform route discovery and update with other Docker hosts as routers; this is unfortunately very heaviweight in resource utility. Others, e.g., Flannel, require that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel overlay container packets in-between different Docker hosts; packet encapsulation not only consumes extra load of hardware resource (VXLAN is also known as "network hypervisor"), but also nullifies useful network diagnosing tools such as traceroute.
 
 How DaoliNet Works
 ==================
