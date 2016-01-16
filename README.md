@@ -35,11 +35,15 @@ Upon a container initiation of a connection, its Docker host will "PacketIn" by 
 
 The automatic PacketIn by a Docker host to lift the first packet to the Controller, and the PacketOut real-time routing configuration of involved Docker hosts are functions of Open-v-Switch (OVS) which is a standard kernel component in every Linux OS.
 
-With the use of the Controller, Docker hosts in the system can be in a simple state of not-knowing-one-another. This greatly simplifies the management of Docker hosts for provisioning service HA and LB. There is no need for the Docker hosts to run complex and resource consuming routing algorithms. There is also no need for the Docker hosts to pairwise run a packet encapsulation protocol which is not only resource consuming but also nullifies network diagnosing tools.
+With the use of the Controller, Docker hosts in the system can be in a simple state of not-knowing-one-another. This greatly simplifies the management of Docker hosts for provisioning service HA and LB. There is no need for the Docker hosts to run complex and resource consuming routing algorithms. There is also no need for the Docker hosts to pairwise run a packet encapsulation protocol which is not only resource consuming but also nullifies network diagnosing and troubleshooting tools such as traceroute.
+
+Summary of DaoliNet Architecture
+================================
+In a DaoliNet network, all compute servers are in an ethernet which is either physically connected by switches, or by VPN connected. Each compute server acts as a router for all of the endpoints that are hosted on that compute server. However, such a router is not an intelligent one in that it never establishes any routing relationship with any other routers in the system. The data path is implemented by the OVS. The control plane is provided by the Controller which, upon a connection request by an OVS implemented non-intelligent router, real-time configures a pair of such routers to establish a flow based connection.
 
 Lightweight Networking for Containers
---------------
-If a connection is idle for a threashold of time, the flow will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of resource utilization is very similar to the Linux Container technology in that an idling container consumes very little server resource. Therefore, DaoliNet is a lightweight networking technology for connecting containers.
+====================================
+Non-intelligent routers consume little server resource since they never run any routing algorithm. Moreover, if a connection is idle for a threashold of time, the flows relating to the idle connection will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of server resource utilization is very similar to the Linux Container technology in that an idling container consumes little server resource. Therefore, DaoliNet is a lightweight networking technology for connecting Docker containers.
 
 **More in our website:** http://www.daolicloud.com/html/technology.html
 
