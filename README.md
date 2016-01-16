@@ -7,11 +7,9 @@ Top-Level Features
 ------------------
 * Lightweight connection of Docker containers, just like Docker's lightweight virtualization of containers without the extra load of a hypervisor, means you can get more out of your hardware resource.
 
-* Connected containers can be distributed over Docker hosts anywhere, i.e., the Docker hosts can be a mixture of laptops or PCs in your office or home, virtual machines or servers in your own datacenter, or public clouds such as AWS.
+* Connected containers can be distributed over a swarm of Docker hosts anywhere, which are a mixture of laptops or PCs in your office or home, virtual machines or servers in your own datacenter, or public clouds such as AWS.
 
-* The network of connected containers is constructed without using packet encapsulation. This unique feature of DaoliNet not only greatly saves server resource, just as Docker saves server resource without using hypervisors, but also more importantly simplifies cloud management: an overlay network of containers can be constructed in hot-plug manner, and can span over different Docker hosts, datacenters, or even behind different firewalls, irrespective of locations of the containers.
-
-* Pure software implementation using Open-V-Switch (OVS) which is ubiquitously distributed in every Linux server, as distributed switches, routers, gateways and firewalls, with high availability and plug-and-play ease of adding servers to the resource pool.
+* Scale-out resource pool by adding Docker hosts with "for dummies" level of ease.
 
 **More in our website**:  http://www.daolicloud.com
  
