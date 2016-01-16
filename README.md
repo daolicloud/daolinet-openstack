@@ -9,7 +9,7 @@ Top-Level Features
 
 * Connected containers can be distributed over a swarm of Docker hosts anywhere, which can be laptops or PCs inside the firewalls of your office or home, virtual machines or servers in your own datacenter, or even in public clouds such as AWS.
 
-* High avalability replication of micro-servicing containers are streamline provisioned to suit the ephemeral nature of containers.
+* High availability replication of micro-servicing containers are streamline provisioned to suit the ephemeral nature of containers.
 
 **More in our website**:  http://www.daolicloud.com
 
@@ -20,7 +20,7 @@ Docker is awesome! It is a container engine to virtualize server CPUs much more 
 
 Existing Solutions
 ------------------
-There exists a number of offers for Docker networking: Weave, Flannel, and Colico are well-known open source projects for Docker networking. Calico and Weave, require that each Docker host must provide the full function of a router to perform route discovery and state update with other Docker hosts as routers; this is unfortunately very heaviweight in resource utilization. Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel container packets in-between different Docker hosts; packet encapsulation not only consumes extra load of hardware resource (VXLAN is also known as "network hypervisor"), but also nullifies useful network diagnosing and troubleshooting tools such as traceroute. To date, networking is a core feature of Docker that is relatively immature and still under heavy development.
+There exists a number of offers for Docker networking: Weave, Flannel, and Calico are well-known open source projects for Docker networking. Calico and Weave, require that each Docker host must provide the full function of a router to perform route discovery and state update with other Docker hosts as routers; this is unfortunately very heaviweight in resource utilization. Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel container packets in-between different Docker hosts; packet encapsulation not only consumes extra load of hardware resource (VXLAN is also known as "network hypervisor"), but also nullifies useful network diagnosing and troubleshooting tools such as traceroute. To date, networking is a core feature of Docker that is relatively immature and still under heavy development.
 
 How DaoliNet Works
 ==================
@@ -43,7 +43,7 @@ In a DaoliNet network, all compute servers are in an ethernet which is either ph
 
 Lightweight Networking for Containers
 ====================================
-Non-intelligent routers consume little server resource since they never run any routing algorithm. Moreover, if a connection is idle for a threashold of time, the flows relating to the idle connection will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of server resource utilization is very similar to the Linux Container technology in that an idling container consumes little server resource. Therefore, DaoliNet is a lightweight networking technology for connecting Docker containers.
+Non-intelligent routers consume little server resource since they never run any routing algorithm. Moreover, if a connection is idle for a threshold of time, the flows relating to the idle connection will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of server resource utilization is very similar to the Linux Container technology in that an idling container consumes little server resource. Therefore, DaoliNet is a lightweight networking technology for connecting Docker containers.
 
 **More in our website:** http://www.daolicloud.com/html/technology.html
 
