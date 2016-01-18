@@ -24,15 +24,15 @@ Existing Solutions
 ------------------
 There exists a number of offers for Docker networking: Weave, Flannel, and Calico are well-known open source projects for Docker networking. Calico and Weave, require that each Docker host must provide the full function of a router to perform route discovery and state update with other Docker hosts as routers; this is unfortunately very heavyweight in resource utilization. Flannel requires that Docker hosts run packet encapsulation, e.g., VXLAN, to tunnel container packets in-between different Docker hosts; packet encapsulation not only consumes extra load of hardware resource (VXLAN is also known as "network hypervisor"), but also nullifies useful network diagnosing and troubleshooting tools such as traceroute. To date, networking is a core feature of Docker that is relatively immature and still under heavy development.
 
-How DaoliNet Works
-==================
 
 An OpenFlow Architecture of DaoliNet
--------
+=========
 OpenFlow is an industry standard networking technology. A network with the OpenFlow architecture uses an OpenFlow Controller as the control plane, and Open-V-Switches (OVSes) to implement the datapath. The OpenFlow Controller is a logically centralized entity but physically a set of HA distributed web-service-like agents. The OVSes in DaoliNet are ubiquitously available in Linux kernels and hence in all Docker hosts.
 
 In a DaoliNet network, all compute servers (Docker hosts) are in an Ethernet which is either physically or VPN connected. Each compute server acts as a router for all of the container workloads that are hosted on that compute server.
 
+How it Works
+------------
 When a container initiates a connection, the OVS in the hosting Docker host, i.e., the source router, will issue a PacketIn request to the OpenFlow Controller. The PacketIn request is just the first packet from the initiating container. The OpenFlow Controller who knows all Docker hosts in the system can identify, from the PacketIn packet, another Docker host which hosts a container as the destination workload for the connection, to be the destination router for the connection. The OpenFlow Controller will respond with a pair of PacketOut flows, one for the source router, and the other, the destination router, for them to establish a route for the requested connection. In case the two containers are in the same Docker host, the source and destination router is just the same Docker host.
 
 We notice that such a connection is hot-plug based in that, the two routers are non-intelligent ones; they do not run conventional routing algorithms, and do not learn and propagate routing tables. In fact, prior to a connection, the routers do not know each other. Also, if a connection becomes idle for a threshold of time, the flow based route for the idle connection will age and be deleted from the memory of the routers; then the involved routers return to the original state of not-knowing-each-other. Therefore, the flow based route is in a no-connection, no-resource-consumption style of resource utilization. The non-intelligent routers in DaoliNet work in the same lightweight fashion of the Linux Container technology in that an idling container consumes little server resource. Therefore, DaoliNet is a lightweight networking technology for connecting Docker containers.
