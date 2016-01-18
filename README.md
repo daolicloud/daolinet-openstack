@@ -5,11 +5,11 @@ DaoliNet is a Software Defined Networking (SDN) system that is designed for ligh
 
 Top-Level Features
 ------------------
-* Lightweight connection of Docker containers, just like Docker's lightweight virtualization of containers without the extra load of a hypervisor, means you can get more out of your hardware resource.
+* Lightweight connection of Docker containers, non-communication containers do not consume server resource, just like Docker's lightweight virtualization of containers without the extra load of a hypervisor, means you can get more out of your hardware resource.
 
 * Connected containers can be distributed over a swarm of Docker hosts anywhere, which can be laptops or PCs inside the firewalls of your office or home, virtual machines or servers in your own datacenter, or even in public clouds such as AWS.
 
-* High availability replication of micro-servicing containers are streamline provisioned to suit the ephemeral nature of containers.
+* Pure software implementation using Open-V-Switch (OVS) which is ubiquitously distributed in every Linux server, as distributed switches, routers, gateways and firewalls, with high availability and plug-and-play ease of adding servers to the resource pool.
 
 **More in our website**:  http://www.daolicloud.com
 
