@@ -27,21 +27,31 @@ There exists a number of offers for Docker networking: Weave, Flannel, and Calic
 How DaoliNet Works
 ==================
 
-The DaoliNet is based on OpenFlow Standard. With DaoliNet, Docker hosts do not learn and update routing information from one another; also they are not configured to run encapsulation protocols between them. All a Docker host has to know for networking is an OpenFlow Controller. This simple not-knowing-one-another relationship among Docker hosts greatly simplifies the management and scalability of Docker cloud. Below let us provide an introduction to important advantages which are enabled by OpenFlow.
+An OpenFlow Architecture of DaoliNet
+-------
+OpenFlow is an industry standard networking technology. A network with the OpenFlow architecture uses an OpenFlow Controller as the control plane, and Open-V-Switches (OVSes) to implement the datapath. The OpenFlow Controller is a logically centralized entity but physically a set of HA distributed web-service-like agents. The OVSes in DaoliNet are ubiquitously available in Linux kernels and hence in all Docker hosts.
 
-OpenFlow Technology
--------------------
-OpenFlow is an industry standard networking technology. It uses an OpenFlow Controller (below is shortened to the Controller) which is a logically centralized entity but physically a set of HA distributed web-service-like agents.
+In a DaoliNet network, all compute servers (Docker hosts) are in an Ethernet which is either physically or VPN connected. Each compute server acts as a router for all of the container workloads that are hosted on that compute server.
 
-Upon a container initiation of a connection, its Docker host will "PacketIn" by sending the first packet from the container to the Controller. The Controller will respond with "PacketOut" by issuing flows to the involved Docker hosts for them to establish the connection (assuming that the connection involves containers over different Docker hosts).
+When a container workload initiates a connection, the OVS in the hosting Docker server will issue a PacketIn request to the OpenFlow Controller. The PacketIn request is just the first packet from the initiating container workload. The OpenFlow Controller will respond with a pair of PacketOut messages sent to two OVSes in two respective hosting Docker servers. These two PacketOut messages are flows to configure the two Docker servers to establish a route between two workloads. Such a connection hot-plug based in that,   .
+
+
+its Docker host will "PacketIn" by sending the first packet from the container to the Controller. The Controller will respond with "PacketOut" by issuing flows to the involved Docker hosts for them to establish the connection (assuming that the connection involves containers over different Docker hosts).
 
 The automatic PacketIn by a Docker host to lift the first packet to the Controller, and the PacketOut real-time routing configuration of involved Docker hosts are functions of Open-v-Switch (OVS) which is a standard kernel component in every Linux OS.
 
-With the use of the Controller, Docker hosts in the system can be in a simple state of not-knowing-one-another. This greatly simplifies the management of Docker hosts for provisioning service HA and LB. There is no need for the Docker hosts to run complex and resource consuming routing algorithms. There is also no need for the Docker hosts to pairwise run a packet encapsulation protocol which is not only resource consuming but also nullifies network diagnosing and troubleshooting tools such as traceroute.
 
-Summary of DaoliNet Architecture
-================================
-In a DaoliNet network, all compute servers are in an ethernet which is either physically connected by switches, or by VPN connected. Each compute server acts as a router for all of the endpoints that are hosted on that compute server. However, such a router is not an intelligent one in that it never establishes any routing relationship with any other such routers in the system. The data path is implemented by the OVS. The control plane is provided by the Controller which, upon a connection request by an OVS implemented non-intelligent router, real-time configures a pair of such routers to establish a hot-plug flow based connection.
+However, such a router is not an intelligent one in that it never establishes any routing relationship with any other such routers in the system.
+
+This simple not-knowing-one-another relationship among Docker hosts greatly simplifies the management and scalability of Docker cloud. Below let us provide an introduction to important advantages which are enabled by OpenFlow.
+
+OpenFlow Technology
+-------------------
+
+
+
+
+With the use of the Controller, Docker hosts in the system can be in a simple state of not-knowing-one-another. This greatly simplifies the management of Docker hosts for provisioning service HA and LB. There is no need for the Docker hosts to run complex and resource consuming routing algorithms. There is also no need for the Docker hosts to pairwise run a packet encapsulation protocol which is not only resource consuming but also nullifies network diagnosing and troubleshooting tools such as traceroute.
 
 Lightweight Networking for Containers
 ====================================
