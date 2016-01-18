@@ -41,7 +41,7 @@ With the use of the Controller, Docker hosts in the system can be in a simple st
 
 Summary of DaoliNet Architecture
 ================================
-In a DaoliNet network, all compute servers are in an ethernet which is either physically connected by switches, or by VPN connected. Each compute server acts as a router for all of the endpoints that are hosted on that compute server. However, such a router is not an intelligent one in that it never establishes any routing relationship with any other routers in the system. The data path is implemented by the OVS. The control plane is provided by the Controller which, upon a connection request by an OVS implemented non-intelligent router, real-time configures a pair of such routers to establish a hot-plug flow based connection.
+In a DaoliNet network, all compute servers are in an ethernet which is either physically connected by switches, or by VPN connected. Each compute server acts as a router for all of the endpoints that are hosted on that compute server. However, such a router is not an intelligent one in that it never establishes any routing relationship with any other such routers in the system. The data path is implemented by the OVS. The control plane is provided by the Controller which, upon a connection request by an OVS implemented non-intelligent router, real-time configures a pair of such routers to establish a hot-plug flow based connection.
 
 Lightweight Networking for Containers
 ====================================
