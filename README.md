@@ -39,12 +39,10 @@ With the use of the Controller, Docker hosts in the system can be in a simple st
 
 Summary of DaoliNet Architecture
 ================================
-In a DaoliNet network, all compute servers are in an ethernet which is either physically connected by switches, or by VPN connected. Each compute server acts as a router for all of the endpoints that are hosted on that compute server. However, such a router is not an intelligent one in that it never establishes any routing relationship with any other routers in the system. The data path is implemented by the OVS. The control plane is provided by the Controller which, upon a connection request by an OVS implemented non-intelligent router, real-time configures a pair of such routers to establish a flow based connection.
+In a DaoliNet network, all compute servers are in an ethernet which is either physically connected by switches, or by VPN connected. Each compute server acts as a router for all of the endpoints that are hosted on that compute server. However, such a router is not an intelligent one in that it never establishes any routing relationship with any other routers in the system. The data path is implemented by the OVS. The control plane is provided by the Controller which, upon a connection request by an OVS implemented non-intelligent router, real-time configures a pair of such routers to establish a hot-plug flow based connection.
 
 Lightweight Networking for Containers
 ====================================
-Non-intelligent routers consume little server resource since they never run any routing algorithm. Moreover, if a connection is idle for a threshold of time, the flows relating to the idle connection will be deleted from the memory and the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of server resource utilization is very similar to the Linux Container technology in that an idling container consumes little server resource. Therefore, DaoliNet is a lightweight networking technology for connecting Docker containers.
+Non-intelligent routers consume little server resource since they never run any routing algorithm. Moreover, if a connection is idle for a threshold of time, the flows relating to the idle connection will age and be deleted from the memory; then the involved Docker hosts return to the original state not-knowing-each-other. This no-connection, no-resource-consumption style of server resource utilization is in the same lightweight fashion of the Linux Container technology in that an idling container consumes little server resource. Therefore, DaoliNet is a lightweight networking technology for connecting Docker containers.
 
 **More in our website:** http://www.daolicloud.com/html/technology.html
-
-**SlideShare:** http://www.slideshare.net/daolinetppt/daolinet-lightweight-and-simple-networking-for-docker
