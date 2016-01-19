@@ -13,7 +13,7 @@ KSQL_CLI=$(echo $KEYSTONE_CONF | sed 's/@[^\/]*//' | awk -F[:/] '{printf "%s -u%
 
 yum remove openstack-neutron openstack-neutron-ml2 python-neutron openstack-neutron-openvswitch openstack-neutron-common openvswitch -y
 rm -rf /etc/neutron/ /var/lib/neutron/
-$KSQL_CLI "delete from endpoint where service_id in (select id from service where type='network');delete from service where type='network';";
+$KSQL_CLI "delete from endpoint where service_id in (select id from service where type='network' or type like 'volume%');delete from service where type='network';";
 
 rm -rf /usr/lib/python2.7/site-packages/keystoneclient
 cp -r ../keystoneclient/ /usr/lib/python2.7/site-packages/
@@ -51,6 +51,7 @@ systemctl daemon-reload
 systemctl enable docker.service
 systemctl start docker.service
 systemctl restart openstack-nova-api
+systemctl enable openstack-nova-network
 systemctl restart openstack-nova-network
 systemctl restart openstack-nova-conductor
 systemctl restart openstack-nova-compute
