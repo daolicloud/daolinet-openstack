@@ -31,7 +31,7 @@ Architecture
 ------------
 The networking architecture of DaoliNet is based on the OpenFlow standard. It uses an OpenFlow Controller as the control plane, and Open-V-Switches (OVSes) to implement the datapath. The OpenFlow Controller in DaoliNet is a logically centralized entity but physically a set of HA distributed web-service-like agents. OVSes are ubiquitously available in Linux kernels and hence in all Docker servers.
 
-In a DaoliNet network, all Docker servers are in an Ethernet which is either physically or VPN connected. Each Docker server acts as a router for all of the container workloads that are hosted on the server. However, the routers do not run any routing algorithms and so they do not know one another. Each router only knows the OpenFlow Controller.
+In a DaoliNet network, all Docker servers are in an Ethernet which is either physically or VPN connected. Each Docker server acts as a router for all of the container workloads that are hosted on that server. However, the routers do not run any routing algorithms and so they do not know one another. Each router only knows the OpenFlow Controller. Upon a container initiating a connection, the involved routers will be real-time configured by the OpenFlow Controller to establish a route.
 
 How it Works
 ------------
