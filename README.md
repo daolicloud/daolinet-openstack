@@ -9,6 +9,8 @@ Top-Level Features
 
 * Connected containers can be distributed over a swarm of Docker servers anywhere, including laptops or PCs inside the firewalls of your office or home, servers in your own datacenter, or virtual machines in public clouds such as AWS. Trans-datacenter traffic is always encrypted.
 
+* Virtualized overlay network: container can keep IP address unchanged after moving physical locations.
+
 * Elastic expansion of resource pool for dummies: plug-n-play adding Docker servers with zero confirguration.
 
 * Pure software implementation using Open-V-Switch (OVS) providing network functions as distributed switches, routers, gateways and firewalls.
