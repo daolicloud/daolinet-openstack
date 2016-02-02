@@ -1,17 +1,17 @@
 DaoliNet for Lightweight Docker Networking
 =================
 
-DaoliNet is a Software Defined Networking (SDN) system that is designed for lightweight network connections for Docker containers, with high availability, performance and scale-out.
+DaoliNet is a Software Defined Networking (SDN) system that is designed for lightweight network connections for Docker containers, with high availability, performance efficiency and scale-out.
 
 Top-Level Features
 ------------------
-* Lightweight connection for Docker containers: virtual switches and virtual routers do not consume server resource when containers being connected by them are not in active communication. This is analogous to Docker's lightweight partition of containers without the extra load of a hypervisor. You can get more out of your hardware resource.
+* Resource efficient connection for Docker containers: connection of containers does not consume server resource when the containers are not in active communication. You get more out of your server resource.
 
-* Connected containers can be distributed over a swarm of Docker hosts anywhere, which can be laptops or PCs inside the firewalls of your office or home, virtual machines or servers in your own datacenter, or even in public clouds such as AWS. Trans-datacenter traffic is always encrypted.
+* Connected containers can be distributed over a swarm of Docker servers anywhere, including laptops or PCs inside the firewalls of your office or home, servers in your own datacenter, or virtual machines in public clouds such as AWS. Trans-datacenter traffic is always encrypted.
 
-* Ease of resource pooling by plug-n-play adding Docker hosts.
+* Elastic expansion of resource pool for dummies: plug-n-play adding Docker servers with zero confirguration.
 
-* Pure software implementation using Open-V-Switch (OVS) which is ubiquitously available in every Linux server, providing network functions as distributed switches, routers, gateways and firewalls.
+* Pure software implementation using Open-V-Switch (OVS) providing network functions as distributed switches, routers, gateways and firewalls.
 
 **More in our website**:  http://www.daolicloud.com
 
