@@ -1,17 +1,17 @@
 DaoliNet for Lightweight Docker Networking
 =================
 
-DaoliNet is a Software Defined Networking (SDN) system that is designed for lightweight network connections for Docker containers, with high availability, performance efficiency and scale-out.
+DaoliNet is a Software Defined Networking (SDN) system that is designed to provide efficient and dynamic connection for Docker containers, which is suitable for the lightweight and ephemeral nature of micro-servicing workloads of Docker containers.
 
 Top-Level Features
 ------------------
-* Resource efficient connection for Docker containers: Connection of containers does not consume server resource when the containers are not in active communication. You get more out of your server resource.
+* Resource efficient connection: Connection of containers does not consume server resource when the containers are not in active communication. You get more out of your server resource.
 
-* Docker servers can be distributed anywhere: Docker servers can be laptops or PCs inside the firewalls of your office or home, servers in your own datacenter, or virtual machines in public clouds such as AWS. Trans-datacenter traffic is always encrypted.
+* Distribution anywhere: Docker servers can be laptops or PCs inside the firewalls of your office or home, servers in your own datacenter, or virtual machines in public clouds such as AWS. Trans-datacenter traffic is always encrypted.
 
 * Network virtualization: A container can keep IP address unchanged after moving physical locations.
 
-* Multi-tenancy network isolation: Networks of different tenants are completely isolated from one another.
+* Multi-tenancy isolation: Networks of different tenants are completely isolated from one another.
 
 * Pure software implementation using Open-V-Switch (OVS): Providing network functions as distributed switches, routers, gateways and firewalls. System deployment in a plug-n-play simplicity.
 
@@ -20,11 +20,9 @@ Top-Level Features
 Docker in Need of Lightweight Networking
 =================
 
-Docker is awesome! It is a container engine to virtualize server CPUs much more efficient than a hypervisor does for virtual machines (VMs). A Docker server can partition an X86 server into thousands of containers. Containers are playing more and more roles in cloud computing in place of VMs. However, because each Docker server is created independently from one another, containers in different Docker hosts are by default not connected one another. We need an efficient and lightweight networking solution to connect containers which are distributed in multiple Docker servers.
+Docker is awesome! It is a container engine to virtualize server CPUs much more efficient than a hypervisor does for virtual machines (VMs). A Docker server can partition an X86 server into thousands of containers. Containers are playing more and more roles in cloud computing in place of VMs. However, because each Docker server is created independently from one another, containers which are distributed in different Docker servers are by default not connected one another. We need a network solution to connect Docker containers. Since containers are lightweight and ephemeral, the network solution need to be efficient in resource utilization and dynamic in connection establishment. There are well-known networking techniques such as MAC-in-UDP encapsulations, or letting Docker servers be virtual routers. These techniques are not efficient, e.g., the former causes Docker servers to store a large nember of MAC addresses of containers, and the letter require Docker servers to frequently discover and update dynamic route tables which can be very inefficient in resource utilization.
 
-Existing Solutions
-------------------
-There exists a number of open source projects for Docker networking: Weave, Flannel, and Calico are well-known ones. Calico and Weave, require that a Docker server must provide the full function of a router to discover and update route tables with other Docker servers as routers in the system. Routing algorithms are very heavyweight in resource consumption. Flannel requires that Docker hosts run packet encapsulation, e.g., MAC in UDP, to tunnel container packets in-between different Docker servers. Packet encapsulation not only consumes extra load of hardware resource (e.g., VXLAN is also known as "network hypervisor"), but also nullifies useful network diagnosing and troubleshooting tools such as traceroute, etc. To date, networking is a core feature of Docker that is relatively immature and still under heavy development.
+To date, networking is a core feature of Docker that is relatively immature and still under heavy development.
 
 DaoliNet for Lightweight Docker Networking
 ==========================================
