@@ -1,4 +1,4 @@
-DaoliNet for Lightweight Docker Networking
+DaoliNet for Efficient and Dynamic Docker Networking
 =================
 
 DaoliNet is a Software Defined Networking (SDN) system that is designed to provide efficient and dynamic connection for Docker containers, which is suitable for the lightweight and ephemeral nature of micro-servicing workloads of Docker containers.
@@ -26,7 +26,7 @@ We know that containers are highly efficient in resource utilization, and epheme
 
 To date, networking is a core feature of Docker that is relatively immature and still under heavy development.
 
-DaoliNet for Lightweight Docker Networking
+DaoliNet for Efficient and Dynamic Docker Networking
 ==========================================
 
 Architecture
@@ -39,7 +39,7 @@ How it Works
 ------------
 When a container initiates a connection, the OVS in the hosting Docker server as the source router will issue a PacketIn request to the OpenFlow Controller. The PacketIn request is just the first packet from the initiating container. The OpenFlow Controller, knowing all Docker servers as routers in the system and seeing PacketIN, can identify another Docker server which hosts a container as the destination workload. This second Docker server is the destination router for the connection. The OpenFlow Controller will respond with a pair of PacketOut flows, one for the source router, and one for the destination router. These two flows provide real-time configurations for the two routers to establish a route for the requested connection. In case the two containers are in the same Docker server, the source and destination router is just the same server.
 
-The OpenFlow established connection is in a hot-plug fashion in that, the involved routers have not run routing algorithms to learn and propagate routing tables. It is the OpenFlow Controller that adds the routing information to the respective routers in PacketOut time. Also, if a connection becomes idle and upon a time threshold, the hot-plug route flows for the idle connection will time-out and be deleted from the memory of the involved routers. Therefore the routers in DaoliNet are non-intelligent ones, they work in a no-connection, no-resource-consumption style of resource utilization. This style of resource utilization is very similar to the Linux Container technology utilizing server CPU in that, an idling container consumes little server resource. DaoliNet is a lightweight networking technology for connecting Docker containers.
+The OpenFlow established connection is in a hot-plug fashion in that, the involved routers have not run routing algorithms to learn and propagate routing tables. It is the OpenFlow Controller that adds the routing information to the respective routers in PacketOut time. Also, if a connection becomes idle and upon a time threshold, the hot-plug route flows for the idle connection will time-out and be deleted from the memory of the involved routers. Therefore the routers in DaoliNet are non-intelligent ones, they work in a no-connection, no-resource-consumption style of resource utilization. This style of resource utilization is very similar to the Linux Container technology utilizing server CPU in that, an idling container consumes little server resource. DaoliNet is an efficient and dynamic networking technology for connecting Docker containers.
 
 Simple Networking for Containers
 --------------------------------
