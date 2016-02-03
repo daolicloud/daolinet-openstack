@@ -45,7 +45,7 @@ class FirewallForm(forms.SelfHandlingForm):
                     gateway.vext_ip != gateway.ext_ip:
                 choices.append(item)
             else:
-                if gateway.hostname == host:
+                if gateway.hostname == instance.host_server:
                     tmp_choices.append(item)
 
         if not choices:
