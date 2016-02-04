@@ -5,11 +5,11 @@ DaoliNet is a Software Defined Networking (SDN) system that is designed to provi
 
 Top-Level Features
 ------------------
-* Resource efficient connection: Connection of containers does not consume server resource when the containers are not in active communication. You get more out of your server resource.
+* Resource efficiency: Connection of containers does not consume server resource when the containers are not in active communication. You get more out of your server resource.
 
 * Distribution anywhere: Docker servers can be laptops or PCs inside the firewalls of your office or home, servers in your own datacenter, or virtual machines in public clouds such as AWS. Trans-datacenter traffic is always encrypted.
 
-* Network virtualization: A container can keep IP address unchanged after moving physical locations.
+* Network virtualization: You can choose any CIDR IP addresses for your containers, and a container can keep IP address unchanged after moving physical locations.
 
 * Multi-tenancy isolation: Networks of different tenants are completely isolated from one another.
 
@@ -22,7 +22,7 @@ Docker in Need of Efficient and Dynamic Networking
 
 Docker is awesome! It is a container engine to virtualize server CPUs much more efficient than a hypervisor does for virtual machines (VMs). A Docker server can partition an X86 server into thousands of containers. Containers are playing more and more roles in cloud computing in place of VMs. However, because each Docker server is created independently from one another, containers which are distributed in different Docker servers are by default not connected one another. We need a network solution to connect Docker containers.
 
-We know that containers are highly efficient in resource utilization, and ephemeral in lifecycle. These translate to a large number of containers in a Docker cloud. A network solution for Docker, if not very carefully designed, would have to process a large number of MAC addresses, or frequently discover and update route tables, both tarnish the efficiency of Docker. Unfortunately, some well-known networking techniques such as MAC-in-UDP encapsulation, or letting Docker servers be virtual routers, do fall into such pitfalls. MAC-in-UDP encapsulation flattens a container network and causes Docker servers to store and process a large number of MAC addresses of containers. Letting Docker servers be routers to frequently discover and update dynamic route tables is obviously very inefficient in resource utilization.
+We know that containers are highly efficient in resource utilization, and ephemeral in lifecycle due to their suitability for micro-services provisioning. These properties translate to a large number of dynamic containers in a Docker cloud. A networking solution for Docker, if not very carefully designed, would tarnish the efficiency of Docker cloud. Unfortunately, some well-known networking techniques such as MAC-in-UDP encapsulation, or Docker servers running routing algorithms, do fall into such pitfalls. MAC-in-UDP encapsulation flattens a container network and causes Docker servers to store and process a large number of MAC addresses of containers. Docker servers running routing algorithms mean to frequently discover and update dynamic route tables. Either is obviously very inefficient in resource utilization.
 
 To date, networking is a core feature of Docker that is relatively immature and still under heavy development.
 
