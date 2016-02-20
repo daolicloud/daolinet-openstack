@@ -72,7 +72,7 @@ def _instance_get_network(instance_uuid, session=None):
                 options(contains_eager("virtual_interface")).\
                 first()
 
-    if not result:
+    if not result or not result.FixedIp.virtual_interface:
         raise exception.FixedIpNotFoundForInstance(instance_uuid=instance_uuid)
 
     result.address = result.FixedIp.address
