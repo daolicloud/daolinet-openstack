@@ -20,7 +20,7 @@ Download the daolinet sources from github:
 
 Download the openstack nova-docker from github:
 -----------------------------------------------
-        % git clone https://git hub.com/openstack/nova-docker.git
+        % git clone https://github.com/openstack/nova-docker.git
         % cd nova-docker/
         % python setup.py install
 
@@ -89,7 +89,7 @@ Install Openvswitch:
               % DB_HOST= "Host of database"
               % DB_PWD=  "Password of database"
 
-	%  ./run
+	%  ./run install
 	% ovs-vsctl set-controller br-int tcp:<ControllerAddress>:6633
 
 

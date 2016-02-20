@@ -1,0 +1,35 @@
+Metadata-Version: 1.1
+Name: daolicontroller
+Version: 1.0
+Summary: Openflow controller
+Home-page: http://www.daolicloud.com
+Author: Daolicloud
+Author-email: dalinet@daolicloud.com
+License: Apache License 2.0
+Description: What's DaoliController
+        =====================
+        
+        DaoliController is an OpenFlow Controller which DaoliNet modifies from Ryu to suit a number of novel uses.
+        
+        All of the code is freely available under the Apache 2.0 license.
+        Daolicontroller is fully written in Python.
+        
+        Quick Start
+        ===========
+        
+        If you prefer to install DaoliController from the source code:
+        
+           % git clone https://github.com/daolinet/daolinet.git
+           % cd daolinet/daolicontroller; python ./setup.py install
+        
+        
+Keywords: openflow
+openvswitch
+openstack
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Topic :: System :: Networking
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
